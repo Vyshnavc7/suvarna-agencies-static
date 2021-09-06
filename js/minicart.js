@@ -1917,7 +1917,8 @@ var defaults = module.exports = {
         button: 'Check Out',
         subtotal: 'Subtotal:',
         discount: 'Discount:',
-        empty: 'Coming soon..'
+        empty: 'Cart is empty'
+        
     }
 
 };
