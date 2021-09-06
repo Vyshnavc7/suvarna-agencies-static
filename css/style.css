@@ -2386,6 +2386,16 @@ ul.links li a:hover {
     }
 }
 
-
+.mail{
+    outline: none;
+    border: 1px solid #c4c5c5;
+    background: none;
+    color: #212121;
+    padding: 11px 15px;
+    width: 80%;
+    float: left;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
 
 /*-- //responsive media queries --*/
