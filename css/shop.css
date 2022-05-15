@@ -847,12 +847,12 @@ input#amount1 {
 .shop_right h6 {
 	font-size: 20px;
 	margin-top: 15px;
-	color: #fff;
+	color: rgb(241, 215, 64);
 	letter-spacing: 1px;
 	font-weight: 700;
 	position: absolute;
-	top: 38%;
-	left: 12%;
+	top: 8%;
+	left: 74%;
 }
 
 /*-- //Slider range --*/
