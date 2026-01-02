@@ -3,14 +3,16 @@
 /*styling open close button*/
 
 .button-log a {
-    color: #333;
+	color: #333;
 	font-size: 1em;
 	text-decoration: none;
 }
-.overlay-login button.overlay-close1  {
-    z-index: 9999;
+
+.overlay-login button.overlay-close1 {
+	z-index: 9999;
 	color: #fff;
 }
+
 .btn-open:after {
 	color: #333;
 	transition-property: all .2s linear 0s;
@@ -35,48 +37,52 @@
 .btn-close:hover:after {
 	color: #34B484;
 }
-.overlay-login button.overlay-close1  {
+
+.overlay-login button.overlay-close1 {
 	z-index: 999;
-    color: #fff;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    position: absolute;
+	color: #fff;
+	right: 0;
+	width: 40px;
+	height: 40px;
+	position: absolute;
 	left: 20px;
-    top: 20px;
-    overflow: hidden;
-    background: none;
-    color: #fff;
-    border: 2px solid #7a7f7f;
+	top: 20px;
+	overflow: hidden;
+	background: none;
+	color: #fff;
+	border: 2px solid #7a7f7f;
 	cursor: pointer;
-	
+
 }
+
 /*overlay*/
 
 .overlay-login {
 	display: none;
-    position: fixed;
-    top: 0;
-    background: #212529;
-    overflow: auto;
+	position: fixed;
+	top: 0;
+	background: #212529;
+	overflow: auto;
 	z-index: 9999;
 	padding: 3em 3em;
 	right: 0;
 	height: 100%;
 	transition: 0.5s all;
-    -webkit-transition: 0.5s all;
-    -moz-transition: 0.5s all;
-    -o-transition: 0.5s all;
-    -ms-transition: 0.5s all;
+	-webkit-transition: 0.5s all;
+	-moz-transition: 0.5s all;
+	-o-transition: 0.5s all;
+	-ms-transition: 0.5s all;
 }
 
 .wrap {
-    margin:5em auto 0;
+	margin: 5em auto 0;
 }
+
 .wrap h5 {
-    font-size: 2em;
+	font-size: 2em;
 	color: #fff;
 }
+
 .wrap ul.wrap-nav {
 	border-bottom: 1px solid #575757;
 	text-transform: capitalize;
@@ -172,14 +178,17 @@
 		padding: 20px 0;
 		border-bottom: 1px solid #575757;
 	}
+
 	.wrap ul.wrap-nav {
 		padding: 30px 0px 0px;
 	}
+
 	.social {
 		color: #c1c1c1;
 		font-size: 25px;
 		padding: 15px 0;
 	}
+
 	.social-icon {
 		width: 100%;
 		height: 50px;
@@ -194,6 +203,6 @@
 	width: 100%;
 	margin-top: 200px;
 	font-size: 20px;
-	color#333;
+	color: #333;
 	text-align: center;
 }
