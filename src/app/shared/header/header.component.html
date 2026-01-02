@@ -22,10 +22,16 @@
 
             <div class="col-md-3 top-info-cart text-right mt-lg-4">
                 <ul class="cart-inner-info">
-                    <li class="button-log">
+                    <li class="button-log" *ngIf="!(authService.currentUser | async)">
                         <a class="btn-open" routerLink="/login">
                             <span class="fa fa-user" aria-hidden="true"></span>
                         </a>
+                    </li>
+                    <li class="button-log" *ngIf="authService.currentUser | async as user">
+                        <span class="mr-2 font-weight-bold" style="font-size: 14px;">Welcome, {{ user.name }}</span>
+                        <button class="btn btn-link text-dark p-0" (click)="logout()" style="text-decoration: none;">
+                            <span class="fas fa-sign-out-alt" aria-hidden="true"></span> Logout
+                        </button>
                     </li>
                     <li class="galssescart galssescart2 cart cart box_1">
                         <form action="#" method="post" class="last">

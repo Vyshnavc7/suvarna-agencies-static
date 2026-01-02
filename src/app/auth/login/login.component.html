@@ -17,25 +17,22 @@
         <h3 class="tittle-w3layouts text-center my-lg-4 my-4">Login Now</h3>
         <div class="inner_sec">
             <div class="login p-5 bg-dark mx-auto mw-100" style="max-width: 500px !important;">
-                <form action="#" method="post">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <div *ngIf="errorMessage" class="alert alert-danger">
+                        {{ errorMessage }}
+                    </div>
                     <div class="form-group">
                         <label class="mb-2 text-white">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            placeholder="" required="">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                            else.</small>
+                        <input type="email" class="form-control" formControlName="email" placeholder="" required="">
                     </div>
                     <div class="form-group">
                         <label class="mb-2 text-white">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder=""
+                        <input type="password" class="form-control" formControlName="password" placeholder=""
                             required="">
                     </div>
-                    <div class="form-check mb-2">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label text-white" for="exampleCheck1">Check me out</label>
-                    </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary submit mb-4">Sign In</button>
+                        <button type="submit" class="btn btn-primary submit mb-4" [disabled]="loginForm.invalid">Sign
+                            In</button>
                     </div>
                     <p class="text-center text-white">Don't have an account? <a routerLink="/signup"
                             class="text-info">Sign Up</a></p>

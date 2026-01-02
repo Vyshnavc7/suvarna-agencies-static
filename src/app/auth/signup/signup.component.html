@@ -17,25 +17,35 @@
         <h3 class="tittle-w3layouts text-center my-lg-4 my-4">Register</h3>
         <div class="inner_sec">
             <div class="login p-5 bg-dark mx-auto mw-100" style="max-width: 500px !important;">
-                <form action="#" method="post">
+                <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                    <div *ngIf="errorMessage" class="alert alert-danger">
+                        {{ errorMessage }}
+                    </div>
                     <div class="form-group">
                         <label class="mb-2 text-white">Full Name</label>
-                        <input type="text" class="form-control" placeholder="" required="">
+                        <input type="text" class="form-control" formControlName="name" placeholder="" required="">
                     </div>
                     <div class="form-group">
                         <label class="mb-2 text-white">Email address</label>
-                        <input type="email" class="form-control" placeholder="" required="">
+                        <input type="email" class="form-control" formControlName="email" placeholder="" required="">
                     </div>
                     <div class="form-group">
                         <label class="mb-2 text-white">Password</label>
-                        <input type="password" class="form-control" placeholder="" required="">
+                        <input type="password" class="form-control" formControlName="password" placeholder=""
+                            required="">
                     </div>
                     <div class="form-group">
                         <label class="mb-2 text-white">Confirm Password</label>
-                        <input type="password" class="form-control" placeholder="" required="">
+                        <input type="password" class="form-control" formControlName="confirmPassword" placeholder=""
+                            required="">
+                        <div *ngIf="signupForm.errors?.['mismatch'] && (signupForm.touched || signupForm.dirty)"
+                            class="text-danger small">
+                            Passwords do not match
+                        </div>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary submit mb-4">Sign Up</button>
+                        <button type="submit" class="btn btn-primary submit mb-4" [disabled]="signupForm.invalid">Sign
+                            Up</button>
                     </div>
                     <p class="text-center text-white">Already have an account? <a routerLink="/login"
                             class="text-info">Login</a></p>
