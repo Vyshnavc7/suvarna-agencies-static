@@ -1,0 +1,43 @@
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+            <ul class="short">
+                <li>
+                    <a routerLink="/">Home</a>
+                    <i>|</i>
+                </li>
+                <li>Login</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+    <div class="container">
+        <h3 class="tittle-w3layouts text-center my-lg-4 my-4">Login Now</h3>
+        <div class="inner_sec">
+            <div class="login p-5 bg-dark mx-auto mw-100" style="max-width: 500px !important;">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <div *ngIf="errorMessage" class="alert alert-danger">
+                        {{ errorMessage }}
+                    </div>
+                    <div class="form-group">
+                        <label class="mb-2 text-white">Email address</label>
+                        <input type="email" class="form-control" formControlName="email" placeholder="" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="mb-2 text-white">Password</label>
+                        <input type="password" class="form-control" formControlName="password" placeholder=""
+                            required="">
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary submit mb-4" [disabled]="loginForm.invalid">Sign
+                            In</button>
+                    </div>
+                    <p class="text-center text-white">Don't have an account? <a routerLink="/signup"
+                            class="text-info">Sign Up</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

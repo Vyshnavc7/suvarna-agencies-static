@@ -1,0 +1,184 @@
+<div class="banner-top container-fluid" id="home">
+    <!-- header -->
+    <header>
+        <div class="row">
+            <div class="col-md-3 top-info text-left mt-lg-4">
+                <h6>Need Help</h6>
+                <ul>
+                    <li>
+                        <i class="fas fa-phone number-phone mt-3"></i> <strong> Call</strong>
+                    </li>
+                    <a href="tel://9847921072" style="color: black;"><strong> 9847921072 </strong></a>
+                </ul>
+            </div>
+            <div class="col-md-6 logo-w3layouts text-center">
+                <h1 class="logo-w3layouts">
+                    <a class="navbar-brand" routerLink="/">Suvarna </a>
+                    <h5><a class="navbar-brand text-center " style="font-size: 30px;padding-left: 40px;">Agencies</a>
+                    </h5>
+                </h1>
+
+            </div>
+
+            <div class="col-md-3 top-info-cart text-right mt-lg-4">
+                <ul class="cart-inner-info">
+                    <li class="button-log" *ngIf="!(authService.currentUser | async)">
+                        <a class="btn-open" routerLink="/login">
+                            <span class="fa fa-user" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    <li class="button-log" *ngIf="authService.currentUser | async as user">
+                        <div class="dropdown profile-dropdown" [class.show]="isProfileDropdownOpen"
+                            #profileDropdownContainer>
+                            <button class="btn btn-link dropdown-toggle p-0 d-flex align-items-center" type="button"
+                                id="profileDropdown" (click)="toggleProfileDropdown()" aria-haspopup="true"
+                                aria-expanded="false" style="text-decoration: none;">
+                                <div class="profile-pic-wrapper">
+                                    <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=random'"
+                                        alt="Profile">
+                                    <span class="online-indicator"></span>
+                                </div>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right profile-menu"
+                                [class.show]="isProfileDropdownOpen" aria-labelledby="profileDropdown">
+                                <div class="user-info-header px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-pic-wrapper mr-3">
+                                            <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=random'"
+                                                alt="Profile">
+                                        </div>
+                                        <div class="user-details">
+                                            <h6 class="mb-0 font-weight-bold">{{ user.name }}</h6>
+                                            <small class="text-muted">{{ user.email }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" routerLink="/profile"><i class="far fa-user"></i> View
+                                    Profile <span class="shortcut">⌘ + F</span></a>
+                                <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-cog"></i> Settings
+                                    <span class="shortcut">⌘ + G</span></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="logout()"><i
+                                        class="fas fa-sign-out-alt"></i> Sign Out <span class="shortcut">⌘ +
+                                        F</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="galssescart galssescart2 cart cart box_1">
+                        <a routerLink="/cart" class="top_googles_cart"
+                            style="text-decoration: none; display: inline-block;">
+                            My cart
+                            <i class="fas fa-cart-arrow-down"></i>
+                            <span class="badge badge-light" *ngIf="(cartItemCount$ | async) as count">{{ count }}</span>
+                        </a>
+                    </li>
+                    <div class="search ">
+                        <div class="mobile-nav-button">
+                            <button id="trigger-overlay" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <!-- open/close -->
+                        <div class="overlay overlay-door">
+                            <button type="button" class="overlay-close">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                            <form action="#" method="post" class="d-flex">
+                                <input class="form-control" type="search" placeholder="Search here..." required="">
+                                <button type="submit" class="btn btn-primary submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                        <!-- open/close -->
+                    </div>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- </div> -->
+
+        <label class="top-log mx-auto"></label>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light top-header mb-2">
+
+            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon">
+
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav nav-mega mx-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link ml-lg-0" routerLink="/">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/shop">All Products</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu mega-menu">
+                            <li>
+                                <div class="row px-3 pt-3">
+                                    <div class="col-lg-4 col-md-6 mb-4 category-column"
+                                        *ngFor="let category of categories">
+                                        <div class="category-header mb-3 pb-2 border-bottom">
+                                            <h4 class="text-uppercase font-weight-bold text-dark m-0"
+                                                style="font-size: 1.1rem;">
+                                                {{ category.name }}
+                                            </h4>
+                                        </div>
+
+                                        <div class="subcategory-list">
+                                            <div *ngFor="let sub of category.subcategories" class="mb-3">
+                                                <h6 class="font-weight-bold text-primary mb-2"
+                                                    style="font-size: 0.95rem;">{{ sub.name }}</h6>
+                                                <ul class="list-unstyled pl-0 mb-0">
+                                                    <li *ngFor="let product of sub.products" class="mb-1">
+                                                        <a [routerLink]="['/product', product.id]"
+                                                            class="text-muted product-link d-block text-truncate">
+                                                            <i class="fas fa-angle-right mr-2 small"></i>{{
+                                                            product.productName }}
+                                                        </a>
+                                                    </li>
+                                                    <li *ngIf="!sub.products?.length" class="text-muted small">
+                                                        No items
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div *ngIf="!category.subcategories?.length" class="text-muted small">
+                                                No subcategories
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <div class="col-12 text-center mt-2 mb-3">
+                                <a routerLink="/shop" class="btn btn-sm btn-primary px-4 py-2"
+                                    style="border-radius: 20px;">
+                                    View All Products
+                                </a>
+                            </div>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/contact">Contact</a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </header>

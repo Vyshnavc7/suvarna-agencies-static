@@ -1,0 +1,162 @@
+.shop-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.product-grid-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+
+        .card-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .new-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ff5722;
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        z-index: 2;
+    }
+
+    .image-wrapper {
+        position: relative;
+        padding: 1.5rem;
+        background: #fff;
+        height: 220px;
+        /* Fixed height for consistency */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        /* Reveal overlay on hover (optional style) - decided to use clean hover instead */
+    }
+
+    .card-body {
+        padding: 1.25rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid #f0f0f0;
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            transition: color 0.2s;
+
+            &:hover {
+                color: #ff5722;
+            }
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ff5722;
+            margin-bottom: 1rem;
+
+            i {
+                font-size: 0.9em;
+                margin-right: 2px;
+            }
+        }
+
+        .action-row {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-quick-view {
+            font-size: 0.85rem;
+            color: #666;
+            text-decoration: none;
+            font-weight: 600;
+
+            &:hover {
+                color: #333;
+            }
+        }
+
+        .btn-add-cart-mini {
+            background: #333;
+            color: #fff;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+
+            &:hover {
+                background: #ff5722;
+                transform: scale(1.1);
+            }
+        }
+    }
+}
+
+/* Sidebar Styling Updates */
+.side-bar {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    margin-bottom: 2rem;
+
+    .agileits-sear-head {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #333;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    ul li {
+        margin-bottom: 0.5rem;
+        color: #666;
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+    }
+}

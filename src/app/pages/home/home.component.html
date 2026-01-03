@@ -1,0 +1,174 @@
+<div class="banner">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active">
+                <div class="carousel-caption text-center">
+                    <h3>Sales in power tools
+                        <span>Visit the shop</span>
+                    </h3>
+                    <a routerLink="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+                </div>
+            </div>
+            <div class="carousel-item item2">
+                <div class="carousel-caption text-center">
+                    <h3>Service at its best
+                        <span>Want to Look Your Best?</span>
+                    </h3>
+                    <a routerLink="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+
+                </div>
+            </div>
+            <div class="carousel-item item3">
+                <div class="carousel-caption text-center">
+                    <h3>Spare parts available
+                        <span>Both sales and service</span>
+                    </h3>
+                    <a routerLink="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    <!--//banner -->
+</div>
+<!--//banner-sec-->
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+    <div class="container-fluid">
+        <div class="inner-sec-shop px-lg-4 px-3">
+            <hr>
+            <h3 class="tittle-w3layouts my-lg-4 my-4">New Arrivals of machines </h3>
+
+            <!-- Dynamic New Arrivals -->
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 mb-4" *ngFor="let product of newArrivals">
+                    <div class="product-grid-card">
+                        <span class="new-badge">New</span> <!-- Always show new on new arrivals section -->
+
+                        <div class="image-wrapper">
+                            <ng-container *ngIf="product.image; else noImage">
+                                <img [src]="product.image" alt="{{product.productName}}">
+                            </ng-container>
+                            <ng-template #noImage>
+                                <i class="fas fa-tools fa-3x text-secondary"></i>
+                            </ng-template>
+                        </div>
+
+                        <div class="card-body">
+                            <a [routerLink]="['/product', product.id]" class="product-title">{{product.productName}}</a>
+
+                            <div class="product-price">
+                                <i class="fas fa-rupee-sign"></i> {{product.price | number:'1.2-2'}}
+                            </div>
+
+                            <div class="action-row">
+                                <a [routerLink]="['/product', product.id]" class="btn-quick-view">
+                                    Quick View
+                                </a>
+                                <button class="btn-add-cart-mini" (click)="addToCart(product)" title="Add to Cart">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="newArrivals.length === 0" class="col-12 text-center py-5">
+                    <div class="alert alert-light">
+                        <p class="mb-0 text-muted">No new arrivals at the moment.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- //Dynamic New Arrivals -->
+            <!-- Next 4 machines starts -->
+
+            <!--//row-->
+
+            <hr>
+            <!-- /grids -->
+            <div class="bottom-sub-grid-content py-lg-5 py-3">
+                <div class="row">
+                    <div class="col-lg-6 bottom-sub-grid text-center">
+                        <div class="bt-icon">
+
+                            <span class="far fa-hand-paper"></span>
+                        </div>
+
+                        <h4 class="sub-tittle-w3layouts my-lg-4 my-3">Satisfaction Guaranteed</h4>
+                        <p>We assure a nice satisfaction with our products and services.</p>
+                        <p>
+                            <!-- shop.html page down-->
+                            <a routerLink="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6 bottom-sub-grid text-center">
+                        <div class="bt-icon">
+                            <span class="far fa-sun"></span>
+                        </div>
+
+                        <h4 class="sub-tittle-w3layouts my-lg-4 my-3">Good service</h4>
+                        <p>We provide a good service at both sales and service</p>
+                        <p>
+                            <!-- shop.html page down-->
+                            <a routerLink="/shop" class="btn btn-sm animated-button gibson-three mt-4">Shop Now</a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <hr>
+            <!-- //grids -->
+
+            <!-- /clients-sec -->
+            <div class="testimonials p-lg-5 p-3 mt-4">
+                <div class="row last-section">
+                    <div class="col-lg-4 footer-top-w3layouts-grid-sec">
+                        <div class="mail-grid-icon text-center">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="mail-grid-text-info">
+                            <h3>Genuine Product</h3>
+                            <p>We provide you with genuine and guranteed products</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 footer-top-w3layouts-grid-sec">
+                        <div class="mail-grid-icon text-center">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="mail-grid-text-info">
+                            <h3>Secure Products</h3>
+                            <p>Products are secured with our service </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 footer-top-w3layouts-grid-sec">
+                        <div class="mail-grid-icon text-center">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="mail-grid-text-info">
+                            <h3>Genuine Service</h3>
+                            <p>We provide service at its quality best</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <hr>
+            <!-- //clients-sec -->
+        </div>
+    </div>
+
+</section>

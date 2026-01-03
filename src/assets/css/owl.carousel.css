@@ -148,6 +148,7 @@
     0% {
         opacity: 1
     }
+
     100% {
         opacity: 0
     }
@@ -180,7 +181,7 @@
     top: 50%;
     margin-left: -40px;
     margin-top: -40px;
-    background: url(owl.video.play.png) no-repeat;
+
     cursor: pointer;
     z-index: 1;
     -webkit-backface-visibility: hidden;
@@ -216,8 +217,6 @@
 
 
 /*--/responsive--*/
-@media(max-width:1080px) {
+@media(max-width:1080px) {}
 
-
-}
 /*--//responsive--*/
