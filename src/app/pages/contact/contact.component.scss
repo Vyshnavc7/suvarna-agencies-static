@@ -1,0 +1,141 @@
+.contact-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h3 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: #666;
+    }
+}
+
+.contact-info-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    height: 100%;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+
+    .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        background: #fff5f2;
+        color: #ff5722;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    h5 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    p,
+    a {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #ff5722;
+    }
+}
+
+.contact-form-section {
+    background: #fff;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-top: 3rem;
+
+    h4 {
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #333;
+        border-left: 4px solid #ff5722;
+        padding-left: 15px;
+    }
+
+    .form-control {
+        border-radius: 4px;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+        background: #fcfcfc;
+
+        &:focus {
+            box-shadow: none;
+            border-color: #ff5722;
+            background: #fff;
+        }
+    }
+
+    label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+    }
+
+    .btn-submit {
+        background: #333;
+        color: #fff;
+        padding: 12px 40px;
+        font-weight: 600;
+        border-radius: 50px;
+        border: none;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 1rem;
+
+        &:hover {
+            background: #ff5722;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        }
+    }
+}
+
+.map-container {
+    margin-top: 4rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    height: 400px;
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+}

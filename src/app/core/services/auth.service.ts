@@ -16,6 +16,10 @@ export class AuthService {
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
+  public get currentUserValue(): any {
+    return this.currentUserSubject.value;
+  }
+
   /* ... headers method logic (unchanged but re-included for completeness implies I need to be careful with replace) ... */
   /* Actually, I should just replace the whole class content or specific parts to avoid overwriting headers logic if I don't need to change it. 
      But I need to update login/signup to update the subject. */

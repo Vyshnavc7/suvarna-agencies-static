@@ -34,11 +34,12 @@
                         </button>
                     </li>
                     <li class="galssescart galssescart2 cart cart box_1">
-                        <button class="top_googles_cart" type="button">
+                        <a routerLink="/cart" class="top_googles_cart"
+                            style="text-decoration: none; display: inline-block;">
                             My cart
                             <i class="fas fa-cart-arrow-down"></i>
                             <span class="badge badge-light" *ngIf="(cartItemCount$ | async) as count">{{ count }}</span>
-                        </button>
+                        </a>
                     </li>
                     <div class="search ">
                         <div class="mobile-nav-button">

@@ -1,0 +1,102 @@
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+            <ul class="short">
+                <li>
+                    <a routerLink="/">Home</a>
+                    <i>|</i>
+                </li>
+                <li>Cart</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+    <div class="container">
+        <h3 class="tittle-w3layouts text-center my-lg-4 my-4">Your Shopping Cart</h3>
+
+        <div class="inner_sec" *ngIf="(cartItems$ | async) as cartItems">
+
+            <div *ngIf="cartItems.length > 0; else emptyCart">
+                <div class="table-responsive">
+                    <table class="table cart-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of cartItems">
+                                <td class="product-col">
+                                    <div class="d-flex align-items-center">
+                                        <div class="img-wrapper mr-3">
+                                            <img [src]="item.product.image || 'assets/images/default-product.png'"
+                                                alt="{{item.product.productName}}">
+                                        </div>
+                                        <div class="product-info">
+                                            <h5 class="mb-0"><a
+                                                    [routerLink]="['/product', item.product.id]">{{item.product.productName}}</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle">₹{{item.product.price | number:'1.2-2'}}</td>
+                                <td class="align-middle">
+                                    <div class="quantity-control">
+                                        <button class="btn btn-sm btn-outline-secondary"
+                                            (click)="updateQuantity(item, -1)">-</button>
+                                        <span class="mx-2">{{item.quantity}}</span>
+                                        <button class="btn btn-sm btn-outline-secondary"
+                                            (click)="updateQuantity(item, 1)">+</button>
+                                    </div>
+                                </td>
+                                <td class="align-middle font-weight-bold">₹{{(item.product.price * item.quantity) |
+                                    number:'1.2-2'}}</td>
+                                <td class="align-middle">
+                                    <button class="btn btn-danger btn-sm rounded-circle" (click)="removeItem(item)"
+                                        title="Remove">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6 offset-md-6">
+                        <div class="cart-summary p-4 bg-light rounded">
+                            <h4 class="mb-4">Cart Total</h4>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Subtotal</span>
+                                <span class="font-weight-bold">₹{{cartTotal | number:'1.2-2'}}</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <h5>Total</h5>
+                                <h5 class="text-primary font-weight-bold">₹{{cartTotal | number:'1.2-2'}}</h5>
+                            </div>
+                            <button class="btn btn-dark btn-block btn-lg" (click)="checkout()">Proceed to
+                                Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #emptyCart>
+                <div class="text-center py-5">
+                    <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+                    <h3>Your cart is empty</h3>
+                    <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet.</p>
+                    <a routerLink="/shop" class="btn btn-primary px-4 py-2">Start Shopping</a>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</section>

@@ -16,7 +16,7 @@ import { CartService } from '../../core/services/cart.service';
 export class HeaderComponent {
   authService = inject(AuthService);
   cartService = inject(CartService);
-  cartItemCount$ = this.cartService.cartItems$;
+  cartItemCount$ = this.cartService.cartCount$;
 
   getCartCount(items: any[]): number {
     return items.reduce((acc, item) => acc + item.quantity, 0);
