@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
@@ -30,7 +31,7 @@ export class CartService {
     map(items => items.length)
   );
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService, private router: Router) {
     this.authService.currentUser.subscribe(user => {
       if (user) {
         this.loadCart();
@@ -53,7 +54,14 @@ export class CartService {
         icon: 'info',
         title: 'Please Login',
         text: 'You need to be logged in to add items to the cart.',
-        confirmButtonColor: '#333'
+        confirmButtonColor: '#ff5722',
+        confirmButtonText: 'Login Now',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
       });
       return;
     }

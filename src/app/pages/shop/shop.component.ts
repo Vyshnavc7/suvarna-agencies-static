@@ -19,15 +19,6 @@ export class ShopComponent implements OnInit {
 
   addToCart(product: any) {
     this.cartService.addToCart(product);
-    Swal.fire({
-      icon: 'success',
-      title: 'Added to Cart',
-      text: `${product.productName} has been added to your cart.`,
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000
-    });
   }
 
   ngOnInit() {

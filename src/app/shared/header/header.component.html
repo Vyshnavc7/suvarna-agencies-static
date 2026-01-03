@@ -28,10 +28,42 @@
                         </a>
                     </li>
                     <li class="button-log" *ngIf="authService.currentUser | async as user">
-                        <span class="mr-2 font-weight-bold" style="font-size: 14px;">Welcome, {{ user.name }}</span>
-                        <button class="btn btn-link text-dark p-0" (click)="logout()" style="text-decoration: none;">
-                            <span class="fas fa-sign-out-alt" aria-hidden="true"></span> Logout
-                        </button>
+                        <div class="dropdown profile-dropdown" [class.show]="isProfileDropdownOpen"
+                            #profileDropdownContainer>
+                            <button class="btn btn-link dropdown-toggle p-0 d-flex align-items-center" type="button"
+                                id="profileDropdown" (click)="toggleProfileDropdown()" aria-haspopup="true"
+                                aria-expanded="false" style="text-decoration: none;">
+                                <div class="profile-pic-wrapper">
+                                    <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=random'"
+                                        alt="Profile">
+                                    <span class="online-indicator"></span>
+                                </div>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right profile-menu"
+                                [class.show]="isProfileDropdownOpen" aria-labelledby="profileDropdown">
+                                <div class="user-info-header px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-pic-wrapper mr-3">
+                                            <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=random'"
+                                                alt="Profile">
+                                        </div>
+                                        <div class="user-details">
+                                            <h6 class="mb-0 font-weight-bold">{{ user.name }}</h6>
+                                            <small class="text-muted">{{ user.email }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" routerLink="/profile"><i class="far fa-user"></i> View
+                                    Profile <span class="shortcut">⌘ + F</span></a>
+                                <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-cog"></i> Settings
+                                    <span class="shortcut">⌘ + G</span></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="logout()"><i
+                                        class="fas fa-sign-out-alt"></i> Sign Out <span class="shortcut">⌘ +
+                                        F</span></a>
+                            </div>
+                        </div>
                     </li>
                     <li class="galssescart galssescart2 cart cart box_1">
                         <a routerLink="/cart" class="top_googles_cart"
@@ -97,122 +129,49 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Categories
                         </a>
-                        <ul class="dropdown-menu mega-menu ">
-                            <h3 class="tittle-w3layouts-sub text-center mt-3"> <strong> POWER TOOLS </strong> </h3>
+                        <ul class="dropdown-menu mega-menu">
                             <li>
-                                <div class="row">
-                                    <div class="col-md-4 media-list span4 text-left">
-                                        <h5 class="tittle-w3layouts-sub"> CUTTER Machines </h5>
-                                        <ul>
-                                            <li class="media-mini mt-3">
-                                                <a routerLink="/shop">Bosch</a>
-                                            </li>
-                                            <li class="">
-                                                <a routerLink="/shop"> Makitha</a>
-                                            </li>
-                                            <li>
-                                                <a routerLink="/shop">DCA</a>
-                                            </li>
+                                <div class="row px-3 pt-3">
+                                    <div class="col-lg-4 col-md-6 mb-4 category-column"
+                                        *ngFor="let category of categories">
+                                        <div class="category-header mb-3 pb-2 border-bottom">
+                                            <h4 class="text-uppercase font-weight-bold text-dark m-0"
+                                                style="font-size: 1.1rem;">
+                                                {{ category.name }}
+                                            </h4>
+                                        </div>
 
-                                        </ul>
-
+                                        <div class="subcategory-list">
+                                            <div *ngFor="let sub of category.subcategories" class="mb-3">
+                                                <h6 class="font-weight-bold text-primary mb-2"
+                                                    style="font-size: 0.95rem;">{{ sub.name }}</h6>
+                                                <ul class="list-unstyled pl-0 mb-0">
+                                                    <li *ngFor="let product of sub.products" class="mb-1">
+                                                        <a [routerLink]="['/product', product.id]"
+                                                            class="text-muted product-link d-block text-truncate">
+                                                            <i class="fas fa-angle-right mr-2 small"></i>{{
+                                                            product.productName }}
+                                                        </a>
+                                                    </li>
+                                                    <li *ngIf="!sub.products?.length" class="text-muted small">
+                                                        No items
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div *ngIf="!category.subcategories?.length" class="text-muted small">
+                                                No subcategories
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 media-list span4 text-left">
-                                        <h5 class="tittle-w3layouts-sub"> DRILL Machines </h5>
-                                        <ul>
-
-                                            <li class="">
-                                                <a routerLink="/shop"> Makitha</a>
-                                            </li>
-                                            <li>
-                                                <a routerLink="/shop">DCA</a>
-                                            </li>
-
-                                        </ul>
-
-                                    </div>
-
-                                    <div class="col-md-4 media-list span4 text-left">
-                                        <h5 class="tittle-w3layouts-sub"> GRINDER Machines </h5>
-                                        <ul>
-                                            <li class="media-mini mt-3">
-                                                <a routerLink="/shop">Dewalt</a>
-                                            </li>
-
-
-                                        </ul>
-
-                                    </div>
-                                    <div class="col-md-4 media-list span4 text-left">
-                                        <h5 class="tittle-w3layouts-sub"> Router Machines </h5>
-                                        <ul>
-                                            <li class="">
-                                                <a routerLink="/shop"> Endico</a>
-                                            </li>
-
-                                        </ul>
-
-                                    </div>
-                                    <div class="col-md-4 media-list span4 text-left">
-                                        <h5 class="tittle-w3layouts-sub"> Blower Machines </h5>
-                                        <ul>
-
-                                            <li class="">
-                                                <a routerLink="/shop"> Planet Power</a>
-                                            </li>
-
-                                        </ul>
-
-                                    </div>
-
-
                                 </div>
-
-                                <div class="col-lg-6 bottom-sub-grid text-center">
-                                    <p>
-                                        <a routerLink="/shop" class="btn btn-sm animated-button gibson-three mt-4">View
-                                            More..</a>
-                                    </p>
-                                </div>
-                                <hr>
-
                             </li>
 
-                        </ul>
-
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            SERVICE
-                        </a>
-                        <ul class="dropdown-menu mega-menu  ">
-                            <h2 class="tittle-w3layouts-sub mt-3 text-center"> Swaraj Electricals </h2>
-                            <li>
-                                <div class="row text-center">
-                                    <div class="col-md-6 media-list span4 text-left">
-                                        <h5 class="tittle-w3layouts-sub "> Available services are </h5>
-                                        <ul>
-                                            <li class="media-mini mt-3">
-                                                <a routerLink="/contact">Drill service</a>
-                                            </li>
-                                            <li class="">
-                                                <a routerLink="/contact"> Cutter service</a>
-                                            </li>
-                                            <li>
-                                                <a routerLink="/contact">Grinder service</a>
-                                            </li>
-                                            <li>
-                                                <a routerLink="/contact">Blower service</a>
-                                            </li>
-                                            <li>
-                                                <a routerLink="/contact">Router service</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <hr>
-                            </li>
+                            <div class="col-12 text-center mt-2 mb-3">
+                                <a routerLink="/shop" class="btn btn-sm btn-primary px-4 py-2"
+                                    style="border-radius: 20px;">
+                                    View All Products
+                                </a>
+                            </div>
                         </ul>
                     </li>
                     <li class="nav-item">
