@@ -1,48 +1,54 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
-declare var $: any;
+import { ProductService } from '../../core/services/product.service';
+import { CartService } from '../../core/services/cart.service';
+import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit {
+  newArrivals: any[] = [];
+  productService = inject(ProductService);
+  cartService = inject(CartService);
 
-  ngAfterViewInit(): void {
-    // Initialize Owl Carousel
-    /*
-    $('.owl-carousel').owlCarousel({
-      loop: true,
-      margin: 10,
-      responsiveClass: true,
-      responsive: {
-        0: {
-          items: 1,
-          nav: true
-        },
-        600: {
-          items: 2,
-          nav: false
-        },
-        900: {
-          items: 3,
-          nav: false
-        },
-        1000: {
-          items: 4,
-          nav: true,
-          loop: false,
-          margin: 20
-        }
+  ngOnInit() {
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        const allProducts = Array.isArray(data) ? data : (data.data || data.rows || []);
+        this.filterNewArrivals(allProducts);
+      },
+      error: (err) => {
+        console.error('Error fetching products', err);
       }
     });
-    */
-    // Note: The original index.html had owl carousel initialization.
-    // However, the home.html I copied doesn't seem to have the .owl-carousel class on any element?
-    // Let me check the HTML content I wrote.
+  }
+
+  filterNewArrivals(products: any[]) {
+    const tenDaysAgo = new Date();
+    tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+
+    this.newArrivals = products.filter(product => {
+      const createdDate = new Date(product.createdAt);
+      return createdDate > tenDaysAgo;
+    });
+  }
+
+  addToCart(product: any) {
+    this.cartService.addToCart(product);
+    Swal.fire({
+      icon: 'success',
+      title: 'Added to Cart',
+      text: `${product.productName} has been added to your cart.`,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
   }
 }

@@ -4,6 +4,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
+import { CartService } from '../../core/services/cart.service';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -13,6 +15,12 @@ import Swal from 'sweetalert2';
 })
 export class HeaderComponent {
   authService = inject(AuthService);
+  cartService = inject(CartService);
+  cartItemCount$ = this.cartService.cartItems$;
+
+  getCartCount(items: any[]): number {
+    return items.reduce((acc, item) => acc + item.quantity, 0);
+  }
 
   logout() {
     Swal.fire({

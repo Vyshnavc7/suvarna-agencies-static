@@ -2,7 +2,6 @@
 <div class="banner_inner">
     <div class="services-breadcrumb">
         <div class="inner_breadcrumb">
-
             <ul class="short">
                 <li>
                     <a routerLink="/">Home</a>
@@ -12,209 +11,114 @@
             </ul>
         </div>
     </div>
-
 </div>
 <!--//banner -->
+
 <!--/shop-->
-<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+<section class="shop-container py-5">
     <div class="container-fluid">
         <div class="inner-sec-shop px-lg-4 px-3">
-            <h3 class="tittle-w3layouts my-lg-4 mt-2 text-center">Products </h3>
+            <h3 class="tittle-w3layouts my-4 text-center">Our Products</h3>
             <div class="row">
-                <!-- product left -->
-                <div class="side-bar col-lg-3">
-                    <div class="search-hotel">
-                        <h3 class="agileits-sear-head">Search Here..</h3>
-                        <form action="#" method="post">
-                            <input class="form-control" type="search" name="search" placeholder="Search here..."
+                <!-- Data Filtering Sidebar -->
+                <div class="col-lg-3 side-bar">
+                    <div class="search-hotel mb-4">
+                        <h3 class="agileits-sear-head">Search</h3>
+                        <form action="#" method="post" class="d-flex">
+                            <input class="form-control mr-2" type="search" name="search" placeholder="Search..."
                                 required="">
-                            <button class="btn1">
+                            <button class="btn btn-dark"
+                                style="border-radius: 50%; width: 40px; height: 40px; padding: 0;">
                                 <i class="fas fa-search"></i>
                             </button>
-                            <div class="clearfix"> </div>
                         </form>
                     </div>
-                    <!-- price range -->
-                    <div class="range">
-                        <h3 class="agileits-sear-head">Price range</h3>
-                        <ul class="dropdown-menu6">
-                            <li>
 
-                                <div id="slider-range"></div>
-                                <input type="text" id="amount"
-                                    style="border: 0; color: #ffffff; font-weight: normal;" />
+                    <!-- Filters (Mock) -->
+                    <div class="left-side mb-4">
+                        <h3 class="agileits-sear-head">Categories</h3>
+                        <ul class="list-unstyled">
+                            <li>
+                                <input type="checkbox" class="checked"> <span class="span">Power Tools</span>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="checked"> <span class="span">Accessories</span>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="checked"> <span class="span">Safety Gear</span>
                             </li>
                         </ul>
                     </div>
-                    <!-- //price range -->
-                    <!--preference -->
-                    <div class="left-side">
-                        <h3 class="agileits-sear-head">Deal Offer On</h3>
-                        <ul>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">Cutter</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">Drill</span>
-                            </li>
 
-                        </ul>
-                    </div>
-                    <!-- // preference -->
-                    <!-- discounts -->
-                    <div class="left-side">
-                        <h3 class="agileits-sear-head">Discount</h3>
-                        <ul>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">5% or More</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">10% or More</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">20% or More</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">30% or More</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">50% or More</span>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="checked">
-                                <span class="span">60% or More</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- //discounts -->
-                    <!-- reviews -->
-
-                    <!-- //reviews -->
-                    <!-- deals -->
                     <div class="deal-leftmk left-side">
                         <h3 class="agileits-sear-head">Special Deals</h3>
-                        <div class="special-sec1">
-                            <div class="img-deals">
-                                <img src="assets/images/s1.jpg" alt="">
+                        <div class="special-sec1 d-flex align-items-center mb-3">
+                            <div class="img-deals mr-3" style="width: 60px;">
+                                <img src="assets/images/s1.jpg" class="img-fluid rounded" alt="">
                             </div>
                             <div class="img-deal1">
-                                <h3>Makitha Drill</h3>
-                                <i class="fa fa-rupee rupecolor"></i>
-                                <a routerLink="/product/1">575.00</a>
+                                <h6 class="mb-1">Makitha Drill</h6>
+                                <a routerLink="/product/1" class="text-secondary small">575.00</a>
                             </div>
-                            <div class="clearfix"></div>
                         </div>
-                        <div class="special-sec1">
-                            <div class="col-xs-4 img-deals">
-                                <img src="assets/images/s2.jpg" alt="">
+                        <div class="special-sec1 d-flex align-items-center mb-3">
+                            <div class="img-deals mr-3" style="width: 60px;">
+                                <img src="assets/images/s2.jpg" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="col-xs-8 img-deal1">
-                                <h3>Endico Router</h3>
-                                <i class="fa fa-rupee rupecolor"></i>
-                                <a routerLink="/product/2">325.00</a>
+                            <div class="img-deal1">
+                                <h6 class="mb-1">Endico Router</h6>
+                                <a routerLink="/product/2" class="text-secondary small">325.00</a>
                             </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="special-sec1">
-                            <div class="col-xs-4 img-deals">
-                                <img src="assets/images/m2.jpg" alt="">
-                            </div>
-                            <div class="col-xs-8 img-deal1">
-                                <h3>Dewalt Grinder</h3>
-                                <i class="fa fa-rupee rupecolor"></i>
-                                <a routerLink="/product/6">725.00</a>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="special-sec1">
-                            <div class="col-xs-4 img-deals">
-                                <img src="assets/images/m4.jpg" alt="">
-                            </div>
-                            <div class="col-xs-8 img-deal1">
-                                <h3>Planet Power Blower</h3>
-                                <i class="fa fa-rupee rupecolor"></i>
-                                <a routerLink="/product/8">325.00</a>
-                            </div>
-                            <div class="clearfix"></div>
                         </div>
                     </div>
-                    <!-- //deals -->
                 </div>
-                <!-- //product left -->
-                <!--/product right-->
-                <div class="left-ads-display col-lg-9">
-                    <div class="wrapper_top_shop">
-                        <div class="row">
-                            <div class="col-md-6 shop_left m-3 ">
-                                <img class="rounded" src="assets/images/electric12.jpg" alt="">
-                                <h6>40% off</h6>
-                            </div>
+                <!-- //Sidebar -->
 
+                <!-- Product Grid -->
+                <div class="col-lg-9">
+                    <div class="row">
+                        <!-- Dynamic Product List -->
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 mb-4" *ngFor="let product of products">
+                            <div class="product-grid-card">
+                                <span class="new-badge" *ngIf="isNew(product.createdAt)">New</span>
 
-                        </div>
-                        <div class="row">
-                            <!-- /womens -->
-                            <div class="col-md-3 product-men women_two shop-gd">
-                                <div class="product-googles-info googles">
-                                    <div class="men-pro-item">
-                                        <div class="men-thumb-item">
-                                            <img src="assets/images/s1.jpg" class="img-fluid" alt="">
-                                            <div class="men-cart-pro">
-                                                <div class="inner-men-cart-pro">
-                                                    <a routerLink="/product/1" class="link-product-add-cart">Quick
-                                                        View</a>
-                                                </div>
-                                            </div>
-                                            <span class="product-new-top">New</span>
-                                        </div>
-                                        <div class="item-info-product">
-                                            <div class="info-product-price">
-                                                <div class="grid_meta">
-                                                    <div class="product_price">
-                                                        <h4>
-                                                            <!-- single.html page down-->
-                                                            <a routerLink="/product/1">Makitha Drill </a>
-                                                            <p>10mm</p>
-                                                        </h4>
-                                                        <div class="grid-price mt-2">
-                                                            <i class="fa fa-rupee rupecolor"></i>
-                                                            <span class="money ">1900.00</span>
-                                                        </div>
-                                                    </div>
+                                <div class="image-wrapper">
+                                    <ng-container *ngIf="product.image; else noImage">
+                                        <img [src]="product.image" alt="{{product.productName}}">
+                                    </ng-container>
+                                    <ng-template #noImage>
+                                        <i class="fas fa-tools fa-3x text-secondary"></i>
+                                    </ng-template>
+                                </div>
 
-                                                </div>
-                                                <div class="googles single-item hvr-outline-out">
-                                                    <form action="#" method="post">
-                                                        <input type="hidden" name="cmd" value="_cart">
-                                                        <input type="hidden" name="add" value="1">
-                                                        <input type="hidden" name="googles_item" value="Farenheit">
-                                                        <input type="hidden" name="amount" value="1900.00">
-                                                        <button type="submit" class="googles-cart pgoogles-cart">
-                                                            <i class="fas fa-cart-plus"></i>
-                                                        </button>
+                                <div class="card-body">
+                                    <a [routerLink]="['/product', product.id]"
+                                        class="product-title">{{product.productName}}</a>
 
+                                    <div class="product-price">
+                                        <i class="fas fa-rupee-sign"></i> {{product.price | number:'1.2-2'}}
+                                    </div>
 
-                                                    </form>
-
-                                                </div>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
+                                    <div class="action-row">
+                                        <a [routerLink]="['/product', product.id]" class="btn-quick-view">
+                                            Quick View
+                                        </a>
+                                        <button class="btn-add-cart-mini" (click)="addToCart(product)"
+                                            title="Add to Cart">
+                                            <i class="fas fa-cart-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <!-- More items would go here (truncated for brevity on migration, but you should copy all items if possible or iterate) -->
-                            <!-- For now I'll just include one row of items or extracting the rest is tedious, I'll copy the structure and iterate later if we have dynamic data. 
-                    I'll add a few more static items to make it look full. -->
                         </div>
-                        <!-- Pagination could go here if present -->
+
+                        <!-- Empty State -->
+                        <div *ngIf="products.length === 0" class="col-12 text-center py-5">
+                            <div class="alert alert-light">
+                                <i class="fas fa-search fa-2x text-muted mb-3"></i>
+                                <p class="mb-0">No products found. Please check back later.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
