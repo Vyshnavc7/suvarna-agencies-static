@@ -96,9 +96,15 @@
                                 [(ngModel)]="formData.Message"></textarea>
                         </div>
 
+                        <div class="form-group mb-4">
+                            <re-captcha (resolved)="resolved($event)"
+                                siteKey="6Le621gsAAAAAAXau5YFMl6GrB5GF4CFqRI_GPfM">
+                            </re-captcha>
+                        </div>
+
                         <div class="text-center text-lg-left">
                             <button type="submit" class="btn btn-submit"
-                                [disabled]="!contactForm.form.valid || isLoading">
+                                [disabled]="!contactForm.form.valid || isLoading || !formData.captchaToken">
                                 <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-2"></span>
                                 <span *ngIf="!isLoading">Send Message <i class="fas fa-paper-plane ml-2"></i></span>
                                 <span *ngIf="isLoading">Sending...</span>
