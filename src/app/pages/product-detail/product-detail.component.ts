@@ -3,12 +3,13 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })
@@ -17,6 +18,7 @@ export class ProductDetailComponent implements OnInit {
   productService = inject(ProductService);
   cartService = inject(CartService);
   route = inject(ActivatedRoute);
+  selectedQuantity: number = 1;
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -39,7 +41,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(product: any) {
-    this.cartService.addToCart(product);
+    this.cartService.addToCart(product, +this.selectedQuantity);
     Swal.fire({
       icon: 'success',
       title: 'Added to Cart',

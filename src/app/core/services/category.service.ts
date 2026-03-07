@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CategoryService {
     private http = inject(HttpClient);
-    private apiUrl = '/server/category';
+    private apiUrl = '/server/store/category';
 
     getCategoriesForMenu(): Observable<any[]> {
         return this.http.get<any[]>(`${this.apiUrl}/menu`);
