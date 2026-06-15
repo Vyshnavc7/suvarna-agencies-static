@@ -6,11 +6,10 @@ import { CartService } from '../../core/services/cart.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-shop',
-  standalone: true,
-  imports: [RouterLink, CommonModule],
-  templateUrl: './shop.component.html',
-  styleUrl: './shop.component.scss'
+    selector: 'app-shop',
+    imports: [RouterLink, CommonModule],
+    templateUrl: './shop.component.html',
+    styleUrl: './shop.component.scss'
 })
 export class ShopComponent implements OnInit {
   products: any[] = [];

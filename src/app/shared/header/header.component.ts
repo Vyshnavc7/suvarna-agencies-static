@@ -8,11 +8,10 @@ import { CartService } from '../../core/services/cart.service';
 import { CategoryService } from '../../core/services/category.service';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [RouterLink, CommonModule],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+    selector: 'app-header',
+    imports: [RouterLink, CommonModule],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
   authService = inject(AuthService);

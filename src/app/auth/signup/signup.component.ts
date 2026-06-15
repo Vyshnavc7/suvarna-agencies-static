@@ -6,11 +6,10 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, CommonModule],
-  templateUrl: './signup.component.html',
-  styleUrl: './signup.component.scss'
+    selector: 'app-signup',
+    imports: [RouterLink, ReactiveFormsModule, CommonModule],
+    templateUrl: './signup.component.html',
+    styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
   signupForm: FormGroup;

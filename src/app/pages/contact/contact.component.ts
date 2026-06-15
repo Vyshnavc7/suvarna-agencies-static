@@ -6,11 +6,10 @@ import { MailService } from '../../core/services/mail.service';
 import { RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
-  selector: 'app-contact',
-  standalone: true,
-  imports: [RouterLink, FormsModule, CommonModule, RecaptchaModule],
-  templateUrl: './contact.component.html',
-  styleUrl: './contact.component.scss'
+    selector: 'app-contact',
+    imports: [RouterLink, FormsModule, CommonModule, RecaptchaModule],
+    templateUrl: './contact.component.html',
+    styleUrl: './contact.component.scss'
 })
 export class ContactComponent {
   formData = {

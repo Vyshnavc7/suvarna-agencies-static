@@ -7,11 +7,10 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-product-detail',
-  standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule],
-  templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.scss'
+    selector: 'app-product-detail',
+    imports: [RouterLink, CommonModule, FormsModule],
+    templateUrl: './product-detail.component.html',
+    styleUrl: './product-detail.component.scss'
 })
 export class ProductDetailComponent implements OnInit {
   product: any = null;
