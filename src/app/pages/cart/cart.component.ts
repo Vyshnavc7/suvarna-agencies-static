@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CartService, CartItem } from '../../core/services/cart.service';
 import Swal from 'sweetalert2';
 import { Observable } from 'rxjs';
@@ -15,7 +15,7 @@ export class CartComponent implements OnInit {
   cartItems$!: Observable<CartItem[]>;
   cartTotal = 0;
 
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService, private router: Router) { }
 
   ngOnInit(): void {
     this.cartItems$ = this.cartService.cartItems$;
@@ -53,11 +53,6 @@ export class CartComponent implements OnInit {
   }
 
   checkout() {
-    Swal.fire({
-      icon: 'info',
-      title: 'Coming Soon',
-      text: 'Checkout functionality will be implemented next!',
-      confirmButtonColor: '#333'
-    });
+    this.router.navigate(['/checkout']);
   }
 }

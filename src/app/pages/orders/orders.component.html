@@ -1,0 +1,144 @@
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+            <ul class="short">
+                <li>
+                    <a routerLink="/">Home</a>
+                    <i>|</i>
+                </li>
+                <li>My Orders</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+    <div class="container">
+        <h3 class="tittle-w3layouts text-center mb-lg-5 mb-3">Order History</h3>
+
+        <!-- LOADING STATE -->
+        <div *ngIf="isLoading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p class="text-muted mt-3">Fetching your orders...</p>
+        </div>
+
+        <!-- ERROR STATE -->
+        <div *ngIf="!isLoading && errorMessage" class="alert alert-danger text-center mx-auto my-4" style="max-width: 600px;">
+            <i class="fas fa-exclamation-triangle mr-2"></i> {{ errorMessage }}
+            <button class="btn btn-outline-danger btn-sm ml-3" (click)="fetchOrders()">Retry</button>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div *ngIf="!isLoading && !errorMessage && orders.length === 0" class="empty-orders text-center py-5 bg-white border rounded shadow-sm">
+            <div class="empty-icon mb-4">
+                <i class="fas fa-shopping-bag fa-4x text-muted"></i>
+            </div>
+            <h4 class="fw-bold mb-2">No Orders Placed Yet</h4>
+            <p class="text-muted mb-4">You haven't placed any orders with us. Add some premium products to your cart and make your first purchase!</p>
+            <a routerLink="/shop" class="btn btn-primary px-4 py-2">Start Shopping</a>
+        </div>
+
+        <!-- ORDERS LIST -->
+        <div *ngIf="!isLoading && !errorMessage && orders.length > 0" class="orders-list">
+            <div class="order-card mb-4 bg-white border rounded shadow-sm overflow-hidden" *ngFor="let order of orders">
+                <!-- Order Card Header -->
+                <div class="order-header d-flex flex-wrap justify-content-between align-items-center p-3 bg-light border-bottom">
+                    <div class="d-flex flex-column mr-3">
+                        <span class="text-muted small text-uppercase font-weight-bold">Order ID</span>
+                        <span class="order-id">#{{ order.paymentId || 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex flex-column mr-3">
+                        <span class="text-muted small text-uppercase font-weight-bold">Date Placed</span>
+                        <span>{{ order.createdAt | date:'mediumDate' }}</span>
+                    </div>
+                    <div class="d-flex flex-column mr-3">
+                        <span class="text-muted small text-uppercase font-weight-bold">Total Cost</span>
+                        <span class="font-weight-bold text-primary">₹{{ (order.paymentDetails?.totalAmount || 0) | number:'1.2-2' }}</span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-2 mt-sm-0">
+                        <span class="badge {{ getStatusClass(order.status) }} text-uppercase px-3 py-2" style="font-size: 0.8rem;">
+                            {{ order.status }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Order Card Body (Products List) -->
+                <div class="order-body p-3">
+                    <div class="row align-items-center border-bottom py-3" *ngFor="let item of order.items; let last = last" [class.border-bottom]="!last">
+                        <div class="col-md-2 col-4 mb-2 mb-md-0">
+                            <div class="product-img-wrapper border rounded p-1 bg-white">
+                                <img [src]="item.image" alt="{{ item.productName }}" class="img-fluid rounded">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-8">
+                            <h6 class="font-weight-bold mb-1">
+                                <a [routerLink]="['/product', item.productId]" class="product-link">{{ item.productName }}</a>
+                            </h6>
+                            <p class="text-muted small mb-1" *ngIf="item.orderId">
+                                <i class="fas fa-receipt mr-1"></i> Order ID: <span class="font-weight-bold text-dark">{{ item.orderId }}</span>
+                            </p>
+                            <p class="text-muted small mb-0">Qty: {{ item.quantity }}</p>
+                            
+                            <!-- Item-level Return / Exchange Status Badge -->
+                            <div class="mt-2 d-flex flex-wrap align-items-center" *ngIf="item.status && item.status !== 'pending' && item.status !== 'shipped' && item.status !== 'delivered'">
+                                <span class="badge px-2 py-1 text-uppercase" style="font-size: 0.75rem;" [ngClass]="{
+                                    'badge-warning': item.status === 'return_requested' || item.status === 'exchange_requested',
+                                    'badge-secondary': item.status === 'returned',
+                                    'badge-primary': item.status === 'exchanged'
+                                }">
+                                    {{ item.status.replace('_', ' ') }}
+                                </span>
+                                
+                                <span class="text-info small font-weight-bold ml-3" *ngIf="item.paymentStatus === 'refunded'">
+                                    <i class="fas fa-coins text-warning mr-1"></i> Refunded via {{ item.paymentMethod }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12 text-md-right mt-2 mt-md-0">
+                            <span class="text-muted small d-block">Price: ₹{{ item.price | number:'1.2-2' }} each</span>
+                            <span class="font-weight-bold">Subtotal: ₹{{ (item.price * item.quantity) | number:'1.2-2' }}</span>
+
+                            <!-- Return / Exchange Action Trigger -->
+                            <div class="mt-2" *ngIf="isEligibleForReturn(item)">
+                                <button class="btn btn-sm btn-outline-warning px-3 py-1 font-weight-bold" (click)="openReturnExchangeModal(item)" style="border-radius: 4px; font-size: 0.8rem;">
+                                    <i class="fas fa-undo mr-1"></i> Return / Exchange
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Card Footer -->
+                <div class="order-footer p-3 bg-light border-top d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="d-flex align-items-center mr-3">
+                        <span class="text-muted small mr-2">Payment Method:</span>
+                        <strong class="small text-uppercase">{{ order.paymentDetails?.paymentMethod || 'COD' }}</strong>
+                    </div>
+
+                    <!-- Payment Retry Options for Failed Payments -->
+                    <div *ngIf="order.paymentStatus?.toLowerCase() === 'failed'" class="d-flex align-items-center gap-2 my-2 my-md-0">
+                        <button class="btn btn-sm btn-primary py-1 px-3" (click)="openCardPaymentModal(order)">
+                            <i class="fas fa-credit-card mr-1"></i> Pay Now (Card)
+                        </button>
+                        <button class="btn btn-sm btn-info text-white py-1 px-3" (click)="openUPIPaymentModal(order)">
+                            <i class="fas fa-mobile-alt mr-1"></i> Pay via UPI
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary py-1 px-3" (click)="switchToCOD(order)">
+                            <i class="fas fa-money-bill-wave mr-1"></i> Switch to COD
+                        </button>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <span class="text-muted small mr-2">Payment Status:</span>
+                        <strong class="small text-uppercase {{ getPaymentStatusClass(order.paymentStatus) }}">
+                            {{ order.paymentStatus || 'Pending' }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

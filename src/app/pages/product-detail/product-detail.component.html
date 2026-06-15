@@ -35,6 +35,17 @@
                             Months)
                         </div>
 
+                        <div class="meta-item mb-3">
+                            <i class="fas mr-2" [ngClass]="product.isReturnable ? 'fa-undo-alt text-success' : 'fa-times-circle text-danger'"></i>
+                            <strong>Return Policy:</strong>
+                            <span class="ml-1" *ngIf="product.isReturnable">
+                                {{product.returnPeriod}} Days Easy Return & Exchange
+                            </span>
+                            <span class="ml-1 text-muted" *ngIf="!product.isReturnable">
+                                Not Eligible for Return
+                            </span>
+                        </div>
+
                         <!-- Quantity Selector (Mock) -->
                         <div class="d-flex align-items-center mb-4">
                             <span class="mr-3 font-weight-bold">Quantity:</span>
@@ -103,6 +114,14 @@
                             <tr *ngIf="product.warranty">
                                 <td><strong>Covered Items</strong></td>
                                 <td>{{product.warranty.items_covered || 'N/A'}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Return Eligibility</strong></td>
+                                <td>{{product.isReturnable ? 'Eligible for Return & Exchange' : 'Not Returnable'}}</td>
+                            </tr>
+                            <tr *ngIf="product.isReturnable">
+                                <td><strong>Return Period</strong></td>
+                                <td>{{product.returnPeriod}} Days</td>
                             </tr>
                         </tbody>
                     </table>

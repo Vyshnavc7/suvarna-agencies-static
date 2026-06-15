@@ -1,0 +1,232 @@
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+            <ul class="short">
+                <li>
+                    <a routerLink="/">Home</a>
+                    <i>|</i>
+                </li>
+                <li>Checkout</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+    <div class="container">
+        
+        <!-- SUCCESS SCREEN -->
+        <div *ngIf="isOrderPlaced" class="success-screen text-center py-5">
+            <div class="success-icon mb-4">
+                <i class="fas fa-check-circle fa-5x text-success"></i>
+            </div>
+            <h2 class="fw-bold mb-3">Order Placed Successfully!</h2>
+            <p class="lead text-muted mb-4">Your order ID is <strong>#{{placedOrderDetails?.payment?.id || '28371'}}</strong>. We have sent a confirmation email with all details.</p>
+            
+            <div class="order-summary-box mx-auto p-4 mb-4 bg-light rounded" style="max-width: 600px;">
+                <h4 class="mb-3 border-bottom pb-2 text-start">Order Summary</h4>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Total Amount Paid</span>
+                    <strong class="text-primary">₹{{cartTotal | number:'1.2-2'}}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Payment Method</span>
+                    <span>{{paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : (paymentMethod === 'Card' ? 'Credit / Debit Card' : 'UPI Payment')}}</span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3">
+                <a routerLink="/shop" class="btn btn-primary btn-lg">Continue Shopping</a>
+                <a routerLink="/" class="btn btn-outline-secondary btn-lg">Go to Home</a>
+            </div>
+        </div>
+
+        <!-- CHECKOUT FLOW -->
+        <div *ngIf="!isOrderPlaced" class="row">
+            <div class="col-lg-8">
+                <!-- SHIPPING ADDRESS BOX -->
+                <div class="checkout-card p-4 mb-4 bg-white rounded border shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0 fw-bold"><i class="fas fa-map-marker-alt text-primary mr-2"></i>Shipping Address</h4>
+                        <button *ngIf="addresses.length > 0" class="btn btn-sm btn-outline-primary" (click)="toggleNewAddressForm()">
+                            {{ showNewAddressForm ? 'Select Existing' : 'Add New Address' }}
+                        </button>
+                    </div>
+
+                    <!-- Existing Addresses list -->
+                    <div *ngIf="!showNewAddressForm && addresses.length > 0" class="row g-3">
+                        <div class="col-md-6" *ngFor="let addr of addresses">
+                            <div class="address-item-card p-3 border rounded" [class.selected]="selectedAddressId === addr.id" (click)="selectedAddressId = addr.id">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge badge-secondary text-uppercase">{{ addr.type }}</span>
+                                    <input type="radio" name="selectedAddress" [value]="addr.id" [checked]="selectedAddressId === addr.id">
+                                </div>
+                                <h6 class="fw-bold mb-1">{{ addr.fullName }}</h6>
+                                <p class="text-muted small mb-1">{{ addr.addressLine1 }}</p>
+                                <p class="text-muted small mb-1" *ngIf="addr.addressLine2">{{ addr.addressLine2 }}</p>
+                                <p class="text-muted small mb-0">{{ addr.city }}, {{ addr.state }} - {{ addr.postalCode }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Address Form -->
+                    <div *ngIf="showNewAddressForm || addresses.length === 0" class="new-address-form">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label required">Full Name</label>
+                                <input type="text" class="form-control" [(ngModel)]="newAddress.fullName" placeholder="e.g. John Doe">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label required">Address Line 1</label>
+                                <input type="text" class="form-control" [(ngModel)]="newAddress.addressLine1" placeholder="Street Address, P.O. Box">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Address Line 2</label>
+                                <input type="text" class="form-control" [(ngModel)]="newAddress.addressLine2" placeholder="Apartment, suite, unit, building (optional)">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label required">City</label>
+                                <input type="text" class="form-control" [(ngModel)]="newAddress.city" placeholder="City">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label required">State</label>
+                                <input type="text" class="form-control" [(ngModel)]="newAddress.state" placeholder="State">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label required">ZIP Code</label>
+                                <input type="text" class="form-control" [(ngModel)]="newAddress.postalCode" placeholder="Postal Code">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label required">Address Type</label>
+                                <select class="form-select" [(ngModel)]="newAddress.type">
+                                    <option value="shipping">Shipping Address</option>
+                                    <option value="billing">Billing Address</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button *ngIf="addresses.length > 0" class="btn btn-outline-secondary" (click)="toggleNewAddressForm()">Cancel</button>
+                            <button class="btn btn-primary" (click)="saveAddress()">Save and Use Address</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAYMENT METHOD BOX -->
+                <div class="checkout-card p-4 mb-4 bg-white rounded border shadow-sm" *ngIf="!showNewAddressForm">
+                    <h4 class="mb-4 fw-bold"><i class="fas fa-credit-card text-primary mr-2"></i>Payment Method</h4>
+                    
+                    <div class="payment-options mb-4">
+                        <div class="form-check payment-option-item p-3 border rounded mb-2" [class.active]="paymentMethod === 'COD'">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCOD" value="COD" [(ngModel)]="paymentMethod">
+                            <label class="form-check-label d-flex align-items-center" for="paymentCOD">
+                                <i class="fas fa-money-bill-wave fa-lg mr-3 text-success"></i>
+                                <div>
+                                    <strong class="d-block">Cash on Delivery (COD)</strong>
+                                    <span class="text-muted small">Pay with cash upon delivery of your products.</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="form-check payment-option-item p-3 border rounded mb-2" [class.active]="paymentMethod === 'Card'">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCard" value="Card" [(ngModel)]="paymentMethod">
+                            <label class="form-check-label d-flex align-items-center" for="paymentCard">
+                                <i class="fas fa-credit-card fa-lg mr-3 text-primary"></i>
+                                <div>
+                                    <strong class="d-block">Credit / Debit Card</strong>
+                                    <span class="text-muted small">We accept Visa, Mastercard, American Express, and RuPay.</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="form-check payment-option-item p-3 border rounded mb-2" [class.active]="paymentMethod === 'UPI'">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="paymentUPI" value="UPI" [(ngModel)]="paymentMethod">
+                            <label class="form-check-label d-flex align-items-center" for="paymentUPI">
+                                <i class="fas fa-mobile-alt fa-lg mr-3 text-info"></i>
+                                <div>
+                                    <strong class="d-block">UPI (BHIM, Google Pay, PhonePe, Paytm)</strong>
+                                    <span class="text-muted small">Pay instantly using any UPI app.</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Card details input form -->
+                    <div *ngIf="paymentMethod === 'Card'" class="card-details-form p-3 bg-light rounded border mb-3">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label required">Card Number</label>
+                                <input type="text" class="form-control" [(ngModel)]="cardDetails.cardNumber" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label required">Name on Card</label>
+                                <input type="text" class="form-control" [(ngModel)]="cardDetails.cardName" placeholder="John Doe">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label required">Expiry Date</label>
+                                <input type="text" class="form-control" [(ngModel)]="cardDetails.expiry" placeholder="MM/YY">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label required">CVV</label>
+                                <input type="password" class="form-control" [(ngModel)]="cardDetails.cvv" placeholder="***" maxlength="4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UPI details input form -->
+                    <div *ngIf="paymentMethod === 'UPI'" class="upi-details-form p-3 bg-light rounded border mb-3">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label required">UPI ID</label>
+                                <input type="text" class="form-control" [(ngModel)]="upiDetails.upiId" placeholder="username@upi or mobile@ybl">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER SUMMARY SIDEBAR -->
+            <div class="col-lg-4" *ngIf="!showNewAddressForm">
+                <div class="checkout-card p-4 bg-light rounded border shadow-sm position-sticky" style="top: 80px;">
+                    <h4 class="mb-4 fw-bold">Order Summary</h4>
+                    
+                    <div class="order-items-list mb-4 max-height-300 overflow-auto">
+                        <div class="order-item d-flex justify-content-between align-items-center py-2 border-bottom" *ngFor="let item of cartItems">
+                            <div class="d-flex align-items-center">
+                                <div class="item-img-wrapper mr-2">
+                                    <img [src]="item.product.image || 'assets/images/default-product.png'" alt="{{item.product.productName}}">
+                                </div>
+                                <div class="item-info">
+                                    <span class="item-name d-block text-truncate" style="max-width: 150px;">{{item.product.productName}}</span>
+                                    <small class="text-muted">Qty: {{item.quantity}}</small>
+                                </div>
+                            </div>
+                            <span class="item-price fw-bold">₹{{(item.product.price * item.quantity) | number:'1.2-2'}}</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-breakdown mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal</span>
+                            <span>₹{{cartTotal | number:'1.2-2'}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Shipping</span>
+                            <span class="text-success">FREE</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-2">
+                            <h5 class="fw-bold">Total</h5>
+                            <h5 class="text-primary fw-bold">₹{{cartTotal | number:'1.2-2'}}</h5>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-dark btn-block btn-lg py-3" [disabled]="isPlacingOrder" (click)="placeOrder()">
+                        <span *ngIf="isPlacingOrder"><i class="fas fa-spinner fa-spin mr-2"></i>Placing Order...</span>
+                        <span *ngIf="!isPlacingOrder">Place Order</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

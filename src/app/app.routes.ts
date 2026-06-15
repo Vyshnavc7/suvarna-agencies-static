@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+// Trigger Angular compiler re-evaluation for checkout & orders page routes
 import { HomeComponent } from './pages/home/home.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { ContactComponent } from './pages/contact/contact.component';
@@ -15,5 +16,7 @@ export const routes: Routes = [
     { path: 'signup', component: SignupComponent },
     { path: 'cart', loadComponent: () => import('./pages/cart/cart.component').then(m => m.CartComponent) },
     { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent) },
+    { path: 'checkout', loadComponent: () => import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent) },
+    { path: 'orders', loadComponent: () => import('./pages/orders/orders.component').then(m => m.OrdersComponent) },
     { path: '**', redirectTo: '' }
 ];
