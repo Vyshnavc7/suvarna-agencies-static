@@ -1,0 +1,95 @@
+.wishlist-container {
+  min-height: calc(100vh - 100px);
+}
+
+.wishlist-main-wrapper {
+  background: var(--bg-surface, #262831);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.border-bottom-custom {
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+}
+
+.wishlist-header {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.wishlist-item {
+  transition: background-color 0.2s ease;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+}
+
+.item-img-wrapper {
+  width: 120px;
+  height: 120px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+.product-title a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: #fff;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: var(--accent-orange, #ff5722);
+  }
+}
+
+
+
+.price-row {
+  .actual-price {
+    font-size: 1.4rem;
+  }
+  .mrp-price {
+    font-size: 0.95rem;
+  }
+  .discount-text {
+    font-size: 0.95rem;
+  }
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: #ff5252;
+  }
+}
+
+.empty-state {
+  background: transparent;
+  padding: 3rem;
+}

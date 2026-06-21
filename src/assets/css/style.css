@@ -1341,35 +1341,66 @@ input#datepicker {
 /*-- //Popup-Box --*/
 
 .banner_inner {
-    background: url(../images/banner-mid.jpg)no-repeat 0px -73px;
-    background-size: cover;
-    -webkit-background-size: cover;
-    -o-background-size: cover;
-    -ms-background-size: cover;
-    moz-background-size: cover;
-    min-height: 180px;
+    background: linear-gradient(135deg, #16181d 0%, #22252e 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner_inner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: 15%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 78, 0, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.services-breadcrumb {
+    width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 ul.short {
     text-align: left;
-    padding: 5em 0em 0 2em;
+    padding: 0 2rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 ul.short li {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     text-transform: uppercase;
     color: #fff;
-    font-size: 0.9em;
+    font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
 }
 
 .services-breadcrumb ul li i {
-    padding: 0 1.5em;
+    padding: 0 1rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+    font-style: normal;
 }
 
 ul.short li a {
     color: #ff4e00;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+ul.short li a:hover {
+    color: #ff7333;
 }
 
 /*-- /error --*/

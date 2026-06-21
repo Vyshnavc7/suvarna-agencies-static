@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CartService, CartItem } from '../../core/services/cart.service';
 import Swal from 'sweetalert2';
@@ -54,17 +54,31 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
+  cartItemId: number | null = null;
+
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['cartItemId']) {
+        this.cartItemId = parseInt(params['cartItemId'], 10);
+      }
+    });
+
     // Load cart items and calculation
     this.cartService.cartItems$.subscribe(items => {
-      this.cartItems = items;
-      this.cartTotal = items.reduce((acc, item) => acc + (item.quantity * item.product.price), 0);
+      if (this.cartItemId) {
+        this.cartItems = items.filter(item => item.id === this.cartItemId);
+      } else {
+        this.cartItems = items;
+      }
+      
+      this.cartTotal = this.cartItems.reduce((acc, item) => acc + (item.quantity * item.product.price), 0);
       
       // If cart is empty and order is not placed, redirect to cart page
-      if (items.length === 0 && !this.isOrderPlaced) {
+      if (this.cartItems.length === 0 && !this.isOrderPlaced) {
         this.router.navigate(['/cart']);
       }
     });
@@ -161,7 +175,8 @@ export class CheckoutComponent implements OnInit {
 
     this.http.post<any>('/server/orders/checkout', {
       paymentMethod: this.paymentMethod,
-      addressId: this.selectedAddressId
+      addressId: this.selectedAddressId,
+      cartItemId: this.cartItemId
     }).subscribe({
       next: (res) => {
         this.isPlacingOrder = false;

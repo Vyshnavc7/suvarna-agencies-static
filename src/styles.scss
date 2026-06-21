@@ -1,1 +1,172 @@
-/* You can add global styles to this file, and also import other style files */
+/* Import Google Fonts - Outfit */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* Global Design Tokens */
+:root {
+  /* Colors */
+  --bg-dark: #1c1e24; /* Lighter grey global background */
+  --bg-surface: #262831;
+  --bg-surface-elevated: #323541;
+  
+  --accent-orange: #ff5722;
+  --accent-orange-hover: #e64a19;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-muted: #808080;
+  
+  --border-color: rgba(255, 255, 255, 0.08);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(26, 27, 34, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  
+  /* Shadows */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(255, 87, 34, 0.3);
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global Reset & Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', sans-serif !important;
+  background-color: var(--bg-dark) !important;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  
+  &:hover {
+    color: var(--accent-orange);
+    text-decoration: none;
+  }
+}
+
+/* Common Utility Classes */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary-custom {
+  background-color: var(--accent-orange);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  border: none;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  
+  &:hover {
+    background-color: var(--accent-orange-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+    color: #fff;
+  }
+}
+
+.btn-outline-custom {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark); 
+}
+::-webkit-scrollbar-thumb {
+  background: #333; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-orange); 
+}
+
+/* Breadcrumb Styles */
+.banner_inner {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.services-breadcrumb {
+  text-align: left;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.inner_breadcrumb .short {
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  list-style: none;
+}
+
+.inner_breadcrumb .short li {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.inner_breadcrumb .short li a {
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.inner_breadcrumb .short li a:hover {
+  color: var(--accent-orange);
+}
+
+.inner_breadcrumb .short li i {
+  font-style: normal;
+  margin: 0 10px;
+  color: var(--border-color);
+  font-size: 0.85rem;
+}

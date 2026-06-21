@@ -1,0 +1,46 @@
+.sidebar-container {
+  width: 250px;
+  height: calc(100vh - 100px); /* Adjust based on header height + padding */
+  position: sticky;
+  top: 100px; /* Below the floating header */
+  padding: 1rem;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.25rem;
+    color: #a0a0a0;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    
+    i {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+    
+    &:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    
+    &.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08); /* Matches the light grey rounded background in the image */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { Component, inject, ElementRef, HostListener, ViewChild, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -9,7 +9,7 @@ import { CategoryService } from '../../core/services/category.service';
 
 @Component({
     selector: 'app-header',
-    imports: [RouterLink, CommonModule],
+    imports: [RouterLink, RouterLinkActive, CommonModule],
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss'
 })
@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
 
   cartItemCount$ = this.cartService.cartCount$;
   isProfileDropdownOpen = false;
-  categories: any[] = [];
+  categories: { name: string, subcategories: { name: string, products: any[] }[] }[] = [];
 
   @ViewChild('profileDropdownContainer') dropdownRef!: ElementRef;
 

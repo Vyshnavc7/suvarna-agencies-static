@@ -1,186 +1,89 @@
-<div class="banner-top container-fluid" id="home">
-    <!-- header -->
-    <header>
-        <div class="row">
-            <div class="col-md-3 top-info text-left mt-lg-4">
-                <h6>Need Help</h6>
-                <ul>
-                    <li>
-                        <i class="fas fa-phone number-phone mt-3"></i> <strong> Call</strong>
-                    </li>
-                    <a href="tel://9847921072" style="color: black;"><strong> 9847921072 </strong></a>
-                </ul>
-            </div>
-            <div class="col-md-6 logo-w3layouts text-center">
-                <h1 class="logo-w3layouts">
-                    <a class="navbar-brand" routerLink="/">Suvarna </a>
-                    <h5><a class="navbar-brand text-center " style="font-size: 30px;padding-left: 40px;">Agencies</a>
-                    </h5>
-                </h1>
+<div class="navbar-container">
+  <div class="unified-navbar">
 
-            </div>
+    <!-- Left: Logo -->
+    <a class="brand-logo" routerLink="/">
+      <div class="logo-icon">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          <defs>
+            <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f1d072" />
+              <stop offset="50%" stop-color="#d0a23d" />
+              <stop offset="100%" stop-color="#a07521" />
+            </linearGradient>
+          </defs>
+          <path d="M 75 22.5 L 50 10 L 20 25 L 20 35 L 80 65 L 80 75 L 50 90 L 25 77.5" fill="none"
+            stroke="url(#gold-grad)" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter"
+            stroke-miterlimit="4" />
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="brand-name">Suvarna</span>
+        <span class="brand-sub">Agencies</span>
+      </div>
+    </a>
 
-            <div class="col-md-3 top-info-cart text-right mt-lg-4">
-                <ul class="cart-inner-info">
-                    <li class="button-log" *ngIf="!(authService.currentUser | async)">
-                        <a class="btn-open" routerLink="/login">
-                            <span class="fa fa-user" aria-hidden="true"></span>
-                        </a>
-                    </li>
-                    <li class="button-log" *ngIf="authService.currentUser | async as user">
-                        <div class="dropdown profile-dropdown" [class.show]="isProfileDropdownOpen"
-                            #profileDropdownContainer>
-                            <button class="btn btn-link dropdown-toggle p-0 d-flex align-items-center" type="button"
-                                id="profileDropdown" (click)="toggleProfileDropdown()" aria-haspopup="true"
-                                aria-expanded="false" style="text-decoration: none;">
-                                <div class="profile-pic-wrapper">
-                                    <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=random'"
-                                        alt="Profile">
-                                    <span class="online-indicator"></span>
-                                </div>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right profile-menu"
-                                [class.show]="isProfileDropdownOpen" aria-labelledby="profileDropdown">
-                                <div class="user-info-header px-4 py-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="profile-pic-wrapper mr-3">
-                                            <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=random'"
-                                                alt="Profile">
-                                        </div>
-                                        <div class="user-details">
-                                            <h6 class="mb-0 font-weight-bold">{{ user.name }}</h6>
-                                            <small class="text-muted">{{ user.email }}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" routerLink="/profile"><i class="far fa-user"></i> View
-                                    Profile <span class="shortcut">⌘ + F</span></a>
-                                <a class="dropdown-item" routerLink="/orders"><i class="fas fa-shopping-bag"></i> My
-                                    Orders <span class="shortcut">⌘ + O</span></a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-cog"></i> Settings
-                                    <span class="shortcut">⌘ + G</span></a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="logout()"><i
-                                        class="fas fa-sign-out-alt"></i> Sign Out <span class="shortcut">⌘ +
-                                        F</span></a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="galssescart galssescart2 cart cart box_1">
-                        <a routerLink="/cart" class="top_googles_cart"
-                            style="text-decoration: none; display: inline-block;">
-                            My cart
-                            <i class="fas fa-cart-arrow-down"></i>
-                            <span class="badge badge-light" *ngIf="(cartItemCount$ | async) as count">{{ count }}</span>
-                        </a>
-                    </li>
-                    <div class="search ">
-                        <div class="mobile-nav-button">
-                            <button id="trigger-overlay" type="button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                        <!-- open/close -->
-                        <div class="overlay overlay-door">
-                            <button type="button" class="overlay-close">
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                            </button>
-                            <form action="#" method="post" class="d-flex">
-                                <input class="form-control" type="search" placeholder="Search here..." required="">
-                                <button type="submit" class="btn btn-primary submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </form>
+    <!-- Middle: Nav Links -->
+    <nav class="nav-links">
+      <a routerLink="/shop" routerLinkActive="active" class="nav-item">Products</a>
+      <a routerLink="/services" routerLinkActive="active" class="nav-item">Services</a>
+      <a routerLink="/about" routerLinkActive="active" class="nav-item">About</a>
+    </nav>
 
-                        </div>
-                        <!-- open/close -->
-                    </div>
-                </ul>
-            </div>
+    <!-- Right: Actions -->
+    <div class="right-actions">
+
+      <!-- Search Bar -->
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search tools...">
+      </div>
+
+      <!-- User Profile -->
+      <div class="profile-dropdown-wrapper" #profileDropdownContainer
+        *ngIf="authService.currentUser | async as user; else loginBtn">
+        <button class="profile-trigger" (click)="toggleProfileDropdown()">
+          <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=333&color=fff'" alt="Profile">
+          <span class="user-name">{{ user.name }}</span>
+        </button>
+
+        <!-- Profile Menu -->
+        <div class="profile-menu" [class.show]="isProfileDropdownOpen">
+          <div class="user-info">
+            <h6>{{ user.name }}</h6>
+            <small>{{ user.email }}</small>
+          </div>
+          <a class="dropdown-item" routerLink="/profile"><i class="far fa-user"></i> My Account</a>
+          <a class="dropdown-item" routerLink="/orders"><i class="fas fa-box"></i> My Orders</a>
+          <!-- <a class="dropdown-item" routerLink="/wishlist"><i class="far fa-heart"></i> My Wishlist</a> -->
+          <a class="dropdown-item" routerLink="/settings"><i class="fas fa-cog"></i> Settings</a>
+          <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="logout()"><i
+              class="fas fa-sign-out-alt"></i> Sign Out</a>
         </div>
+      </div>
 
+      <ng-template #loginBtn>
+        <a routerLink="/login" class="login-link">Sign In</a>
+      </ng-template>
 
-        <!-- </div> -->
+      <!-- Notification Bell -->
+      <div class="icon-action bell" title="Notifications">
+        <i class="far fa-bell"></i>
+        <span class="dot"></span>
+      </div>
 
-        <label class="top-log mx-auto"></label>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light top-header mb-2">
+      <!-- Wishlist -->
+      <a routerLink="/wishlist" class="icon-action wishlist" title="My Wishlist">
+        <i class="far fa-heart"></i>
+      </a>
 
-            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon">
+      <!-- Cart -->
+      <a routerLink="/cart" class="icon-action cart" title="My Cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="badge" *ngIf="(cartItemCount$ | async) as count">{{ count }}</span>
+        <span class="badge" *ngIf="!(cartItemCount$ | async)">0</span>
+      </a>
 
-                </span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav nav-mega mx-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link ml-lg-0" routerLink="/">Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/shop">All Products</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Categories
-                        </a>
-                        <ul class="dropdown-menu mega-menu">
-                            <li>
-                                <div class="row px-3 pt-3">
-                                    <div class="col-lg-4 col-md-6 mb-4 category-column"
-                                        *ngFor="let category of categories">
-                                        <div class="category-header mb-3 pb-2 border-bottom">
-                                            <h4 class="text-uppercase font-weight-bold text-dark m-0"
-                                                style="font-size: 1.1rem;">
-                                                {{ category.name }}
-                                            </h4>
-                                        </div>
-
-                                        <div class="subcategory-list">
-                                            <div *ngFor="let sub of category.subcategories" class="mb-3">
-                                                <h6 class="font-weight-bold text-primary mb-2"
-                                                    style="font-size: 0.95rem;">{{ sub.name }}</h6>
-                                                <ul class="list-unstyled pl-0 mb-0">
-                                                    <li *ngFor="let product of sub.products" class="mb-1">
-                                                        <a [routerLink]="['/product', product.id]"
-                                                            class="text-muted product-link d-block text-truncate">
-                                                            <i class="fas fa-angle-right mr-2 small"></i>{{
-                                                            product.productName }}
-                                                        </a>
-                                                    </li>
-                                                    <li *ngIf="!sub.products?.length" class="text-muted small">
-                                                        No items
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div *ngIf="!category.subcategories?.length" class="text-muted small">
-                                                No subcategories
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <div class="col-12 text-center mt-2 mb-3">
-                                <a routerLink="/shop" class="btn btn-sm btn-primary px-4 py-2"
-                                    style="border-radius: 20px;">
-                                    View All Products
-                                </a>
-                            </div>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/contact">Contact</a>
-                    </li>
-                </ul>
-
-            </div>
-        </nav>
-    </header>
+    </div>
+  </div>
+</div>

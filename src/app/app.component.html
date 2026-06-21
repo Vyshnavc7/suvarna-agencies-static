@@ -1,3 +1,17 @@
-<app-header></app-header>
-<router-outlet></router-outlet>
-<app-footer></app-footer>
+<div class="app-layout">
+  <app-header></app-header>
+  
+  <div class="app-body">
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+    <app-footer></app-footer>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  @if (showScrollToTop) {
+    <button class="scroll-to-top" (click)="scrollToTop()" aria-label="Scroll to Top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+  }
+</div>

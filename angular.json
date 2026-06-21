@@ -37,14 +37,8 @@
             ],
             "styles": [
               "src/assets/css/bootstrap.css",
-              "src/styles.scss",
-              "src/assets/css/login_overlay.css",
-              "src/assets/css/style6.css",
-              "src/assets/css/shop.css",
-              "src/assets/css/owl.carousel.css",
-              "src/assets/css/owl.theme.css",
-              "src/assets/css/style.css",
-              "src/assets/css/fontawesome-all.css"
+              "src/assets/css/fontawesome-all.css",
+              "src/styles.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
