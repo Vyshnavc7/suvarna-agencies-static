@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 interface GroupedOrder {
@@ -16,28 +17,39 @@ interface GroupedOrder {
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
 export class OrdersComponent implements OnInit {
   orders: GroupedOrder[] = [];
+  searchQuery: string = '';
+  currentPage: number = 1;
+  pageSize: number = 5;
+  totalOrders: number = 0;
+  hasMoreOrders: boolean = true;
   isLoading = true;
   errorMessage = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchOrders();
   }
 
-  fetchOrders(): void {
+  fetchOrders(append: boolean = false): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.http.get<any[]>('/server/orders').subscribe({
-      next: (data) => {
-        this.orders = this.groupOrders(data);
+    this.http.get<any>(`/server/orders?page=${this.currentPage}&limit=${this.pageSize}`).subscribe({
+      next: (response) => {
+        // Response from getAllRecord is { message, data, count }
+        const rawOrders = response.data || [];
+        this.totalOrders = response.count || 0;
+
+        this.orders = this.groupOrders(rawOrders, append);
+        this.hasMoreOrders = (this.currentPage * this.pageSize) < this.totalOrders;
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -48,8 +60,14 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  private groupOrders(orders: any[]): GroupedOrder[] {
+  private groupOrders(orders: any[], append: boolean = false): GroupedOrder[] {
     const grouped: { [key: number]: GroupedOrder } = {};
+
+    if (append) {
+      this.orders.forEach(o => {
+        grouped[o.paymentId] = o;
+      });
+    }
 
     orders.forEach(order => {
       const payId = order.paymentId || 0;
@@ -86,6 +104,27 @@ export class OrdersComponent implements OnInit {
     );
   }
 
+  get filteredOrders() {
+    if (!this.searchQuery || this.searchQuery.trim() === '') {
+      return this.orders;
+    }
+    const lowerQuery = this.searchQuery.toLowerCase();
+    return this.orders.map(order => {
+      const matchingItems = order.items.filter(item =>
+        item.productName.toLowerCase().includes(lowerQuery) ||
+        (order.paymentId || '').toString().includes(lowerQuery)
+      );
+      return { ...order, items: matchingItems };
+    }).filter(order => order.items.length > 0);
+  }
+
+  showMoreOrders() {
+    if (this.hasMoreOrders) {
+      this.currentPage++;
+      this.fetchOrders(true);
+    }
+  }
+
   isEligibleForReturn(item: any): boolean {
     if (item.status !== 'delivered') return false;
     if (!item.isReturnable) return false;
@@ -101,8 +140,8 @@ export class OrdersComponent implements OnInit {
       html:
         '<div class="text-left mb-2"><label for="swal-req-type" style="font-weight: 600; font-size: 0.95rem;">Request Type:</label></div>' +
         '<select id="swal-req-type" class="form-control mb-3" style="padding: 8px; border-radius: 6px; font-size: 0.9rem;">' +
-          '<option value="return">Return & Refund</option>' +
-          '<option value="exchange">Product Exchange</option>' +
+        '<option value="return">Return & Refund</option>' +
+        '<option value="exchange">Product Exchange</option>' +
         '</select>' +
         '<div class="text-left mb-2"><label for="swal-req-reason" style="font-weight: 600; font-size: 0.95rem;">Reason for Request:</label></div>' +
         '<textarea id="swal-req-reason" class="form-control" rows="4" placeholder="Please describe the reason (min 10 characters)..." style="padding: 10px; border-radius: 6px; font-size: 0.9rem;"></textarea>',
@@ -113,7 +152,7 @@ export class OrdersComponent implements OnInit {
       preConfirm: () => {
         const type = (document.getElementById('swal-req-type') as HTMLSelectElement).value;
         const reason = (document.getElementById('swal-req-reason') as HTMLTextAreaElement).value;
-        
+
         if (!type) {
           Swal.showValidationMessage('Please select a request type');
           return false;
@@ -164,8 +203,8 @@ export class OrdersComponent implements OnInit {
         '<input id="swal-card-number" class="form-control mb-2" placeholder="Card Number (16 digits)" maxlength="16" style="padding: 10px; border-radius: 6px;">' +
         '<input id="swal-card-name" class="form-control mb-2" placeholder="Name on Card" style="padding: 10px; border-radius: 6px;">' +
         '<div class="row g-2" style="display: flex; gap: 8px;">' +
-          '<div style="flex: 1;"><input id="swal-card-expiry" class="form-control" placeholder="MM/YY" maxlength="5" style="padding: 10px; border-radius: 6px;"></div>' +
-          '<div style="flex: 1;"><input id="swal-card-cvv" type="password" class="form-control" placeholder="CVV" maxlength="3" style="padding: 10px; border-radius: 6px;"></div>' +
+        '<div style="flex: 1;"><input id="swal-card-expiry" class="form-control" placeholder="MM/YY" maxlength="5" style="padding: 10px; border-radius: 6px;"></div>' +
+        '<div style="flex: 1;"><input id="swal-card-cvv" type="password" class="form-control" placeholder="CVV" maxlength="3" style="padding: 10px; border-radius: 6px;"></div>' +
         '</div>',
       focusConfirm: false,
       showCancelButton: true,
@@ -176,7 +215,7 @@ export class OrdersComponent implements OnInit {
         const cardName = (document.getElementById('swal-card-name') as HTMLInputElement).value;
         const expiry = (document.getElementById('swal-card-expiry') as HTMLInputElement).value;
         const cvv = (document.getElementById('swal-card-cvv') as HTMLInputElement).value;
-        
+
         if (!cardNumber || !cardName || !expiry || !cvv) {
           Swal.showValidationMessage('Please fill in all card details');
           return false;

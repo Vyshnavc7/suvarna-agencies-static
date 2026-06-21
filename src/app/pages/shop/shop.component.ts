@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../core/services/cart.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,9 +16,27 @@ export class ShopComponent implements OnInit {
   products: any[] = [];
   productService = inject(ProductService);
   cartService = inject(CartService);
+  wishlistService = inject(WishlistService);
+
+  wishlistItems: any[] = [];
 
   addToCart(product: any) {
     this.cartService.addToCart(product);
+  }
+
+  isWishlisted(productId: number): boolean {
+    return this.wishlistItems.some(item => item.productId === productId);
+  }
+
+  toggleWishlist(product: any, event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const existingItem = this.wishlistItems.find(item => item.productId === product.id);
+    if (existingItem) {
+      this.wishlistService.removeFromWishlist(existingItem.id).subscribe();
+    } else {
+      this.wishlistService.addToWishlist(product.id).subscribe();
+    }
   }
 
   ngOnInit() {
@@ -30,6 +49,10 @@ export class ShopComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching products', err);
       }
+    });
+
+    this.wishlistService.wishlistItems$.subscribe(items => {
+      this.wishlistItems = items || [];
     });
   }
 

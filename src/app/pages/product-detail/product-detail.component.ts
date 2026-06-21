@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -16,6 +17,7 @@ export class ProductDetailComponent implements OnInit {
   product: any = null;
   productService = inject(ProductService);
   cartService = inject(CartService);
+  wishlistService = inject(WishlistService);
   route = inject(ActivatedRoute);
   selectedQuantity: number = 1;
 
@@ -50,6 +52,10 @@ export class ProductDetailComponent implements OnInit {
       showConfirmButton: false,
       timer: 3000
     });
+  }
+
+  addToWishlist(product: any) {
+    this.wishlistService.addToWishlist(product.id).subscribe();
   }
 
   isNew(dateString: string): boolean {

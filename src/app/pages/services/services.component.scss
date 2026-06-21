@@ -1,0 +1,16 @@
+.services-container {
+    background: var(--bg-dark);
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-state {
+    background: rgba(26, 28, 35, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 4rem 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}

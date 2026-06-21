@@ -1,95 +1,80 @@
-<footer class="py-lg-5 py-3" style="padding:20px;">
-    <div class="container-fluid px-lg-5 px-3">
-        <div class="row footer-top-w3layouts">
-            <div class="col-lg-3 footer-grid-w3ls">
-                <div class="footer-title">
-                    <h3>About Us</h3>
-                </div>
-                <div class="footer-text">
-                    <p>We here deals with both sales and service of power tools. <br>Best quality brands are
-                        provided here based on needs booking are accepted.</p>
-                    <ul class="footer-social text-left mt-lg-4 mt-3">
-
-                        <li class="mx-2">
-                            <a href="#">
-                                <span class="fab fa-facebook-f"></span>
-                            </a>
-                        </li>
-                        <li class="mx-2">
-                            <a href="#">
-                                <span class="fab fa-twitter"></span>
-                            </a>
-                        </li>
-
-                        <li class="mx-2">
-                            <a href="#">
-                                <span class="fab fa-linkedin-in"></span>
-                            </a>
-                        </li>
-                        <li class="mx-2">
-                            <a href="#">
-                                <span class="fab fa-instagram"></span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-3 footer-grid-w3ls">
-                <div class="footer-title">
-                    <h3>Get in touch</h3>
-                </div>
-                <div class="contact-info">
-                    <h4>Location :</h4>
-                    <p>Kakkad road, South bazar, kannur-670002</p>
-                    <div class="phone">
-                        <h4>Contact :</h4>
-                        <p>Phone :<a href="tel://9847921072"> 9847921072 </a></p>
-                        <p>Email :
-                            <a style="font-size: 13px;"
-                                href="mailto:agenciessuvarna&#64;gmail.com">agenciessuvarna&#64;gmail.com</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 footer-grid-w3ls">
-                <div class="footer-title">
-                    <h3>Quick Links</h3>
-                </div>
-                <ul class="links">
-                    <li>
-                        <a routerLink="/">Home</a>
-                    </li>
-                    <li>
-                        <a routerLink="/about">About</a>
-                    </li>
-                    <li>
-                        <a routerLink="/contact">Contact Us</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-lg-3 footer-grid-w3ls">
-                <div class="footer-title">
-                    <h3>Sign up for more information</h3>
-                </div>
-                <div class="footer-text">
-                    <p>By subscribing to our mailing list you will always get latest news and updates from us.</p>
-                    <form action="#" method="post">
-                        <input class="form-control" type="email" name="Email" placeholder="Enter your email..."
-                            required="">
-                        <button class="btn1">
-                            <i class="far fa-envelope" aria-hidden="true"></i>
-                        </button>
-                        <div class="clearfix"> </div>
-                    </form>
-                </div>
-            </div>
+<footer class="footer-wrapper">
+  <div class="container-fluid">
+    <div class="row footer-content">
+      <div class="col-lg-3 col-md-6 footer-brand">
+        <a class="brand-logo" routerLink="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+          <div style="width: 40px; height: 40px;">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+              <defs>
+                <linearGradient id="gold-grad-footer" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f1d072"/>
+                  <stop offset="50%" stop-color="#d0a23d"/>
+                  <stop offset="100%" stop-color="#a07521"/>
+                </linearGradient>
+              </defs>
+              <path d="M 75 22.5 L 50 10 L 20 25 L 20 35 L 80 65 L 80 75 L 50 90 L 25 77.5" 
+                    fill="none" 
+                    stroke="url(#gold-grad-footer)" 
+                    stroke-width="16" 
+                    stroke-linecap="butt" 
+                    stroke-linejoin="miter"
+                    stroke-miterlimit="4"/>
+            </svg>
+          </div>
+          <h2 style="font-size: 1.8rem; font-weight: 800; margin: 0; color: #fff;">Suvarna<span style="font-weight: 300; color: #a0a0a0;">Agencies</span></h2>
+        </a>
+        <p class="brand-desc">
+          Premium power tools and machinery. Delivering excellence in both sales and service since our inception. Your trusted partner for quality tools.
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
         </div>
-        <div class="copyright-w3layouts mt-4">
-            <p class="copy-right text-center ">&copy; 2026 suvarna Agencies. All Rights Reserved | Designed by <a
-                    href="https://github.com/Vyshnavc7"> C.Vyshnav </a> <br>
-                Design by<a href="http://w3layouts.com/"> W3layouts </a>
-            </p>
-        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a routerLink="/"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a routerLink="/about"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a routerLink="/shop"><i class="fas fa-chevron-right"></i> All Products</a></li>
+          <li><a routerLink="/contact"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+          <li *ngIf="!(authService.currentUser | async)"><a routerLink="/login"><i class="fas fa-chevron-right"></i> Sign In</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 footer-contact">
+        <h3>Contact Us</h3>
+        <ul class="contact-info">
+          <li>
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Kakkad Road, South Bazar<br>Kannur - 670002</span>
+          </li>
+          <li>
+            <i class="fas fa-phone-alt"></i>
+            <a href="tel://9847921072">+91 98479 21072</a>
+          </li>
+          <li>
+            <i class="fas fa-envelope"></i>
+            <a href="mailto:agenciessuvarna&#64;gmail.com">agenciessuvarna&#64;gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 footer-newsletter">
+        <h3>Newsletter</h3>
+        <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Enter your email" required>
+          <button type="submit" class="btn-primary-custom"><i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
     </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 Suvarna Agencies. All Rights Reserved. Designed by C.Vyshnav.</p>
+    </div>
+  </div>
 </footer>

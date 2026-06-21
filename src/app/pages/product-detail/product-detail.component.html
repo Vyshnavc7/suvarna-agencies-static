@@ -58,9 +58,12 @@
                             </select>
                         </div>
 
-                        <div class="action-buttons">
-                            <button class="btn btn-add-cart" (click)="addToCart(product)">
+                        <div class="action-buttons d-flex mt-4">
+                            <button class="btn btn-add-cart mr-3" (click)="addToCart(product)">
                                 Add to Cart <i class="fas fa-cart-plus"></i>
+                            </button>
+                            <button class="btn btn-outline-danger px-4" (click)="addToWishlist(product)">
+                                <i class="far fa-heart"></i> Wishlist
                             </button>
                         </div>
 
