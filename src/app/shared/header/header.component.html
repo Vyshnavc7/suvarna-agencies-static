@@ -34,9 +34,40 @@
     <div class="right-actions">
 
       <!-- Search Bar -->
-      <div class="search-box">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="Search tools...">
+      <div class="search-box-container" #searchContainerRef>
+        <div class="search-box">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" placeholder="Search tools..." [value]="searchQuery" (input)="onSearchInput($event)">
+          <i class="fas fa-times clear-icon" *ngIf="searchQuery.length > 0" (click)="clearSearchBox()"></i>
+        </div>
+        
+        <!-- Search Dropdown -->
+        <div class="search-dropdown" *ngIf="showSearchDropdown">
+          
+          <div class="search-loader-container" *ngIf="isSearching">
+            <div class="spinner-border text-warning spinner-sm" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <span class="loader-text">Searching...</span>
+          </div>
+
+          <div class="search-results-list" *ngIf="!isSearching && filteredProducts.length > 0">
+            <a *ngFor="let product of filteredProducts" 
+               [routerLink]="['/product', product.id]" 
+               (click)="clearSearch()"
+               class="search-result-item">
+              <img [src]="product.imageUrl ? 'http://localhost:3000' + product.imageUrl : 'assets/images/placeholder.png'" alt="{{product.productName}}" class="search-result-img">
+              <div class="search-result-info">
+                <span class="search-result-name">{{ product.productName }}</span>
+                <span class="search-result-price">₹{{ product.price }}</span>
+              </div>
+            </a>
+          </div>
+          
+          <div class="search-no-results" *ngIf="!isSearching && filteredProducts.length === 0">
+            No products found for "{{ searchQuery }}".
+          </div>
+        </div>
       </div>
 
       <!-- User Profile -->

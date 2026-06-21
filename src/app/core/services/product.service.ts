@@ -24,4 +24,8 @@ export class ProductService {
     getProductById(id: string): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
     }
+
+    searchProducts(query: string): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}?filters[productName]=${query}`, { headers: this.getHeaders() });
+    }
 }

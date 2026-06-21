@@ -117,6 +117,10 @@
   gap: 1.5rem;
 }
 
+.search-box-container {
+  position: relative;
+}
+
 .search-box {
   position: relative;
   display: flex;
@@ -133,7 +137,7 @@
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    padding: 0.5rem 1rem 0.5rem 2.2rem;
+    padding: 0.5rem 2.2rem 0.5rem 2.2rem;
     color: #fff;
     font-size: 0.85rem;
     width: 200px;
@@ -146,9 +150,123 @@
     
     &:focus {
       border-color: rgba(255, 255, 255, 0.2);
-      width: 220px;
+      width: 240px;
       background: rgba(0, 0, 0, 0.5);
     }
+  }
+
+  .clear-icon {
+    position: absolute;
+    right: 12px;
+    color: #888;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: 260px;
+  background: var(--bg-surface-elevated, #1a1c23);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-height: 350px;
+  overflow-y: auto;
+  z-index: 1000;
+  
+  /* Scrollbar styles */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .search-loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    color: #888;
+    
+    .loader-text {
+      font-size: 0.9rem;
+    }
+  }
+
+  .search-results-list {
+    display: flex;
+    flex-direction: column;
+    
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 15px;
+      text-decoration: none;
+      transition: background 0.2s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+      
+      .search-result-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: #000;
+      }
+      
+      .search-result-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        
+        .search-result-name {
+          color: #fff;
+          font-size: 0.85rem;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 160px;
+        }
+        
+        .search-result-price {
+          color: var(--accent-orange, #ff5722);
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .search-no-results {
+    padding: 15px;
+    color: #888;
+    font-size: 0.9rem;
+    text-align: center;
   }
 }
 
