@@ -22,6 +22,7 @@ export class SignupComponent {
   constructor() {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
+      gender: ['male', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
@@ -35,8 +36,8 @@ export class SignupComponent {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      const { name, email, password } = this.signupForm.value;
-      this.authService.signup({ name, email, password }).subscribe({
+      const { name, email, password, gender } = this.signupForm.value;
+      this.authService.signup({ name, email, password, gender }).subscribe({
         next: (response) => {
           console.log('Signup successful', response);
           Swal.fire({
