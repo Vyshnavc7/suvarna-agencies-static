@@ -6,11 +6,10 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, CommonModule],
-  templateUrl: './signup.component.html',
-  styleUrl: './signup.component.scss'
+    selector: 'app-signup',
+    imports: [RouterLink, ReactiveFormsModule, CommonModule],
+    templateUrl: './signup.component.html',
+    styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
   signupForm: FormGroup;
@@ -23,6 +22,7 @@ export class SignupComponent {
   constructor() {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
+      gender: ['male', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
@@ -36,8 +36,8 @@ export class SignupComponent {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      const { name, email, password } = this.signupForm.value;
-      this.authService.signup({ name, email, password }).subscribe({
+      const { name, email, password, gender } = this.signupForm.value;
+      this.authService.signup({ name, email, password, gender }).subscribe({
         next: (response) => {
           console.log('Signup successful', response);
           Swal.fire({

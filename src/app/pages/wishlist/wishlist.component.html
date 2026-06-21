@@ -1,0 +1,74 @@
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+            <ul class="short">
+                <li><a routerLink="/">Home</a><i>|</i></li>
+                <li><a routerLink="/profile">My Account</a><i>|</i></li>
+                <li>Wishlist</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="wishlist-container py-lg-5 py-3">
+  <div class="container" style="max-width: 1000px;">
+    
+    <div class="wishlist-main-wrapper glass-panel" *ngIf="(wishlistItems$ | async) as items">
+      <!-- Header -->
+      <div class="wishlist-header px-4 py-3 border-bottom-custom">
+        <h4 class="mb-0 text-white font-weight-bold">My Wishlist ({{ items.length }})</h4>
+      </div>
+      
+      <!-- List -->
+      <div class="wishlist-list" *ngIf="items.length > 0; else emptyWishlist">
+        
+        <div class="wishlist-item d-flex p-4 border-bottom-custom" *ngFor="let item of items">
+          
+          <!-- Left: Image -->
+          <div class="item-img-wrapper mr-4">
+            <img [src]="item.product.image || 'assets/images/default-product.png'" alt="{{item.product.productName}}">
+          </div>
+          
+          <!-- Middle: Details -->
+          <div class="item-details-wrapper flex-grow-1 pr-4">
+            <h5 class="product-title mb-2">
+              <a [routerLink]="['/product', item.product.id]" class="text-white">{{item.product.productName}}</a>
+            </h5>
+            
+            <div class="price-row d-flex align-items-baseline">
+              <span class="actual-price font-weight-bold h4 mb-0 text-white">₹{{item.product.price | number:'1.0-0'}}</span>
+              <span class="mrp-price text-muted ml-3" *ngIf="item.product.actualPrice"><del>₹{{item.product.actualPrice | number:'1.0-0'}}</del></span>
+              <span class="discount-text text-success font-weight-bold ml-3" *ngIf="item.product.discountPercentage">{{item.product.discountPercentage}}% off</span>
+            </div>
+
+            <!-- Optional Add to Cart button (since it's a wishlist) -->
+            <div class="mt-3">
+               <button class="btn btn-sm btn-outline-custom" style="border-radius: 4px; padding: 4px 12px; font-size: 0.8rem;" (click)="moveToCart(item)">
+                 <i class="fas fa-shopping-cart mr-1"></i> Move to Cart
+               </button>
+            </div>
+          </div>
+          
+          <!-- Right: Delete Action -->
+          <div class="item-actions-wrapper">
+            <button class="delete-btn" (click)="removeItem(item)" title="Remove from Wishlist">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <ng-template #emptyWishlist>
+        <div class="empty-state text-center py-5 mx-auto" style="max-width: 600px;">
+          <i class="far fa-heart fa-4x text-muted mb-4"></i>
+          <h3 class="fw-bold text-white mb-2">Your wishlist is empty</h3>
+          <p class="text-muted mb-4">You haven't saved any items yet. Explore our shop to find your next favorite tool!</p>
+          <a routerLink="/shop" class="btn-primary-custom px-4 py-2 font-weight-bold">Start Shopping</a>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+</div>

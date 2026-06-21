@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+// Trigger Angular compiler re-evaluation for checkout & orders page routes
 import { HomeComponent } from './pages/home/home.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { ContactComponent } from './pages/contact/contact.component';
@@ -10,10 +11,16 @@ export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'shop', component: ShopComponent },
     { path: 'contact', component: ContactComponent },
+    { path: 'about', loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent) },
     { path: 'product/:id', component: ProductDetailComponent },
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'cart', loadComponent: () => import('./pages/cart/cart.component').then(m => m.CartComponent) },
     { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent) },
+    { path: 'checkout', loadComponent: () => import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent) },
+    { path: 'orders', loadComponent: () => import('./pages/orders/orders.component').then(m => m.OrdersComponent) },
+    { path: 'settings', loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent) },
+    { path: 'services', loadComponent: () => import('./pages/services/services.component').then(m => m.ServicesComponent) },
+    { path: 'wishlist', loadComponent: () => import('./pages/wishlist/wishlist.component').then(m => m.WishlistComponent) },
     { path: '**', redirectTo: '' }
 ];

@@ -13,6 +13,9 @@ export interface CartItem {
     id: number;
     productName: string;
     price: number;
+    actualPrice: number;
+    discountPercentage: number;
+    discountPrice: number;
     image: string;
     description: string;
   };

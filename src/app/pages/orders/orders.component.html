@@ -1,0 +1,133 @@
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+            <ul class="short">
+                <li><a routerLink="/">Home</a><i>|</i></li>
+                <li><a routerLink="/profile">My Account</a><i>|</i></li>
+                <li>Orders</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+    <div class="container-fluid px-lg-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+            <h1 class="page-title mb-3 mb-md-0" style="color: #fff; font-weight: 700;">Are you looking for these orders?</h1>
+            <div class="search-box position-relative" style="max-width: 350px; width: 100%;">
+                <input type="text" class="form-control bg-dark text-white border-secondary rounded-pill pl-4 pr-5 py-2" placeholder="Search by Product or Order ID..." [(ngModel)]="searchQuery">
+                <i class="fas fa-search position-absolute text-muted" style="right: 20px; top: 50%; transform: translateY(-50%);"></i>
+            </div>
+        </div>
+        <!-- LOADING STATE -->
+        <div *ngIf="isLoading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="text-muted mt-3">Fetching your orders...</p>
+        </div>
+
+        <!-- ERROR STATE -->
+        <div *ngIf="!isLoading && errorMessage" class="alert alert-danger text-center mx-auto my-4" style="max-width: 600px;">
+            <i class="fas fa-exclamation-triangle mr-2"></i> {{ errorMessage }}
+            <button class="btn btn-outline-danger btn-sm ml-3" (click)="fetchOrders()">Retry</button>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div *ngIf="!isLoading && !errorMessage && orders.length === 0" class="empty-state text-center py-5">
+            <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+            <h3 class="fw-bold text-white mb-2">No Orders Placed Yet</h3>
+            <p class="text-muted mb-4">You haven't placed any orders with us. Add some premium products to your cart and make your first purchase!</p>
+            <a routerLink="/shop" class="btn-primary-custom px-4 py-2">Start Shopping</a>
+        </div>
+
+        <!-- NO SEARCH RESULTS -->
+        <div *ngIf="!isLoading && !errorMessage && orders.length > 0 && filteredOrders.length === 0" class="empty-state text-center py-5">
+            <i class="fas fa-search fa-3x text-muted mb-4"></i>
+            <h4 class="fw-bold text-white mb-2">No matching orders found</h4>
+            <p class="text-muted">We couldn't find any orders matching "{{ searchQuery }}".</p>
+        </div>
+
+        <!-- ORDERS LIST (Tile Layout) -->
+        <div *ngIf="!isLoading && !errorMessage && filteredOrders.length > 0" class="orders-list">
+            <ng-container *ngFor="let order of filteredOrders">
+                <div class="order-item-group" *ngFor="let item of order.items">
+                    
+                    <!-- The Tile -->
+                    <div class="order-tile" (click)="item.expanded = !item.expanded" [class.expanded]="item.expanded">
+                        <div class="tile-image-col">
+                            <img [src]="item.image" alt="{{item.productName}}">
+                        </div>
+                        
+                        <div class="tile-info-col">
+                            <h4 class="product-name">{{ item.productName }}</h4>
+                            <p class="product-variant">Order #{{ order.paymentId || 'N/A' }} • Qty: {{ item.quantity }}</p>
+                        </div>
+                        
+                        <div class="tile-price-col">
+                            ₹{{ (item.price * item.quantity) | number:'1.0-0' }}
+                        </div>
+                        
+                        <div class="tile-status-col">
+                            <div class="status-indicator" [ngClass]="item.status === 'delivered' ? 'text-success' : 'text-warning'">
+                                <i class="far fa-circle font-weight-bold"></i>
+                                <span class="status-title">{{ item.status === 'delivered' ? 'Delivered on' : 'Delivery expected by' }} {{ item.updatedAt | date:'mediumDate' }}</span>
+                            </div>
+                            <p class="status-desc">{{ item.status === 'shipped' ? 'Your item has been shipped.' : 'Order is ' + item.status }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Expanded Details -->
+                    <div class="order-expanded-details" *ngIf="item.expanded">
+                        <div class="row">
+                            <!-- Left: Item details -->
+                            <div class="col-md-6 mb-3 mb-md-0 border-right-custom">
+                                <h5 class="text-white mb-3">Item Details</h5>
+                                <p class="text-muted mb-1"><strong>Status:</strong> <span class="text-uppercase text-white">{{ item.status.replace('_', ' ') }}</span></p>
+                                <p class="text-muted mb-1"><strong>Price each:</strong> ₹{{ item.price | number:'1.2-2' }}</p>
+                                
+                                <div class="mt-3" *ngIf="isEligibleForReturn(item)">
+                                    <button class="btn-outline-custom btn-sm" (click)="openReturnExchangeModal(item)">
+                                        <i class="fas fa-undo mr-1"></i> Return / Exchange
+                                    </button>
+                                </div>
+                                <div class="mt-3" *ngIf="item.paymentStatus === 'refunded'">
+                                    <span class="text-info font-weight-bold">
+                                        <i class="fas fa-coins text-warning mr-1"></i> Refunded via {{ item.paymentMethod }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Right: Order & Payment details -->
+                            <div class="col-md-6">
+                                <h5 class="text-white mb-3">Order & Payment</h5>
+                                <p class="text-muted mb-1"><strong>Total Order Cost:</strong> <span class="text-white">₹{{ (order.paymentDetails?.totalAmount || 0) | number:'1.2-2' }}</span></p>
+                                <p class="text-muted mb-1"><strong>Payment Method:</strong> <span class="text-white text-uppercase">{{ order.paymentDetails?.paymentMethod || 'COD' }}</span></p>
+                                <p class="text-muted mb-3"><strong>Payment Status:</strong> <span class="text-white text-uppercase">{{ order.paymentStatus || 'Pending' }}</span></p>
+                                
+                                <!-- Payment Retry Options -->
+                                <div *ngIf="order.paymentStatus?.toLowerCase() === 'failed'" class="d-flex flex-wrap gap-2 mt-3">
+                                    <button class="btn-primary-custom btn-sm py-1 px-3" (click)="openCardPaymentModal(order)">
+                                        <i class="fas fa-credit-card mr-1"></i> Pay via Card
+                                    </button>
+                                    <button class="btn-primary-custom btn-sm py-1 px-3" style="background-color: #17a2b8;" (click)="openUPIPaymentModal(order)">
+                                        <i class="fas fa-mobile-alt mr-1"></i> Pay via UPI
+                                    </button>
+                                    <button class="btn-outline-custom btn-sm py-1 px-3" (click)="switchToCOD(order)">
+                                        <i class="fas fa-money-bill-wave mr-1"></i> Switch to COD
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </ng-container>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-4 mb-2" *ngIf="hasMoreOrders && !searchQuery">
+                <button class="btn-outline-custom" (click)="showMoreOrders()">
+                    Load More Orders <i class="fas fa-chevron-down ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

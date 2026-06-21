@@ -1,0 +1,14 @@
+.settings-container {
+    background: var(--bg-dark);
+    min-height: 50vh;
+}
+
+.list-group-item {
+    &.active {
+        background-color: var(--accent-orange) !important;
+        border-color: var(--accent-orange) !important;
+    }
+    &:hover:not(.active) {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+}

@@ -6,11 +6,10 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [RouterLink, CommonModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'app-home',
+    imports: [RouterLink, CommonModule],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
   newArrivals: any[] = [];

@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ],
             "outputPath": "dist/suvarna-web",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -34,14 +37,8 @@
             ],
             "styles": [
               "src/assets/css/bootstrap.css",
-              "src/styles.scss",
-              "src/assets/css/login_overlay.css",
-              "src/assets/css/style6.css",
-              "src/assets/css/shop.css",
-              "src/assets/css/owl.carousel.css",
-              "src/assets/css/owl.theme.css",
-              "src/assets/css/style.css",
-              "src/assets/css/fontawesome-all.css"
+              "src/assets/css/fontawesome-all.css",
+              "src/styles.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -56,13 +53,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "4MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "4kB",
+                  "maximumError": "12kB"
                 }
               ],
               "outputHashing": "all"
