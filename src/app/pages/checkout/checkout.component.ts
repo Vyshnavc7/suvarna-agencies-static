@@ -46,6 +46,32 @@ export class CheckoutComponent implements OnInit {
     upiId: ''
   };
 
+  onCardNumberInput(event: any) {
+    let inputElement = event.target;
+    let digits = inputElement.value.replace(/\D/g, '').substring(0, 16);
+    let formatted = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+    this.cardDetails.cardNumber = formatted;
+    inputElement.value = formatted;
+  }
+
+  onExpiryInput(event: any) {
+    let inputElement = event.target;
+    let digits = inputElement.value.replace(/\D/g, '').substring(0, 6);
+    let formatted = digits;
+    if (digits.length >= 2) {
+      formatted = digits.substring(0, 2) + '/' + digits.substring(2);
+    }
+    this.cardDetails.expiry = formatted;
+    inputElement.value = formatted;
+  }
+
+  onCvvInput(event: any) {
+    let inputElement = event.target;
+    let formatted = inputElement.value.replace(/\D/g, '').substring(0, 4);
+    this.cardDetails.cvv = formatted;
+    inputElement.value = formatted;
+  }
+
   // Status
   isPlacingOrder = false;
   isOrderPlaced = false;
@@ -153,8 +179,20 @@ export class CheckoutComponent implements OnInit {
     }
 
     if (this.paymentMethod === 'Card') {
-      if (!this.cardDetails.cardNumber || !this.cardDetails.cardName || !this.cardDetails.expiry || !this.cardDetails.cvv) {
-        Swal.fire('Error', 'Please fill in all credit card details.', 'error');
+      if (!this.cardDetails.cardNumber || this.cardDetails.cardNumber.replace(/\s/g, '').length < 16) {
+        Swal.fire('Error', 'Please enter a valid 16-digit credit card number.', 'error');
+        return;
+      }
+      if (!this.cardDetails.cardName || !this.cardDetails.cardName.trim()) {
+        Swal.fire('Error', 'Please enter the name on your card.', 'error');
+        return;
+      }
+      if (!this.cardDetails.expiry || !/^(0[1-9]|1[0-2])\/\d{4}$/.test(this.cardDetails.expiry)) {
+        Swal.fire('Error', 'Please enter a valid expiry date in MM/YYYY format.', 'error');
+        return;
+      }
+      if (!this.cardDetails.cvv || this.cardDetails.cvv.length < 3) {
+        Swal.fire('Error', 'Please enter a valid CVV (3 or 4 digits).', 'error');
         return;
       }
     }
