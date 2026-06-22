@@ -6,8 +6,21 @@
     </h1>
   </div>
 
+  <!-- Skeleton Grid -->
+  <div class="product-grid" *ngIf="isLoading">
+    <div class="product-card" *ngFor="let s of skeletonArray">
+      <div class="skeleton-img skeleton-box"></div>
+      <div class="card-info mt-3">
+        <div class="skeleton-text skeleton-box"></div>
+        <div class="skeleton-text short skeleton-box"></div>
+        <div class="skeleton-text skeleton-box mt-4" style="height: 24px; width: 40%;"></div>
+        <div class="skeleton-box mt-auto" style="height: 40px; border-radius: 8px;"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Product Grid -->
-  <div class="product-grid">
+  <div class="product-grid" *ngIf="!isLoading">
     <div class="product-card" *ngFor="let product of products">
       <!-- Image Box -->
       <div class="card-image-box">

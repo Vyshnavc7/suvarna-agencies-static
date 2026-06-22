@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { map } from 'rxjs/operators';
 
 import { CartService } from '../../core/services/cart.service';
 import { CategoryService } from '../../core/services/category.service';
@@ -21,6 +22,15 @@ export class HeaderComponent implements OnInit {
   productService = inject(ProductService);
 
   cartItemCount$ = this.cartService.cartCount$;
+  cartItems$ = this.cartService.cartItems$;
+  isCartDrawerOpen = false;
+
+  get cartTotal$() {
+    return this.cartItems$.pipe(
+      map(items => items.reduce((sum, item) => sum + ((item.product?.price || 0) * item.quantity), 0))
+    );
+  }
+
   isProfileDropdownOpen = false;
   categories: { name: string, subcategories: { name: string, products: any[] }[] }[] = [];
 
@@ -105,6 +115,18 @@ export class HeaderComponent implements OnInit {
 
   getCartCount(items: any[]): number {
     return items.reduce((acc, item) => acc + item.quantity, 0);
+  }
+
+  toggleCartDrawer() {
+    this.isCartDrawerOpen = !this.isCartDrawerOpen;
+  }
+  
+  closeCartDrawer() {
+    this.isCartDrawerOpen = false;
+  }
+  
+  removeFromCart(id: number) {
+    this.cartService.removeFromCart(id).subscribe();
   }
 
   logout() {

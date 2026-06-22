@@ -109,12 +109,48 @@
       </a>
 
       <!-- Cart -->
-      <a routerLink="/cart" class="icon-action cart" title="My Cart">
+      <a href="javascript:void(0)" class="icon-action cart" title="My Cart" (click)="toggleCartDrawer()">
         <i class="fas fa-shopping-cart"></i>
         <span class="badge" *ngIf="(cartItemCount$ | async) as count">{{ count }}</span>
         <span class="badge" *ngIf="!(cartItemCount$ | async)">0</span>
       </a>
 
     </div>
+  </div>
+</div>
+
+<!-- Sliding Cart Drawer -->
+<div class="cart-drawer-overlay" *ngIf="isCartDrawerOpen" (click)="closeCartDrawer()"></div>
+<div class="cart-drawer" [class.open]="isCartDrawerOpen">
+  <div class="drawer-header">
+    <h5>Your Cart</h5>
+    <button class="btn-close-drawer" (click)="closeCartDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="drawer-body">
+    <ng-container *ngIf="(cartItems$ | async) as items">
+      <div *ngIf="items.length === 0" class="empty-cart-msg">
+        <i class="fas fa-shopping-basket fa-3x mb-3 text-muted"></i>
+        <p>Your cart is empty.</p>
+        <button class="btn btn-outline-custom" (click)="closeCartDrawer()" routerLink="/shop">Continue Shopping</button>
+      </div>
+      <div class="cart-item-list" *ngIf="items.length > 0">
+        <div class="cart-item" *ngFor="let item of items">
+          <img [src]="item.product.image ? 'http://localhost:7781' + item.product.image : 'assets/images/placeholder.png'" alt="product">
+          <div class="item-details">
+            <h6>{{item.product.productName}}</h6>
+            <span class="item-price">₹{{item.product.price | number:'1.2-2'}} x {{item.quantity}}</span>
+          </div>
+          <button class="btn-remove-item" (click)="removeFromCart(item.id)"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="drawer-footer" *ngIf="(cartItemCount$ | async) && (cartItemCount$ | async)! > 0">
+    <div class="drawer-total">
+      <span>Subtotal:</span>
+      <span class="total-amount">₹{{cartTotal$ | async | number:'1.2-2'}}</span>
+    </div>
+    <a routerLink="/cart" class="btn btn-outline-custom w-100 mb-2 text-center d-block" (click)="closeCartDrawer()">View Full Cart</a>
+    <a routerLink="/checkout" class="btn btn-primary-custom w-100 text-center d-block" (click)="closeCartDrawer()">Proceed to Checkout</a>
   </div>
 </div>

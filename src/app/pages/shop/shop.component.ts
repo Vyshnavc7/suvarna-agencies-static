@@ -15,6 +15,8 @@ import Swal from 'sweetalert2';
 })
 export class ShopComponent implements OnInit {
   products: any[] = [];
+  isLoading = true;
+  skeletonArray = Array(8).fill(0);
   productService = inject(ProductService);
   cartService = inject(CartService);
   wishlistService = inject(WishlistService);
@@ -80,14 +82,15 @@ export class ShopComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this.productService.getProducts().subscribe({
       next: (data) => {
-        console.log('API Response:', data); // Inspect structure
         this.products = Array.isArray(data) ? data : (data.data || data.rows || []);
-        console.log('Products assigned:', this.products);
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching products', err);
+        this.isLoading = false;
       }
     });
   }
