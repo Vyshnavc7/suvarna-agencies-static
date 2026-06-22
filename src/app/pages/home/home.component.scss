@@ -244,6 +244,7 @@
 
 /* Premium Product Card */
 .premium-product-card {
+  position: relative;
   background: var(--bg-surface-elevated);
   border-radius: 16px;
   border: 1px solid var(--border-color);
