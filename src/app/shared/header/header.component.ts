@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { CartService } from '../../core/services/cart.service';
 import { CategoryService } from '../../core/services/category.service';
 import { ProductService } from '../../core/services/product.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
     selector: 'app-header',
@@ -20,10 +21,15 @@ export class HeaderComponent implements OnInit {
   cartService = inject(CartService);
   categoryService = inject(CategoryService);
   productService = inject(ProductService);
+  notificationService = inject(NotificationService);
 
   cartItemCount$ = this.cartService.cartCount$;
   cartItems$ = this.cartService.cartItems$;
   isCartDrawerOpen = false;
+  
+  notifications$ = this.notificationService.notifications$;
+  notificationUnreadCount$ = this.notificationService.unreadCount$;
+  isNotificationDropdownOpen = false;
 
   get cartTotal$() {
     return this.cartItems$.pipe(
@@ -42,6 +48,7 @@ export class HeaderComponent implements OnInit {
 
   @ViewChild('profileDropdownContainer') dropdownRef!: ElementRef;
   @ViewChild('searchContainerRef') searchContainerRef!: ElementRef;
+  @ViewChild('notificationDropdownRef') notificationDropdownRef!: ElementRef;
 
   ngOnInit() {
     this.categoryService.getCategoriesForMenu().subscribe({
@@ -59,6 +66,9 @@ export class HeaderComponent implements OnInit {
     }
     if (this.showSearchDropdown && this.searchContainerRef && !this.searchContainerRef.nativeElement.contains(event.target)) {
       this.showSearchDropdown = false;
+    }
+    if (this.isNotificationDropdownOpen && this.notificationDropdownRef && !this.notificationDropdownRef.nativeElement.contains(event.target)) {
+      this.isNotificationDropdownOpen = false;
     }
   }
 
@@ -111,6 +121,24 @@ export class HeaderComponent implements OnInit {
 
   toggleProfileDropdown() {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+    if (this.isProfileDropdownOpen) this.isNotificationDropdownOpen = false;
+  }
+
+  toggleNotificationDropdown() {
+    this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
+    if (this.isNotificationDropdownOpen) this.isProfileDropdownOpen = false;
+  }
+
+  loadNotifications() {
+    this.notificationService.loadNotifications();
+  }
+
+  markNotificationAsRead(id: number) {
+    this.notificationService.markAsRead(id).subscribe();
+  }
+
+  markAllNotificationsAsRead() {
+    this.notificationService.markAllAsRead().subscribe();
   }
 
   getCartCount(items: any[]): number {
