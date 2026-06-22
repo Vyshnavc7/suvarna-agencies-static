@@ -204,6 +204,21 @@
                         </div>
                     </div>
 
+                    <div class="coupon-section mb-4">
+                        <h6 class="text-white mb-2">Apply Promo Code</h6>
+                        <div class="input-group" *ngIf="!appliedCoupon">
+                            <input type="text" class="form-control" placeholder="Enter code" [(ngModel)]="couponCode">
+                            <button class="btn btn-primary" type="button" (click)="applyCoupon()" [disabled]="isApplyingCoupon || !couponCode">
+                                <span *ngIf="isApplyingCoupon"><i class="fas fa-spinner fa-spin"></i></span>
+                                <span *ngIf="!isApplyingCoupon">Apply</span>
+                            </button>
+                        </div>
+                        <div class="applied-coupon p-2 rounded d-flex justify-content-between align-items-center" *ngIf="appliedCoupon" style="background: rgba(40, 167, 69, 0.1); border: 1px solid #28a745;">
+                            <span class="text-success"><i class="fas fa-tag mr-2"></i><strong>{{appliedCoupon.code}}</strong> applied</span>
+                            <button class="btn btn-sm text-danger" (click)="removeCoupon()"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+
                     <div class="summary-breakdown mb-4">
                         <div class="d-flex justify-content-between mb-3">
                             <span style="color: var(--text-secondary);">Subtotal</span>
@@ -213,10 +228,14 @@
                             <span style="color: var(--text-secondary);">Shipping</span>
                             <span class="text-success fw-bold">FREE</span>
                         </div>
+                        <div class="d-flex justify-content-between mb-3" *ngIf="appliedCoupon">
+                            <span style="color: var(--text-secondary);">Discount</span>
+                            <span class="text-success fw-bold">-₹{{discountAmount | number:'1.2-2'}}</span>
+                        </div>
                         <hr style="border-color: rgba(255,255,255,0.1);">
                         <div class="d-flex justify-content-between mt-3 mb-2">
                             <h5 class="fw-bold text-white">Total</h5>
-                            <h5 class="fw-bold" style="color: var(--accent-orange);">₹{{cartTotal | number:'1.2-2'}}</h5>
+                            <h5 class="fw-bold" style="color: var(--accent-orange);">₹{{(cartTotal - discountAmount) | number:'1.2-2'}}</h5>
                         </div>
                     </div>
 

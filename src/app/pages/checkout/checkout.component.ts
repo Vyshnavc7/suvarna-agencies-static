@@ -72,6 +72,43 @@ export class CheckoutComponent implements OnInit {
     inputElement.value = formatted;
   }
 
+  // Coupon
+  couponCode = '';
+  appliedCoupon: any = null;
+  discountAmount = 0;
+  isApplyingCoupon = false;
+
+  applyCoupon() {
+    if (!this.couponCode) return;
+    this.isApplyingCoupon = true;
+    this.http.post<any>('/server/coupons/validate', { code: this.couponCode, cartTotal: this.cartTotal }).subscribe({
+      next: (res) => {
+        this.isApplyingCoupon = false;
+        this.appliedCoupon = res.coupon;
+        this.discountAmount = res.coupon.discountAmount;
+        Swal.fire({
+          icon: 'success',
+          title: 'Coupon Applied',
+          text: res.message,
+          timer: 1500,
+          showConfirmButton: false
+        });
+      },
+      error: (err) => {
+        this.isApplyingCoupon = false;
+        this.appliedCoupon = null;
+        this.discountAmount = 0;
+        Swal.fire('Error', err.error?.message || 'Invalid coupon code', 'error');
+      }
+    });
+  }
+
+  removeCoupon() {
+    this.appliedCoupon = null;
+    this.couponCode = '';
+    this.discountAmount = 0;
+  }
+
   // Status
   isPlacingOrder = false;
   isOrderPlaced = false;
@@ -214,7 +251,8 @@ export class CheckoutComponent implements OnInit {
     this.http.post<any>('/server/orders/checkout', {
       paymentMethod: this.paymentMethod,
       addressId: this.selectedAddressId,
-      cartItemId: this.cartItemId
+      cartItemId: this.cartItemId,
+      couponCode: this.appliedCoupon ? this.appliedCoupon.code : null
     }).subscribe({
       next: (res) => {
         this.isPlacingOrder = false;
