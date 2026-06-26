@@ -206,3 +206,107 @@ a {
   height: 200px;
   border-radius: 8px;
 }
+
+/* Custom SweetAlert2 Theme */
+.swal2-popup {
+  background: var(--bg-surface) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 16px !important;
+  font-family: 'Outfit', sans-serif !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 2rem 1.5rem !important;
+}
+
+.swal2-title {
+  color: var(--text-primary) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.6rem !important;
+}
+
+.swal2-html-container {
+  color: var(--text-secondary) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+.swal2-confirm {
+  background-color: var(--accent-orange) !important;
+  color: #fff !important;
+  border-radius: 50px !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  transition: all var(--transition-fast) !important;
+  border: none !important;
+  outline: none !important;
+  
+  &:hover {
+    background-color: var(--accent-orange-hover) !important;
+    box-shadow: var(--shadow-glow) !important;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.4) !important;
+  }
+}
+
+.swal2-cancel {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 50px !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  transition: all var(--transition-fast) !important;
+  outline: none !important;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+.swal2-deny {
+  border-radius: 50px !important;
+  padding: 0.75rem 2rem !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.swal2-input, .swal2-textarea, .swal2-select {
+  background-color: var(--bg-dark) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  font-family: 'Outfit', sans-serif !important;
+  
+  &:focus {
+    border-color: var(--accent-orange) !important;
+    box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2) !important;
+  }
+}
+
+.swal2-validation-message {
+  background: var(--bg-surface-elevated) !important;
+  color: #f44336 !important;
+  border-radius: 8px !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
