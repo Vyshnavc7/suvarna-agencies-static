@@ -25,6 +25,9 @@ export class ProductDetailComponent implements OnInit {
 
   authService = inject(AuthService);
 
+  selectedImage: string | null = null;
+  galleryImages: string[] = [];
+
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -38,11 +41,36 @@ export class ProductDetailComponent implements OnInit {
     this.productService.getProductById(id).subscribe({
       next: (data) => {
         this.product = data.data || data; // Handle potential wrapper
+        this.setupGallery();
       },
       error: (err) => {
         console.error('Error fetching product details', err);
       }
     });
+  }
+
+  setupGallery() {
+    this.galleryImages = [];
+    if (this.product) {
+      if (this.product.image) {
+        this.galleryImages.push(this.product.image);
+        this.selectedImage = this.product.image;
+      }
+      if (this.product.productImages && Array.isArray(this.product.productImages)) {
+        this.product.productImages.forEach((img: any) => {
+          if (img.filePath && !this.galleryImages.includes(img.filePath)) {
+            this.galleryImages.push(img.filePath);
+          }
+        });
+      }
+      if (!this.selectedImage && this.galleryImages.length > 0) {
+        this.selectedImage = this.galleryImages[0];
+      }
+    }
+  }
+
+  selectImage(imgUrl: string) {
+    this.selectedImage = imgUrl;
   }
 
   addToCart(product: any) {

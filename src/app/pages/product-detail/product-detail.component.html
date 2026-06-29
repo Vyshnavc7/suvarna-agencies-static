@@ -16,14 +16,25 @@
         <div class="product-card mb-5">
             <div class="row no-gutters">
                 <!-- Left Column: Image -->
-                <div class="col-lg-5">
+                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
                     <div class="product-image-container">
-                        <ng-container *ngIf="product.image; else noImage">
-                            <img [src]="product.image" class="img-fluid" alt="{{product.productName}}">
-                        </ng-container>
-                        <ng-template #noImage>
-                            <i class="fas fa-tools fa-7x text-secondary"></i>
-                        </ng-template>
+                        <div class="main-image-box text-center">
+                            <ng-container *ngIf="selectedImage; else noImage">
+                                <img [src]="selectedImage" class="img-fluid" alt="{{product.productName}}">
+                            </ng-container>
+                            <ng-template #noImage>
+                                <i class="fas fa-tools fa-7x text-secondary"></i>
+                            </ng-template>
+                        </div>
+                        
+                        <!-- Thumbnail gallery -->
+                        <div class="image-gallery-thumbnails mt-4 d-flex flex-wrap gap-2 justify-content-center" *ngIf="galleryImages.length > 1">
+                            <div class="thumbnail-item" *ngFor="let imgUrl of galleryImages" 
+                                 [class.active]="imgUrl === selectedImage" 
+                                 (click)="selectImage(imgUrl)">
+                                <img [src]="imgUrl" alt="Thumbnail" class="img-fluid rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
