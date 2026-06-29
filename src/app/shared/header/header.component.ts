@@ -1,9 +1,10 @@
-import { Component, inject, ElementRef, HostListener, ViewChild, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, ElementRef, HostListener, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-import { map } from 'rxjs/operators';
+import { Subject, Subscription, of } from 'rxjs';
+import { map, debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 
 import { CartService } from '../../core/services/cart.service';
 import { CategoryService } from '../../core/services/category.service';
@@ -16,12 +17,13 @@ import { NotificationService } from '../../core/services/notification.service';
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   cartService = inject(CartService);
   categoryService = inject(CategoryService);
   productService = inject(ProductService);
   notificationService = inject(NotificationService);
+  router = inject(Router);
 
   cartItemCount$ = this.cartService.cartCount$;
   cartItems$ = this.cartService.cartItems$;
@@ -44,7 +46,10 @@ export class HeaderComponent implements OnInit {
   showSearchDropdown = false;
   isSearching = false;
   searchQuery = '';
-  searchTimeout: any;
+  activeHighlightIndex = -1;
+
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
 
   @ViewChild('profileDropdownContainer') dropdownRef!: ElementRef;
   @ViewChild('searchContainerRef') searchContainerRef!: ElementRef;
@@ -57,6 +62,42 @@ export class HeaderComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load categories', err)
     });
+
+    // Set up reactive auto-complete search
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(query => {
+        if (query.trim().length < 3) {
+          return of({ data: [] });
+        }
+        this.isSearching = true;
+        this.showSearchDropdown = true;
+        this.activeHighlightIndex = -1;
+        return this.productService.searchProducts(query).pipe(
+          catchError(err => {
+            console.error('Search API failed', err);
+            return of({ data: [] });
+          })
+        );
+      })
+    ).subscribe({
+      next: (response) => {
+        const data = response.data || response;
+        this.filteredProducts = Array.isArray(data) ? data : [];
+        this.isSearching = false;
+      },
+      error: (err) => {
+        console.error('Search stream error', err);
+        this.isSearching = false;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -73,35 +114,48 @@ export class HeaderComponent implements OnInit {
   }
 
   onSearchInput(event: any) {
-    const query = event.target.value.trim();
+    const query = event.target.value;
     this.searchQuery = query;
     
-    if (query.length >= 3) {
-      if (this.searchTimeout) {
-        clearTimeout(this.searchTimeout);
-      }
-      
-      this.isSearching = true;
-      this.showSearchDropdown = true;
-      
-      // Debounce API calls by 300ms
-      this.searchTimeout = setTimeout(() => {
-        this.productService.searchProducts(query).subscribe({
-          next: (response) => {
-            const data = response.data || response;
-            this.filteredProducts = Array.isArray(data) ? data : [];
-            this.isSearching = false;
-          },
-          error: (err) => {
-            console.error('Search API failed', err);
-            this.isSearching = false;
-          }
-        });
-      }, 300);
+    if (query.trim().length >= 3) {
+      this.searchSubject.next(query.trim());
     } else {
       this.filteredProducts = [];
       this.showSearchDropdown = false;
       this.isSearching = false;
+      this.activeHighlightIndex = -1;
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (!this.showSearchDropdown || this.filteredProducts.length === 0) {
+      if (event.key === 'Escape') {
+        this.clearSearchBox();
+      }
+      return;
+    }
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.activeHighlightIndex = (this.activeHighlightIndex + 1) % this.filteredProducts.length;
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.activeHighlightIndex = (this.activeHighlightIndex - 1 + this.filteredProducts.length) % this.filteredProducts.length;
+        break;
+      case 'Enter':
+        event.preventDefault();
+        if (this.activeHighlightIndex >= 0 && this.activeHighlightIndex < this.filteredProducts.length) {
+          const selectedProduct = this.filteredProducts[this.activeHighlightIndex];
+          this.router.navigate(['/product', selectedProduct.id]);
+          this.clearSearch();
+        }
+        break;
+      case 'Escape':
+        event.preventDefault();
+        this.clearSearch();
+        break;
     }
   }
 
@@ -110,13 +164,12 @@ export class HeaderComponent implements OnInit {
     this.filteredProducts = [];
     this.showSearchDropdown = false;
     this.isSearching = false;
-    if (this.searchTimeout) {
-      clearTimeout(this.searchTimeout);
-    }
+    this.activeHighlightIndex = -1;
   }
 
   clearSearch() {
     this.showSearchDropdown = false;
+    this.activeHighlightIndex = -1;
   }
 
   toggleProfileDropdown() {

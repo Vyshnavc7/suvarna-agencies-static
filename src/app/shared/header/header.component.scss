@@ -226,8 +226,11 @@
         border-bottom: none;
       }
       
-      &:hover {
-        background: rgba(255, 255, 255, 0.08);
+      &:hover,
+      &.active {
+        background: rgba(255, 87, 34, 0.08);
+        border-left: 3px solid var(--accent-orange, #ff5722);
+        padding-left: 12px;
       }
       
       .search-result-img {

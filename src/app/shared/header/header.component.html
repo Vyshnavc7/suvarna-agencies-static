@@ -37,7 +37,7 @@
       <div class="search-box-container" #searchContainerRef>
         <div class="search-box">
           <i class="fas fa-search search-icon"></i>
-          <input type="text" placeholder="Search tools..." [value]="searchQuery" (input)="onSearchInput($event)">
+          <input type="text" placeholder="Search tools..." [value]="searchQuery" (input)="onSearchInput($event)" (keydown)="onKeyDown($event)">
           <i class="fas fa-times clear-icon" *ngIf="searchQuery.length > 0" (click)="clearSearchBox()"></i>
         </div>
 
@@ -52,10 +52,10 @@
           </div>
 
           <div class="search-results-list" *ngIf="!isSearching && filteredProducts.length > 0">
-            <a *ngFor="let product of filteredProducts" [routerLink]="['/product', product.id]" (click)="clearSearch()"
-              class="search-result-item">
+            <a *ngFor="let product of filteredProducts; let i = index" [routerLink]="['/product', product.id]" (click)="clearSearch()"
+              class="search-result-item" [class.active]="i === activeHighlightIndex">
               <img
-                [src]="product.imageUrl ? 'http://localhost:3000' + product.imageUrl : 'assets/images/placeholder.png'"
+                [src]="product.image ? 'http://localhost:7781' + product.image : 'assets/images/placeholder.png'"
                 alt="{{product.productName}}" class="search-result-img">
               <div class="search-result-info">
                 <span class="search-result-name">{{ product.productName }}</span>
