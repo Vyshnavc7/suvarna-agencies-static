@@ -1,10 +1,24 @@
 .about-container {
-    background: var(--bg-dark);
+    background: transparent;
 }
 
 .about-content {
-    background: rgba(26, 28, 35, 0.7);
-    backdrop-filter: blur(10px);
+    background: #ffffff;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    border: none;
+    
+    h1 {
+        color: #1e293b;
+        font-weight: 800;
+    }
+    
+    p {
+        color: #64748b;
+    }
+    
+    h3 {
+        color: #c99b2e;
+    }
 }
 
 .letter-spacing-1 {

@@ -4,14 +4,14 @@
 
 .wishlist-main-wrapper {
   background: var(--bg-surface, #262831);
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 .border-bottom-custom {
-  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
 }
 
 .wishlist-header {
@@ -26,14 +26,14 @@
   }
   
   &:hover {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: rgba(0, 0, 0, 0.02);
   }
 }
 
 .item-img-wrapper {
   width: 120px;
   height: 120px;
-  background: #fff;
+  background: var(--text-primary);
   border-radius: 8px;
   padding: 0.5rem;
   display: flex;
@@ -53,11 +53,11 @@
   font-weight: 500;
   font-size: 1.15rem;
   line-height: 1.4;
-  color: #fff;
+  color: var(--text-primary);
   transition: color 0.2s;
   
   &:hover {
-    color: var(--accent-orange, #ff5722);
+    color: var(--accent-orange, #c99b2e);
   }
 }
 

@@ -16,7 +16,7 @@
     <div class="wishlist-main-wrapper glass-panel" *ngIf="(wishlistItems$ | async) as items">
       <!-- Header -->
       <div class="wishlist-header px-4 py-3 border-bottom-custom">
-        <h4 class="mb-0 text-white font-weight-bold">My Wishlist ({{ items.length }})</h4>
+        <h4 class="mb-0  font-weight-bold">My Wishlist ({{ items.length }})</h4>
       </div>
       
       <!-- List -->
@@ -32,11 +32,11 @@
           <!-- Middle: Details -->
           <div class="item-details-wrapper flex-grow-1 pr-4">
             <h5 class="product-title mb-2">
-              <a [routerLink]="['/product', item.product.id]" class="text-white">{{item.product.productName}}</a>
+              <a [routerLink]="['/product', item.product.id]" class="">{{item.product.productName}}</a>
             </h5>
             
             <div class="price-row d-flex align-items-baseline">
-              <span class="actual-price font-weight-bold h4 mb-0 text-white">₹{{item.product.price | number:'1.0-0'}}</span>
+              <span class="actual-price font-weight-bold h4 mb-0 ">₹{{item.product.price | number:'1.0-0'}}</span>
               <span class="mrp-price text-muted ml-3" *ngIf="item.product.actualPrice"><del>₹{{item.product.actualPrice | number:'1.0-0'}}</del></span>
               <span class="discount-text text-success font-weight-bold ml-3" *ngIf="item.product.discountPercentage">{{item.product.discountPercentage}}% off</span>
             </div>
@@ -63,7 +63,7 @@
       <ng-template #emptyWishlist>
         <div class="empty-state text-center py-5 mx-auto" style="max-width: 600px;">
           <i class="far fa-heart fa-4x text-muted mb-4"></i>
-          <h3 class="fw-bold text-white mb-2">Your wishlist is empty</h3>
+          <h3 class="fw-bold  mb-2">Your wishlist is empty</h3>
           <p class="text-muted mb-4">You haven't saved any items yet. Explore our shop to find your next favorite tool!</p>
           <a routerLink="/shop" class="btn-primary-custom px-4 py-2 font-weight-bold">Start Shopping</a>
         </div>

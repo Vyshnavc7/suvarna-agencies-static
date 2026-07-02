@@ -4,28 +4,43 @@
 /* Global Design Tokens */
 :root {
   /* Colors */
-  --bg-dark: #1c1e24; /* Lighter grey global background */
-  --bg-surface: #262831;
-  --bg-surface-elevated: #323541;
+  --bg-dark: #f8fafc; /* Global light background */
+  --bg-surface: #ffffff; /* White cards and panels */
+  --bg-surface-elevated: #f1f5f9; /* Slightly off-white for contrast */
   
-  --accent-orange: #ff5722;
-  --accent-orange-hover: #e64a19;
+  --accent-orange: #c99b2e;
+  --accent-orange-hover: #a67c21;
   
-  --text-primary: #ffffff;
-  --text-secondary: #b3b3b3;
-  --text-muted: #808080;
+  --text-primary: #1e293b; /* Dark slate for primary text */
+  --text-secondary: #475569; /* Slate for secondary text */
+  --text-muted: #94a3b8; /* Light slate for muted text */
   
-  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color: rgba(0, 0, 0, 0.08); /* Dark subtle border */
   
   /* Glassmorphism */
-  --glass-bg: rgba(26, 27, 34, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.05);
-  
+  --glass-bg: rgba(255, 255, 255, 0.7); /* Light blur background */
+  --glass-border: rgba(0, 0, 0, 0.05); /* Light blur border */
+}
+
+/* Pristine White Overrides for Cards */
+.premium-product-card, .product-card, .feature-card, .cart-item, .glass-card, .glass-panel {
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+:root {
   /* Shadows */
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(255, 87, 34, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --shadow-glow: 0 0 20px rgba(201, 155, 46, 0.3);
   
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -39,8 +54,8 @@ body, html {
   font-family: 'Outfit', sans-serif !important;
   background-color: var(--bg-dark) !important;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
   color: var(--text-primary);
   min-height: 100vh;
@@ -105,9 +120,9 @@ a {
   transition: all var(--transition-fast);
   
   &:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
   }
 }
 
@@ -119,7 +134,7 @@ a {
   background: var(--bg-dark); 
 }
 ::-webkit-scrollbar-thumb {
-  background: #333; 
+  background: #cbd5e1; 
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -130,7 +145,7 @@ a {
 .banner_inner {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid var(--border-color);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .services-breadcrumb {
@@ -181,10 +196,10 @@ a {
   background: var(--bg-surface-elevated);
   background-image: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.05) 20%,
-    rgba(255, 255, 255, 0.1) 60%,
-    rgba(255, 255, 255, 0)
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0.05) 20%,
+    rgba(0, 0, 0, 0.1) 60%,
+    rgba(0, 0, 0, 0)
   );
   background-size: 2000px 100%;
   animation: shimmer 2s infinite linear;
@@ -252,7 +267,7 @@ a {
   }
   
   &:focus {
-    box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.4) !important;
+    box-shadow: 0 0 0 3px rgba(201, 155, 46, 0.4) !important;
   }
 }
 
@@ -271,13 +286,13 @@ a {
   outline: none !important;
   
   &:hover {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
-    color: #fff !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.2) !important;
+    color: var(--text-primary) !important;
   }
   
   &:focus {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
   }
 }
 
@@ -299,7 +314,7 @@ a {
   
   &:focus {
     border-color: var(--accent-orange) !important;
-    box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2) !important;
+    box-shadow: 0 0 0 2px rgba(201, 155, 46, 0.2) !important;
   }
 }
 

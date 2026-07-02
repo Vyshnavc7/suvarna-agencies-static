@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<section class="banner-bottom-wthreelayouts py-lg-5 py-3" style="background-color: var(--bg-body);">
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3" style="background-color: transparent;">
     <div class="container">
         
         <!-- SUCCESS SCREEN -->
@@ -26,18 +26,18 @@
             <div class="order-summary-box mx-auto p-4 mb-4 rounded" style="max-width: 600px;">
                 <h4 class="mb-3 border-bottom pb-2 text-start">Order Summary</h4>
                 <div class="d-flex justify-content-between mb-2">
-                    <span style="color: var(--text-secondary);">Total Amount Paid</span>
-                    <strong style="color: var(--accent-orange);">₹{{cartTotal | number:'1.2-2'}}</strong>
+                    <span class="text-muted">Total Amount Paid</span>
+                    <strong class="h5 m-0 text-primary">₹{{cartTotal | number:'1.2-2'}}</strong>
                 </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span style="color: var(--text-secondary);">Payment Method</span>
-                    <span style="color: var(--text-primary);">{{paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : (paymentMethod === 'Card' ? 'Credit / Debit Card' : 'UPI Payment')}}</span>
+                <div class="d-flex justify-content-between mb-2 mt-3">
+                    <span class="text-muted">Payment Method</span>
+                    <span class="fw-bold text-dark">{{paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : (paymentMethod === 'Card' ? 'Credit / Debit Card' : 'UPI Payment')}}</span>
                 </div>
             </div>
 
             <div class="d-flex justify-content-center gap-3">
                 <a routerLink="/shop" class="btn btn-primary btn-lg">Continue Shopping</a>
-                <a routerLink="/" class="btn btn-dark btn-lg" style="background: var(--bg-surface-elevated);">Go to Home</a>
+                <a routerLink="/" class="btn btn-dark btn-lg">Go to Home</a>
             </div>
         </div>
 
@@ -121,8 +121,8 @@
                             <label class="form-check-label d-flex align-items-center" for="paymentCOD">
                                 <i class="fas fa-money-bill-wave fa-lg mr-3 text-success"></i>
                                 <div>
-                                    <strong class="d-block text-white">Cash on Delivery (COD)</strong>
-                                    <span class="small" style="color: var(--text-secondary);">Pay with cash upon delivery of your products.</span>
+                                    <strong class="d-block ">Cash on Delivery (COD)</strong>
+                                    <span class="small text-muted">Pay with cash upon delivery of your products.</span>
                                 </div>
                             </label>
                         </div>
@@ -132,8 +132,8 @@
                             <label class="form-check-label d-flex align-items-center" for="paymentCard">
                                 <i class="fas fa-credit-card fa-lg mr-3" style="color: #64b5f6;"></i>
                                 <div>
-                                    <strong class="d-block text-white">Credit / Debit Card</strong>
-                                    <span class="small" style="color: var(--text-secondary);">We accept Visa, Mastercard, American Express, and RuPay.</span>
+                                    <strong class="d-block ">Credit / Debit Card</strong>
+                                    <span class="small text-muted">We accept Visa, Mastercard, American Express, and RuPay.</span>
                                 </div>
                             </label>
                         </div>
@@ -143,8 +143,8 @@
                             <label class="form-check-label d-flex align-items-center" for="paymentUPI">
                                 <i class="fas fa-mobile-alt fa-lg mr-3" style="color: #4dd0e1;"></i>
                                 <div>
-                                    <strong class="d-block text-white">UPI (BHIM, Google Pay, PhonePe, Paytm)</strong>
-                                    <span class="small" style="color: var(--text-secondary);">Pay instantly using any UPI app.</span>
+                                    <strong class="d-block ">UPI (BHIM, Google Pay, PhonePe, Paytm)</strong>
+                                    <span class="small text-muted">Pay instantly using any UPI app.</span>
                                 </div>
                             </label>
                         </div>
@@ -187,7 +187,7 @@
             <!-- ORDER SUMMARY SIDEBAR -->
             <div class="col-lg-4" *ngIf="!showNewAddressForm">
                 <div class="checkout-card p-4 position-sticky" style="top: 80px;">
-                    <h4 class="mb-4 fw-bold text-white">Order Summary</h4>
+                    <h4 class="mb-4 fw-bold ">Order Summary</h4>
                     
                     <div class="order-items-list mb-4 max-height-300 overflow-auto pr-2">
                         <div class="order-item d-flex justify-content-between align-items-center py-3 border-bottom" *ngFor="let item of cartItems">
@@ -197,15 +197,15 @@
                                 </div>
                                 <div class="item-info">
                                     <span class="item-name d-block text-truncate mb-1" style="max-width: 150px;">{{item.product.productName}}</span>
-                                    <small style="color: var(--text-secondary);">Qty: {{item.quantity}}</small>
+                                    <small class="text-muted">Qty: {{item.quantity}}</small>
                                 </div>
                             </div>
-                            <span class="item-price fw-bold text-white">₹{{(item.product.price * item.quantity) | number:'1.2-2'}}</span>
+                            <span class="item-price fw-bold ">₹{{(item.product.price * item.quantity) | number:'1.2-2'}}</span>
                         </div>
                     </div>
 
                     <div class="coupon-section mb-4">
-                        <h6 class="text-white mb-2">Apply Promo Code</h6>
+                        <h6 class=" mb-2">Apply Promo Code</h6>
                         <div class="input-group" *ngIf="!appliedCoupon">
                             <input type="text" class="form-control" placeholder="Enter code" [(ngModel)]="couponCode">
                             <button class="btn btn-primary" type="button" (click)="applyCoupon()" [disabled]="isApplyingCoupon || !couponCode">
@@ -221,21 +221,21 @@
 
                     <div class="summary-breakdown mb-4">
                         <div class="d-flex justify-content-between mb-3">
-                            <span style="color: var(--text-secondary);">Subtotal</span>
-                            <span class="text-white">₹{{cartTotal | number:'1.2-2'}}</span>
+                            <span class="text-muted">Subtotal</span>
+                            <span class="">₹{{cartTotal | number:'1.2-2'}}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
-                            <span style="color: var(--text-secondary);">Shipping</span>
+                            <span class="text-muted">Shipping</span>
                             <span class="text-success fw-bold">FREE</span>
                         </div>
                         <div class="d-flex justify-content-between mb-3" *ngIf="appliedCoupon">
-                            <span style="color: var(--text-secondary);">Discount</span>
+                            <span class="text-muted">Discount</span>
                             <span class="text-success fw-bold">-₹{{discountAmount | number:'1.2-2'}}</span>
                         </div>
-                        <hr style="border-color: rgba(255,255,255,0.1);">
+                        <hr style="border-color: #f1f5f9;">
                         <div class="d-flex justify-content-between mt-3 mb-2">
-                            <h5 class="fw-bold text-white">Total</h5>
-                            <h5 class="fw-bold" style="color: var(--accent-orange);">₹{{(cartTotal - discountAmount) | number:'1.2-2'}}</h5>
+                            <h5 class="fw-bold ">Total</h5>
+                            <h5 class="fw-bold" style="color: #ff5722;">₹{{(cartTotal - discountAmount) | number:'1.2-2'}}</h5>
                         </div>
                     </div>
 

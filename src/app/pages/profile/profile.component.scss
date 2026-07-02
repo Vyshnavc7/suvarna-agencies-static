@@ -69,12 +69,12 @@
             cursor: pointer;
             
             &:hover {
-                background: rgba(255, 255, 255, 0.03);
+                background: rgba(0, 0, 0, 0.03);
                 color: var(--accent-orange);
             }
             
             &.active {
-                background: rgba(255, 87, 34, 0.1);
+                background: rgba(201, 155, 46, 0.1);
                 color: var(--accent-orange);
                 border-left: 4px solid var(--accent-orange);
             }

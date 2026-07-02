@@ -16,17 +16,17 @@
     <div class="container">
         <h3 class="tittle-w3layouts text-center my-lg-4 my-4">Login Now</h3>
         <div class="inner_sec">
-            <div class="login p-5 bg-dark mx-auto mw-100" style="max-width: 500px !important;">
+            <div class="login p-5 bg-light mx-auto mw-100" style="max-width: 500px !important;">
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                     <div *ngIf="errorMessage" class="alert alert-danger">
                         {{ errorMessage }}
                     </div>
                     <div class="form-group">
-                        <label class="mb-2 text-white">Email address</label>
+                        <label class="mb-2 ">Email address</label>
                         <input type="email" class="form-control" formControlName="email" placeholder="" required="">
                     </div>
                     <div class="form-group">
-                        <label class="mb-2 text-white">Password</label>
+                        <label class="mb-2 ">Password</label>
                         <input type="password" class="form-control" formControlName="password" placeholder=""
                             required="">
                     </div>
@@ -34,7 +34,7 @@
                         <button type="submit" class="btn btn-primary submit mb-4" [disabled]="loginForm.invalid">Sign
                             In</button>
                     </div>
-                    <p class="text-center text-white">Don't have an account? <a routerLink="/signup"
+                    <p class="text-center ">Don't have an account? <a routerLink="/signup"
                             class="text-info">Sign Up</a></p>
                 </form>
             </div>
