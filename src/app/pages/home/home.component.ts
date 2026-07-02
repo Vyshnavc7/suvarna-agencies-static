@@ -13,19 +13,41 @@ import Swal from 'sweetalert2';
 })
 export class HomeComponent implements OnInit {
   newArrivals: any[] = [];
+  featuredProduct: any = null;
   productService = inject(ProductService);
   cartService = inject(CartService);
 
   ngOnInit() {
     this.productService.getProducts().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         const allProducts = Array.isArray(data) ? data : (data.data || data.rows || []);
         this.filterNewArrivals(allProducts);
+        this.selectFeaturedProduct(allProducts);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error fetching products', err);
       }
     });
+  }
+
+  selectFeaturedProduct(products: any[]) {
+    // 1. Try to find a product that has both isFeatured=true and an image
+    this.featuredProduct = products.find(p => p.isFeatured && p.image);
+    
+    // 2. If none, find a product with an image
+    if (!this.featuredProduct) {
+      this.featuredProduct = products.find(p => p.image);
+    }
+    
+    // 3. If still none, find any product that isFeatured
+    if (!this.featuredProduct) {
+      this.featuredProduct = products.find(p => p.isFeatured);
+    }
+    
+    // 4. Finally, just pick the first product
+    if (!this.featuredProduct && products.length > 0) {
+      this.featuredProduct = products[0];
+    }
   }
 
   filterNewArrivals(products: any[]) {
