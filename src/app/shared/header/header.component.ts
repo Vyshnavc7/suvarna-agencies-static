@@ -10,6 +10,7 @@ import { CartService } from '../../core/services/cart.service';
 import { CategoryService } from '../../core/services/category.service';
 import { ProductService } from '../../core/services/product.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { ProfileService } from '../../core/services/profile.service';
 
 @Component({
     selector: 'app-header',
@@ -23,6 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   categoryService = inject(CategoryService);
   productService = inject(ProductService);
   notificationService = inject(NotificationService);
+  profileService = inject(ProfileService);
   router = inject(Router);
 
   cartItemCount$ = this.cartService.cartCount$;
@@ -40,6 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isProfileDropdownOpen = false;
+  isPro = false;
   categories: { name: string, subcategories: { name: string, products: any[] }[] }[] = [];
 
   filteredProducts: any[] = [];
@@ -62,6 +65,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       },
       error: (err) => console.error('Failed to load categories', err)
     });
+
+    if (this.authService.currentUserValue) {
+      this.profileService.getProfile().subscribe({
+        next: (res) => {
+          this.isPro = res.data?.type === 'pro';
+        }
+      });
+    }
 
     // Set up reactive auto-complete search
     this.searchSubscription = this.searchSubject.pipe(

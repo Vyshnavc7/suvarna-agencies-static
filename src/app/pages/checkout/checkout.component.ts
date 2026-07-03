@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { CartService, CartItem } from '../../core/services/cart.service';
 import { SavedCardService, SavedCard } from '../../core/services/saved-card.service';
 import { SavedUpiService, SavedUpi } from '../../core/services/saved-upi.service';
+import { ProfileService } from '../../core/services/profile.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,6 +19,11 @@ import Swal from 'sweetalert2';
 export class CheckoutComponent implements OnInit {
   cartItems: CartItem[] = [];
   cartTotal = 0;
+  mrpTotal = 0;
+  discountTotal = 0;
+  proDiscount = 0;
+  isPro = false;
+  proDiscountPercent = 5; // Default from settings
   
   // Addresses
   addresses: any[] = [];
@@ -127,7 +133,8 @@ export class CheckoutComponent implements OnInit {
     private savedUpiService: SavedUpiService,
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private profileService: ProfileService
   ) { }
 
   cartItemId: number | null = null;
@@ -136,6 +143,22 @@ export class CheckoutComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['cartItemId']) {
         this.cartItemId = parseInt(params['cartItemId'], 10);
+      }
+    });
+
+    this.profileService.getProfile().subscribe({
+      next: (res) => {
+        this.isPro = res.data?.type === 'pro';
+        this.recalculateTotal();
+      }
+    });
+
+    this.http.get<any>('/server/settings/public').subscribe({
+      next: (res) => {
+        if (res.data) {
+          this.proDiscountPercent = res.data.proDiscountPercentage;
+          this.recalculateTotal();
+        }
       }
     });
 
@@ -148,7 +171,7 @@ export class CheckoutComponent implements OnInit {
       }
       
       if (!this.isOrderPlaced) {
-        this.cartTotal = this.cartItems.reduce((acc, item) => acc + (item.quantity * item.product.price), 0);
+        this.recalculateTotal();
       }
       
       // If cart is empty and order is not placed, redirect to cart page
@@ -160,6 +183,18 @@ export class CheckoutComponent implements OnInit {
     this.cartService.loadCart();
     this.loadAddresses();
     this.loadSavedPaymentMethods();
+  }
+
+  recalculateTotal() {
+    if (this.isOrderPlaced || !this.cartItems || this.cartItems.length === 0) return;
+    
+    this.cartTotal = this.cartItems.reduce((acc, item) => acc + (item.quantity * item.product.price), 0);
+    this.mrpTotal = this.cartItems.reduce((acc, item) => acc + (item.quantity * (item.product.actualPrice || item.product.price)), 0);
+    
+    this.proDiscount = this.isPro ? (this.cartTotal * (this.proDiscountPercent / 100)) : 0;
+    this.cartTotal -= this.proDiscount;
+    
+    this.discountTotal = this.mrpTotal - this.cartTotal;
   }
 
   loadSavedPaymentMethods() {

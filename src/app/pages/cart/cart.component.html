@@ -139,9 +139,17 @@
                             <span class="text-muted">Price ({{cartItems.length}} items)</span>
                             <span class="">₹{{mrpTotal | number:'1.0-0'}}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-3 text-success">
-                            <span>Discount</span>
-                            <span>− ₹{{discountTotal | number:'1.0-0'}}</span>
+                        <div class="d-flex justify-content-between mb-3 text-success" *ngIf="(discountTotal - proDiscount) > 0">
+                            <span>Discount
+                                <span class="badge text-success small" style="background: rgba(40,167,69,0.1);">
+                                    {{ mrpTotal > 0 ? ((discountTotal - proDiscount) / mrpTotal * 100 | number:'1.0-0') : 0 }}% off
+                                </span>
+                            </span>
+                            <span>− ₹{{(discountTotal - proDiscount) | number:'1.0-0'}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 text-warning font-weight-bold" *ngIf="isPro">
+                            <span>Pro Member Discount ({{ proDiscountPercent }}%) <i class="fas fa-crown ml-1"></i></span>
+                            <span>− ₹{{proDiscount | number:'1.0-0'}}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Delivery Charges</span>

@@ -22,7 +22,7 @@
                                 alt="Profile" class="avatar">
                             <div class="user-details">
                                 <p class="greeting">Welcome back,</p>
-                                <h5 class="name">{{ user.name }}</h5>
+                                <h5 class="name" [class.pro-name]="profileData?.type === 'pro'">{{ user.name }}</h5>
                             </div>
                         </div>
                     </div>
@@ -127,8 +127,9 @@
                         
                         <h4 class="mb-4 font-weight-bold text-dark border-bottom pb-3">Account Level</h4>
                         <div>
-                            <span class="premium-badge">
-                                <i class="fas fa-crown mr-2"></i> {{ profileData.type || 'Customer' }}
+                            <span class="premium-badge" [class.is-pro]="profileData.type === 'pro'">
+                                <i class="fas" [ngClass]="profileData.type === 'pro' ? 'fa-crown' : 'fa-user'"></i> 
+                                {{ profileData.type === 'pro' ? 'PRO MEMBER' : 'BASIC CUSTOMER' }}
                             </span>
                         </div>
 

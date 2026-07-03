@@ -76,13 +76,13 @@
         *ngIf="authService.currentUser | async as user; else loginBtn">
         <button class="profile-trigger" (click)="toggleProfileDropdown()">
           <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=333&color=fff'" alt="Profile">
-          <span class="user-name">{{ user.name }}</span>
+          <span class="user-name" [class.pro-name]="isPro">{{ user.name }}</span>
         </button>
 
         <!-- Profile Menu -->
         <div class="profile-menu" [class.show]="isProfileDropdownOpen">
           <div class="user-info">
-            <h6>{{ user.name }}</h6>
+            <h6 [class.pro-name]="isPro">{{ user.name }}</h6>
             <small>{{ user.email }}</small>
           </div>
           <a class="dropdown-item" routerLink="/profile"><i class="far fa-user"></i> My Account</a>
@@ -109,11 +109,11 @@
         <div class="profile-menu p-0" [class.show]="isNotificationDropdownOpen"
           style="width: 420px; max-height: 500px; overflow-y: auto;">
           <div class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary">
-            <h6 class="m-0 ">Notifications</h6>
+            <h6 class="m-0 text-white fw-bold">Notifications</h6>
             <div class="d-flex align-items-center">
-              <a href="javascript:void(0)" class="text-muted" style="margin-right: 15px;" title="Refresh" (click)="loadNotifications()"><i
+              <a href="javascript:void(0)" class="text-secondary" style="margin-right: 15px;" title="Refresh" (click)="loadNotifications()"><i
                   class="fas fa-sync-alt"></i></a>
-              <a href="javascript:void(0)" class="text-muted" style="font-size: 0.8rem;"
+              <a href="javascript:void(0)" class="text-secondary" style="font-size: 0.8rem;"
                 (click)="markAllNotificationsAsRead()">Mark all as read</a>
             </div>
           </div>

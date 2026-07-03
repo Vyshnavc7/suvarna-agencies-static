@@ -29,13 +29,33 @@
                     <span class="text-muted">{{paymentMethod === 'COD' ? 'Amount to Pay' : 'Total Amount Paid'}}</span>
                     <strong class="h5 m-0 text-primary">₹{{finalAmountPaid | number:'1.2-2'}}</strong>
                 </div>
+
+                <!-- Product Discount -->
+                <div class="d-flex justify-content-between mb-2 mt-2" *ngIf="discountTotal > 0">
+                    <span class="text-success">Product Discount</span>
+                    <span class="text-success fw-bold">− ₹{{(discountTotal - proDiscount) | number:'1.2-2'}}</span>
+                </div>
+
+                <!-- Pro Member Discount -->
+                <div class="d-flex justify-content-between mb-2" *ngIf="isPro && proDiscount > 0">
+                    <span class="text-warning fw-bold"><i class="fas fa-crown me-1"></i> Pro Discount ({{ proDiscountPercent }}%)</span>
+                    <span class="text-warning fw-bold">− ₹{{proDiscount | number:'1.2-2'}}</span>
+                </div>
+
+                <!-- Coupon Discount -->
+                <div class="d-flex justify-content-between mb-2" *ngIf="appliedCoupon && discountAmount > 0">
+                    <span class="text-info">Coupon <span class="badge bg-info text-dark small">{{appliedCoupon.code}}</span></span>
+                    <span class="text-info fw-bold">− ₹{{discountAmount | number:'1.2-2'}}</span>
+                </div>
+
                 <div class="d-flex justify-content-between mb-2 mt-3">
                     <span class="text-muted">Payment Method</span>
                     <span class="fw-bold text-dark">{{paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : (paymentMethod === 'Card' ? 'Credit / Debit Card' : 'UPI Payment')}}</span>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-center gap-3">
+
+            <div class="d-flex justify-content-center align-items-center gap-3">
                 <a routerLink="/shop" class="btn btn-primary btn-lg">Continue Shopping</a>
                 <a routerLink="/" class="btn btn-dark btn-lg">Go to Home</a>
             </div>
@@ -280,14 +300,18 @@
                     <div class="summary-breakdown mb-4">
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Subtotal</span>
-                            <span class="">₹{{cartTotal | number:'1.2-2'}}</span>
+                            <span class="">₹{{(cartTotal + proDiscount) | number:'1.2-2'}}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Shipping</span>
                             <span class="text-success fw-bold">FREE</span>
                         </div>
+                        <div class="d-flex justify-content-between mb-3 text-warning font-weight-bold" *ngIf="isPro">
+                            <span>Pro Member Discount ({{ proDiscountPercent }}%) <i class="fas fa-crown ml-1"></i></span>
+                            <span>− ₹{{proDiscount | number:'1.2-2'}}</span>
+                        </div>
                         <div class="d-flex justify-content-between mb-3" *ngIf="appliedCoupon">
-                            <span class="text-muted">Discount</span>
+                            <span class="text-muted">Coupon Discount</span>
                             <span class="text-success fw-bold">-₹{{discountAmount | number:'1.2-2'}}</span>
                         </div>
                         <hr style="border-color: #f1f5f9;">

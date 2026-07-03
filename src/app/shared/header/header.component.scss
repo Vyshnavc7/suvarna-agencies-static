@@ -307,6 +307,16 @@
       color: #e0e0e0;
       font-size: 0.9rem;
       font-weight: 500;
+      
+      &.pro-name {
+        color: #c99b2e;
+        background: linear-gradient(90deg, #c99b2e, #ffdf80, #c99b2e);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 1px 5px rgba(201, 155, 46, 0.4);
+        animation: shine 3s linear infinite;
+      }
     }
     
     &:hover .user-name {
@@ -344,6 +354,16 @@
         margin: 0 0 0.2rem 0;
         font-size: 0.95rem;
         color: #fff;
+        
+        &.pro-name {
+          color: #c99b2e;
+          background: linear-gradient(90deg, #c99b2e, #ffdf80, #c99b2e);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          text-shadow: 0px 1px 5px rgba(201, 155, 46, 0.4);
+          animation: shine 3s linear infinite;
+        }
       }
       small {
         color: #888;
@@ -375,6 +395,12 @@
         background: rgba(255, 82, 82, 0.1);
       }
     }
+  }
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
   }
 }
 
