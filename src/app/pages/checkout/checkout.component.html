@@ -26,8 +26,8 @@
             <div class="order-summary-box mx-auto p-4 mb-4 rounded" style="max-width: 600px;">
                 <h4 class="mb-3 border-bottom pb-2 text-start">Order Summary</h4>
                 <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Total Amount Paid</span>
-                    <strong class="h5 m-0 text-primary">₹{{cartTotal | number:'1.2-2'}}</strong>
+                    <span class="text-muted">{{paymentMethod === 'COD' ? 'Amount to Pay' : 'Total Amount Paid'}}</span>
+                    <strong class="h5 m-0 text-primary">₹{{finalAmountPaid | number:'1.2-2'}}</strong>
                 </div>
                 <div class="d-flex justify-content-between mb-2 mt-3">
                     <span class="text-muted">Payment Method</span>
@@ -150,34 +150,89 @@
                         </div>
                     </div>
 
-                    <!-- Card details input form -->
-                    <div *ngIf="paymentMethod === 'Card'" class="card-details-form p-3 rounded mb-3">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label required">Card Number</label>
-                                <input type="text" class="form-control" [ngModel]="cardDetails.cardNumber" (input)="onCardNumberInput($event)" placeholder="1234 5678 9012 3456" maxlength="19">
+                    <!-- Card details section -->
+                    <div *ngIf="paymentMethod === 'Card'" class="p-3 rounded mb-3">
+                        <div *ngIf="savedCards.length > 0" class="mb-4">
+                            <h6 class="mb-3 fw-bold">Select a Saved Card</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6" *ngFor="let card of savedCards">
+                                    <div class="address-item-card p-3 rounded h-100" [class.selected]="selectedSavedCardId === card.id" (click)="selectedSavedCardId = card.id || null" style="cursor: pointer;">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-primary text-white text-uppercase">{{ card.cardType }}</span>
+                                            <input type="radio" name="selectedSavedCard" [value]="card.id" [checked]="selectedSavedCardId === card.id" style="accent-color: var(--accent-orange);">
+                                        </div>
+                                        <h6 class="fw-bold mb-1">{{ card.cardHolderName }}</h6>
+                                        <p class="small mb-0">•••• •••• •••• {{ card.cardNumber.slice(-4) }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="address-item-card p-3 rounded d-flex align-items-center justify-content-center h-100" [class.selected]="selectedSavedCardId === null" (click)="selectedSavedCardId = null" style="cursor: pointer; min-height: 100px;">
+                                        <div class="text-center">
+                                            <i class="fas fa-plus mb-2" style="font-size: 1.2rem; color: var(--accent-orange);"></i>
+                                            <h6 class="fw-bold mb-0">Use New Card</h6>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label required">Name on Card</label>
-                                <input type="text" class="form-control" [(ngModel)]="cardDetails.cardName" placeholder="John Doe">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label required">Expiry Date</label>
-                                <input type="text" class="form-control" [ngModel]="cardDetails.expiry" (input)="onExpiryInput($event)" placeholder="MM/YYYY" maxlength="7">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label required">CVV</label>
-                                <input type="password" class="form-control" [ngModel]="cardDetails.cvv" (input)="onCvvInput($event)" placeholder="***" maxlength="4">
+                        </div>
+
+                        <!-- Card details input form -->
+                        <div *ngIf="selectedSavedCardId === null" class="card-details-form p-3 border rounded">
+                            <h6 class="mb-3 fw-bold">Enter Card Details</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label required">Card Number</label>
+                                    <input type="text" class="form-control" [ngModel]="cardDetails.cardNumber" (input)="onCardNumberInput($event)" placeholder="1234 5678 9012 3456" maxlength="19">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label required">Name on Card</label>
+                                    <input type="text" class="form-control" [(ngModel)]="cardDetails.cardName" placeholder="John Doe">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label required">Expiry Date</label>
+                                    <input type="text" class="form-control" [ngModel]="cardDetails.expiry" (input)="onExpiryInput($event)" placeholder="MM/YYYY" maxlength="7">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label required">CVV</label>
+                                    <input type="password" class="form-control" [ngModel]="cardDetails.cvv" (input)="onCvvInput($event)" placeholder="***" maxlength="4">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- UPI details input form -->
-                    <div *ngIf="paymentMethod === 'UPI'" class="upi-details-form p-3 rounded mb-3">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label required">UPI ID</label>
-                                <input type="text" class="form-control" [(ngModel)]="upiDetails.upiId" placeholder="username@upi or mobile@ybl">
+                    <!-- UPI details section -->
+                    <div *ngIf="paymentMethod === 'UPI'" class="p-3 rounded mb-3">
+                        <div *ngIf="savedUpis.length > 0" class="mb-4">
+                            <h6 class="mb-3 fw-bold">Select a Saved UPI</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6" *ngFor="let upi of savedUpis">
+                                    <div class="address-item-card p-3 rounded h-100" [class.selected]="selectedSavedUpiId === upi.id" (click)="selectedSavedUpiId = upi.id || null" style="cursor: pointer;">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-info text-white text-uppercase">{{ upi.providerName }}</span>
+                                            <input type="radio" name="selectedSavedUpi" [value]="upi.id" [checked]="selectedSavedUpiId === upi.id" style="accent-color: var(--accent-orange);">
+                                        </div>
+                                        <h6 class="fw-bold mb-0">{{ upi.upiId }}</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="address-item-card p-3 rounded d-flex align-items-center justify-content-center h-100" [class.selected]="selectedSavedUpiId === null" (click)="selectedSavedUpiId = null" style="cursor: pointer; min-height: 80px;">
+                                        <div class="text-center">
+                                            <i class="fas fa-plus mb-2" style="font-size: 1.2rem; color: var(--accent-orange);"></i>
+                                            <h6 class="fw-bold mb-0">Use New UPI ID</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- UPI details input form -->
+                        <div *ngIf="selectedSavedUpiId === null" class="upi-details-form p-3 border rounded">
+                            <h6 class="mb-3 fw-bold">Enter UPI ID</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label required">UPI ID</label>
+                                    <input type="text" class="form-control" [(ngModel)]="upiDetails.upiId" placeholder="username@upi or mobile@ybl">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -193,7 +248,10 @@
                         <div class="order-item d-flex justify-content-between align-items-center py-3 border-bottom" *ngFor="let item of cartItems">
                             <div class="d-flex align-items-center">
                                 <div class="item-img-wrapper mr-3">
-                                    <img [src]="item.product.image || 'assets/images/default-product.png'" alt="{{item.product.productName}}">
+                                    <img *ngIf="item.product.image" [src]="item.product.image" (error)="item.product.image = ''" alt="{{item.product.productName}}">
+                                    <div *ngIf="!item.product.image" class="d-flex align-items-center justify-content-center h-100 w-100" style="font-size: 2rem; font-weight: 700; color: #c99b2e; background: transparent;">
+                                        {{ item.product.productName.charAt(0) | uppercase }}
+                                    </div>
                                 </div>
                                 <div class="item-info">
                                     <span class="item-name d-block text-truncate mb-1" style="max-width: 150px;">{{item.product.productName}}</span>

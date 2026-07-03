@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CartService, CartItem } from '../../core/services/cart.service';
+import { SavedCardService, SavedCard } from '../../core/services/saved-card.service';
+import { SavedUpiService, SavedUpi } from '../../core/services/saved-upi.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -45,6 +47,10 @@ export class CheckoutComponent implements OnInit {
   upiDetails = {
     upiId: ''
   };
+  savedCards: SavedCard[] = [];
+  savedUpis: SavedUpi[] = [];
+  selectedSavedCardId: number | null = null;
+  selectedSavedUpiId: number | null = null;
 
   onCardNumberInput(event: any) {
     let inputElement = event.target;
@@ -113,9 +119,12 @@ export class CheckoutComponent implements OnInit {
   isPlacingOrder = false;
   isOrderPlaced = false;
   placedOrderDetails: any = null;
+  finalAmountPaid = 0;
 
   constructor(
     private cartService: CartService,
+    private savedCardService: SavedCardService,
+    private savedUpiService: SavedUpiService,
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute
@@ -138,7 +147,9 @@ export class CheckoutComponent implements OnInit {
         this.cartItems = items;
       }
       
-      this.cartTotal = this.cartItems.reduce((acc, item) => acc + (item.quantity * item.product.price), 0);
+      if (!this.isOrderPlaced) {
+        this.cartTotal = this.cartItems.reduce((acc, item) => acc + (item.quantity * item.product.price), 0);
+      }
       
       // If cart is empty and order is not placed, redirect to cart page
       if (this.cartItems.length === 0 && !this.isOrderPlaced) {
@@ -148,6 +159,35 @@ export class CheckoutComponent implements OnInit {
 
     this.cartService.loadCart();
     this.loadAddresses();
+    this.loadSavedPaymentMethods();
+  }
+
+  loadSavedPaymentMethods() {
+    this.savedCardService.getSavedCards().subscribe({
+      next: (cards) => {
+        this.savedCards = cards;
+        const defaultCard = cards.find(c => c.isDefault);
+        if (defaultCard) {
+          this.selectedSavedCardId = defaultCard.id || null;
+        } else if (cards.length > 0) {
+          this.selectedSavedCardId = cards[0].id || null;
+        }
+      },
+      error: (err) => console.error('Failed to load saved cards', err)
+    });
+
+    this.savedUpiService.getSavedUpis().subscribe({
+      next: (upis) => {
+        this.savedUpis = upis;
+        const defaultUpi = upis.find(u => u.isDefault);
+        if (defaultUpi) {
+          this.selectedSavedUpiId = defaultUpi.id || null;
+        } else if (upis.length > 0) {
+          this.selectedSavedUpiId = upis[0].id || null;
+        }
+      },
+      error: (err) => console.error('Failed to load saved upis', err)
+    });
   }
 
   loadAddresses() {
@@ -216,33 +256,37 @@ export class CheckoutComponent implements OnInit {
     }
 
     if (this.paymentMethod === 'Card') {
-      if (!this.cardDetails.cardNumber || this.cardDetails.cardNumber.replace(/\s/g, '').length < 16) {
-        Swal.fire('Error', 'Please enter a valid 16-digit credit card number.', 'error');
-        return;
-      }
-      if (!this.cardDetails.cardName || !this.cardDetails.cardName.trim()) {
-        Swal.fire('Error', 'Please enter the name on your card.', 'error');
-        return;
-      }
-      if (!this.cardDetails.expiry || !/^(0[1-9]|1[0-2])\/\d{4}$/.test(this.cardDetails.expiry)) {
-        Swal.fire('Error', 'Please enter a valid expiry date in MM/YYYY format.', 'error');
-        return;
-      }
-      if (!this.cardDetails.cvv || this.cardDetails.cvv.length < 3) {
-        Swal.fire('Error', 'Please enter a valid CVV (3 or 4 digits).', 'error');
-        return;
+      if (this.selectedSavedCardId === null) {
+        if (!this.cardDetails.cardNumber || this.cardDetails.cardNumber.replace(/\s/g, '').length < 16) {
+          Swal.fire('Error', 'Please enter a valid 16-digit credit card number.', 'error');
+          return;
+        }
+        if (!this.cardDetails.cardName || !this.cardDetails.cardName.trim()) {
+          Swal.fire('Error', 'Please enter the name on your card.', 'error');
+          return;
+        }
+        if (!this.cardDetails.expiry || !/^(0[1-9]|1[0-2])\/\d{4}$/.test(this.cardDetails.expiry)) {
+          Swal.fire('Error', 'Please enter a valid expiry date in MM/YYYY format.', 'error');
+          return;
+        }
+        if (!this.cardDetails.cvv || this.cardDetails.cvv.length < 3) {
+          Swal.fire('Error', 'Please enter a valid CVV (3 or 4 digits).', 'error');
+          return;
+        }
       }
     }
 
     if (this.paymentMethod === 'UPI') {
-      if (!this.upiDetails.upiId) {
-        Swal.fire('Error', 'Please enter your UPI ID.', 'error');
-        return;
-      }
-      const upiRegex = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
-      if (!upiRegex.test(this.upiDetails.upiId)) {
-        Swal.fire('Error', 'Please enter a valid UPI ID (e.g. username@upi or mobile@ybl).', 'error');
-        return;
+      if (this.selectedSavedUpiId === null) {
+        if (!this.upiDetails.upiId) {
+          Swal.fire('Error', 'Please enter your UPI ID.', 'error');
+          return;
+        }
+        const upiRegex = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
+        if (!upiRegex.test(this.upiDetails.upiId)) {
+          Swal.fire('Error', 'Please enter a valid UPI ID (e.g. username@upi or mobile@ybl).', 'error');
+          return;
+        }
       }
     }
 
@@ -255,6 +299,7 @@ export class CheckoutComponent implements OnInit {
       couponCode: this.appliedCoupon ? this.appliedCoupon.code : null
     }).subscribe({
       next: (res) => {
+        this.finalAmountPaid = this.cartTotal - this.discountAmount;
         this.isPlacingOrder = false;
         this.isOrderPlaced = true;
         this.placedOrderDetails = res;

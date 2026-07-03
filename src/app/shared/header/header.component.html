@@ -54,9 +54,10 @@
           <div class="search-results-list" *ngIf="!isSearching && filteredProducts.length > 0">
             <a *ngFor="let product of filteredProducts; let i = index" [routerLink]="['/product', product.id]" (click)="clearSearch()"
               class="search-result-item" [class.active]="i === activeHighlightIndex">
-              <img
-                [src]="product.image ? 'http://localhost:7781' + product.image : 'assets/images/placeholder.png'"
-                alt="{{product.productName}}" class="search-result-img">
+              <img *ngIf="product.image" [src]="'http://localhost:7781' + product.image" (error)="product.image = ''" alt="{{product.productName}}" class="search-result-img">
+              <div *ngIf="!product.image" class="search-result-img d-flex align-items-center justify-content-center" style="font-size: 1.5rem; font-weight: 700; color: #c99b2e; background: transparent;">
+                  {{ product.productName.charAt(0) | uppercase }}
+              </div>
               <div class="search-result-info">
                 <span class="search-result-name">{{ product.productName }}</span>
                 <span class="search-result-price">₹{{ product.price }}</span>
@@ -165,9 +166,10 @@
       </div>
       <div class="cart-item-list" *ngIf="items.length > 0">
         <div class="cart-item" *ngFor="let item of items">
-          <img
-            [src]="item.product.image ? 'http://localhost:7781' + item.product.image : 'assets/images/placeholder.png'"
-            alt="product">
+          <img *ngIf="item.product.image" [src]="'http://localhost:7781' + item.product.image" (error)="item.product.image = ''" alt="product">
+          <div *ngIf="!item.product.image" class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 6px; font-size: 1.5rem; font-weight: 700; color: #c99b2e; background: transparent;">
+              {{ item.product.productName.charAt(0) | uppercase }}
+          </div>
           <div class="item-details">
             <h6>{{item.product.productName}}</h6>
             <span class="item-price">₹{{item.product.price | number:'1.2-2'}} x {{item.quantity}}</span>

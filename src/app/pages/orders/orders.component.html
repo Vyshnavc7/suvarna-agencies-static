@@ -67,7 +67,10 @@
                     <!-- The Tile -->
                     <div class="order-tile" (click)="item.expanded = !item.expanded" [class.expanded]="item.expanded">
                         <div class="tile-image-col">
-                            <img [src]="item.image" alt="{{item.productName}}">
+                            <img *ngIf="item.image" [src]="item.image" (error)="item.image = ''" alt="{{item.productName}}">
+                            <div *ngIf="!item.image" class="d-flex align-items-center justify-content-center h-100 w-100" style="font-size: 2.5rem; font-weight: 700; color: #c99b2e; background: transparent;">
+                                {{ item.productName.charAt(0) | uppercase }}
+                            </div>
                         </div>
                         
                         <div class="tile-info-col">

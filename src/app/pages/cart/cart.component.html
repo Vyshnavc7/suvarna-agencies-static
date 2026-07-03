@@ -1,3 +1,14 @@
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+            <ul class="short">
+                <li><a routerLink="/">Home</a><i>|</i></li>
+                <li>Cart</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <section class="banner-bottom-wthreelayouts py-lg-5 py-3 cart-section">
     <div class="container">
         <div class="inner_sec" *ngIf="(cartItems$ | async) as cartItems">
@@ -17,8 +28,10 @@
                             <!-- Image Column -->
                             <div class="item-img-box mb-4 mb-sm-0 mr-sm-4">
                                 <div class="img-container">
-                                    <img [src]="item.product.image || 'assets/images/default-product.png'"
-                                        alt="{{item.product.productName}}">
+                                    <img *ngIf="item.product.image" [src]="item.product.image" (error)="item.product.image = ''" alt="{{item.product.productName}}">
+                                    <div *ngIf="!item.product.image" class="d-flex align-items-center justify-content-center h-100 w-100" style="font-size: 2.5rem; font-weight: 700; color: #c99b2e; background: transparent;">
+                                        {{ item.product.productName.charAt(0) | uppercase }}
+                                    </div>
                                 </div>
                                 <!-- Qty Box -->
                                 <div class="mt-4">
@@ -81,8 +94,10 @@
                                 <!-- Image Column -->
                                 <div class="item-img-box mb-4 mb-sm-0 mr-sm-4 text-center">
                                     <div class="img-container">
-                                        <img [src]="saved.product.image || 'assets/images/default-product.png'"
-                                            alt="{{saved.product.productName}}" style="filter: grayscale(40%);">
+                                        <img *ngIf="saved.product.image" [src]="saved.product.image" (error)="saved.product.image = ''" alt="{{saved.product.productName}}" style="filter: grayscale(40%);">
+                                        <div *ngIf="!saved.product.image" class="d-flex align-items-center justify-content-center h-100 w-100" style="font-size: 2.5rem; font-weight: 700; color: #c99b2e; background: transparent; filter: grayscale(40%);">
+                                            {{ saved.product.productName.charAt(0) | uppercase }}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -161,12 +176,13 @@
 
         <!-- Empty Cart -->
         <ng-template #emptyCart>
-            <div class="empty-state text-center py-5 mx-auto" style="max-width: 600px;">
-                <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
-                <h3 class="fw-bold  mb-2">Your cart is empty</h3>
-                <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet. Explore our top
-                    categories!</p>
-                <a routerLink="/shop" class="btn-primary-custom px-4 py-2">Start Shopping</a>
+            <div class="empty-cart-wrapper">
+                <div class="cart-icon-container">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h3 class="empty-cart-title">Your cart is empty</h3>
+                <p class="empty-cart-desc">Looks like you haven't added anything to your cart yet. Discover our top collections and find something you love!</p>
+                <a routerLink="/shop" class="btn-start-shopping">Start Shopping</a>
             </div>
         </ng-template>
 
