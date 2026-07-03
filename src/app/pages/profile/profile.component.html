@@ -1,11 +1,11 @@
-<div class="banner_inner">
-    <div class="services-breadcrumb">
-        <div class="inner_breadcrumb">
-            <ul class="short">
-                <li><a routerLink="/">Home</a><i>|</i></li>
-                <li>Profile</li>
-            </ul>
-        </div>
+<div class="page-header bg-white py-4 border-bottom">
+    <div class="container-fluid px-lg-5 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Profile</li>
+            </ol>
+        </nav>
     </div>
 </div>
 
@@ -16,11 +16,14 @@
             <div class="col-lg-3 col-md-4">
                 <div class="profile-sidebar">
                     <div class="sidebar-header">
-                        <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=ff5722&color=fff&size=128&bold=true'"
-                            alt="Profile" class="avatar">
-                        <div>
-                            <p class="greeting">Hello,</p>
-                            <h5 class="name">{{ user.name }}</h5>
+                        <div class="sidebar-cover"></div>
+                        <div class="sidebar-profile-info">
+                            <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=c99b2e&color=fff&size=128&bold=true'"
+                                alt="Profile" class="avatar">
+                            <div class="user-details">
+                                <p class="greeting">Welcome back,</p>
+                                <h5 class="name">{{ user.name }}</h5>
+                            </div>
                         </div>
                     </div>
                     
@@ -42,7 +45,7 @@
                         </div>
                         <a class="menu-link">Gift Cards <span class="amount-badge">₹0</span></a>
                         <a class="menu-link">Saved UPI</a>
-                        <a class="menu-link">Saved Cards</a>
+                        <a routerLink="/saved-cards" class="menu-link">Saved Cards</a>
                     </div>
                 </div>
             </div>
@@ -52,19 +55,33 @@
                 <div class="profile-content position-relative">
                     
                     <!-- Loading State for Data -->
-                    <div *ngIf="isLoading" class="text-center py-5">
-                        <div class="spinner-border" style="color: var(--accent-orange)" role="status"></div>
-                        <p class="mt-3 text-muted">Loading profile details...</p>
+                    <div *ngIf="isLoading" class="profile-skeleton-loader">
+                        <div class="skeleton-header mb-5"></div>
+                        <div class="row form-group mb-4">
+                            <div class="col-md-5"><div class="skeleton-input"></div></div>
+                            <div class="col-md-5"><div class="skeleton-input"></div></div>
+                        </div>
+                        <div class="skeleton-text short mb-4"></div>
+                        <div class="d-flex mb-5">
+                            <div class="skeleton-card mr-3"></div>
+                            <div class="skeleton-card"></div>
+                        </div>
+                        <div class="skeleton-header mb-4 mt-5"></div>
+                        <div class="row form-group">
+                            <div class="col-md-5"><div class="skeleton-input"></div></div>
+                            <div class="col-md-5"><div class="skeleton-input"></div></div>
+                        </div>
                     </div>
 
                     <!-- Profile Data Content -->
                     <div *ngIf="!isLoading && profileData">
                         
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h4 class="m-0  font-weight-bold">Personal Information</h4>
-                            <span class="edit-link" (click)="toggleEditMode()">
+                        <div class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-3">
+                            <h4 class="m-0 font-weight-bold text-dark">Personal Information</h4>
+                            <button class="btn btn-sm rounded-pill edit-btn" (click)="toggleEditMode()" [ngClass]="isEditMode ? 'btn-outline-danger' : 'btn-outline-custom'">
+                                <i class="fas" [ngClass]="isEditMode ? 'fa-times' : 'fa-pen'"></i> 
                                 {{ isEditMode ? 'Cancel Edit' : 'Edit Profile' }}
-                            </span>
+                            </button>
                         </div>
                         
                         <div class="row form-group">
@@ -79,12 +96,14 @@
                         </div>
                         
                         <span class="gender-label">Your Gender</span>
-                        <div class="mb-4" [style.pointer-events]="!isEditMode ? 'none' : 'auto'" [style.opacity]="!isEditMode ? '0.7' : '1'">
-                            <label class="custom-radio">
-                                <input type="radio" name="gender" value="male" [checked]="profileData.gender === 'male'" (change)="profileData.gender = 'male'" [attr.tabindex]="!isEditMode ? -1 : 0"> Male
+                        <div class="d-flex mb-4" [style.pointer-events]="!isEditMode ? 'none' : 'auto'" [style.opacity]="!isEditMode ? '0.7' : '1'">
+                            <label class="gender-card" [class.selected]="profileData.gender === 'male'">
+                                <input type="radio" name="gender" value="male" [checked]="profileData.gender === 'male'" (change)="profileData.gender = 'male'" class="d-none"> 
+                                <i class="fas fa-mars mr-2"></i> Male
                             </label>
-                            <label class="custom-radio">
-                                <input type="radio" name="gender" value="female" [checked]="profileData.gender === 'female'" (change)="profileData.gender = 'female'" [attr.tabindex]="!isEditMode ? -1 : 0"> Female
+                            <label class="gender-card" [class.selected]="profileData.gender === 'female'">
+                                <input type="radio" name="gender" value="female" [checked]="profileData.gender === 'female'" (change)="profileData.gender = 'female'" class="d-none"> 
+                                <i class="fas fa-venus mr-2"></i> Female
                             </label>
                         </div>
                         
@@ -106,17 +125,17 @@
                         
                         <div class="section-divider"></div>
                         
-                        <h4 class="mb-3  font-weight-bold">Account Level</h4>
+                        <h4 class="mb-4 font-weight-bold text-dark border-bottom pb-3">Account Level</h4>
                         <div>
-                            <span class="badge badge-primary px-4 py-2 text-capitalize rounded-pill" style="font-size: 0.95rem; background: rgba(255, 87, 34, 0.1); color: var(--accent-orange); border: 1px solid rgba(255, 87, 34, 0.3);">
-                                <i class="fas fa-shield-alt mr-2"></i> {{ profileData.type || 'Customer' }}
+                            <span class="premium-badge">
+                                <i class="fas fa-crown mr-2"></i> {{ profileData.type || 'Customer' }}
                             </span>
                         </div>
 
                         <!-- Save Actions -->
                         <div *ngIf="isEditMode" class="mt-5 text-right">
-                            <button class="btn btn-secondary px-4 py-2 mr-3" style="border-radius: 6px;" (click)="toggleEditMode()">Cancel</button>
-                            <button class="btn btn-primary px-5 py-2" style="background: var(--accent-orange); border-color: var(--accent-orange); border-radius: 6px;" (click)="saveProfile()">Save Changes</button>
+                            <button class="btn-outline-custom px-4 py-2 mr-3" (click)="toggleEditMode()">Cancel</button>
+                            <button class="btn-primary-custom px-5 py-2" (click)="saveProfile()">Save Changes</button>
                         </div>
 
                     </div>

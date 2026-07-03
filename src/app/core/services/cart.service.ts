@@ -28,6 +28,7 @@ export interface CartItem {
 export class CartService {
   private apiUrl = '/server/cart';
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
+  private pendingAdditions = new Set<number>();
   cartItems$ = this.cartItemsSubject.asObservable();
 
   public cartCount$ = this.cartItems$.pipe(
@@ -69,18 +70,45 @@ export class CartService {
       return;
     }
 
-    return this.http.post(this.apiUrl + '/add', { productId: product.id, quantity }).pipe(
+    const productId = product.productId || product.id;
+
+    // Check if it's already in the cart locally
+    const currentCart = this.cartItemsSubject.value;
+    const existingItem = currentCart.find(item => item.productId === productId);
+
+    if (existingItem) {
+      // Just update quantity
+      return this.updateQuantity(existingItem.id, existingItem.quantity + quantity).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Cart Updated',
+          text: `Increased quantity of ${product.productName || 'item'} in your cart.`,
+          timer: 1500,
+          showConfirmButton: false
+        });
+      });
+    }
+
+    // Prevent spam clicks
+    if (this.pendingAdditions.has(productId)) {
+      return; 
+    }
+    this.pendingAdditions.add(productId);
+
+    return this.http.post(this.apiUrl + '/add', { productId: productId, quantity }).pipe(
       tap(() => {
+        this.pendingAdditions.delete(productId);
         this.loadCart(); // Reload cart to get updated state
         Swal.fire({
           icon: 'success',
           title: 'Added to Cart',
-          text: `${product.productName} has been added to your cart.`,
+          text: `${product.productName || 'Item'} has been added to your cart.`,
           timer: 1500,
           showConfirmButton: false
         });
       }),
       catchError(err => {
+        this.pendingAdditions.delete(productId);
         console.error('Add to cart failed', err);
         Swal.fire({
           icon: 'error',

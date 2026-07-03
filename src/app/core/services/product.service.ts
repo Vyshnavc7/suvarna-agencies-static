@@ -17,8 +17,8 @@ export class ProductService {
         });
     }
 
-    getProducts(): Observable<any> {
-        return this.http.get<any>(this.apiUrl, { headers: this.getHeaders() });
+    getProducts(page: number = 1, limit: number = 8): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}?page=${page}&limit=${limit}`, { headers: this.getHeaders() });
     }
 
     getProductById(id: string): Observable<any> {

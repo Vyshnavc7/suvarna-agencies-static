@@ -384,3 +384,43 @@
     }
   }
 }
+
+/* Marquee Banner */
+.marquee-banner {
+  background: #c99b2e;
+  color: #ffffff;
+  padding: 10px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(201, 155, 46, 0.3);
+  z-index: 10;
+  
+  .marquee-content {
+    display: inline-block;
+    animation: marquee 25s linear infinite;
+    
+    span {
+      margin-right: 4rem;
+      
+      i {
+        margin-right: 8px;
+        color: #ffffff;
+      }
+    }
+    
+    &:hover {
+      animation-play-state: paused;
+    }
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

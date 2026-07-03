@@ -1,3 +1,18 @@
+<!-- Top Announcement Marquee -->
+<div class="marquee-banner">
+  <div class="marquee-content">
+    <span><i class="fas fa-fire"></i> MEGA SALE: Up to 30% Off on Premium Tools</span>
+    <span><i class="fas fa-rocket"></i> NEWLY LAUNCHED: Advanced Heavy Machinery</span>
+    <span><i class="fas fa-truck"></i> Free Shipping on all orders above ₹10,000</span>
+    <span><i class="fas fa-star"></i> 100% Genuine Products Guaranteed</span>
+    <!-- Duplicated for seamless scrolling -->
+    <span><i class="fas fa-fire"></i> MEGA SALE: Up to 30% Off on Premium Tools</span>
+    <span><i class="fas fa-rocket"></i> NEWLY LAUNCHED: Advanced Heavy Machinery</span>
+    <span><i class="fas fa-truck"></i> Free Shipping on all orders above ₹10,000</span>
+    <span><i class="fas fa-star"></i> 100% Genuine Products Guaranteed</span>
+  </div>
+</div>
+
 <div class="hero-section">
   <div class="hero-bg-elements">
     <div class="glow-orb orb-1"></div>
@@ -55,7 +70,9 @@
                   featuredProduct.productName }}</a></h5>
               <div class="d-flex justify-content-between align-items-center">
                 <span class="price">₹{{ featuredProduct.price | number:'1.2-2' }}</span>
-                <button class="btn-icon" (click)="addToCart(featuredProduct)"><i class="fas fa-cart-plus"></i></button>
+                <button class="btn-icon" [ngClass]="{'in-cart': isInCart(featuredProduct)}" (click)="isInCart(featuredProduct) ? goToCart() : addToCart(featuredProduct)" [title]="isInCart(featuredProduct) ? 'Go to Cart' : 'Add to Cart'">
+                  <i class="fas" [ngClass]="isInCart(featuredProduct) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -101,7 +118,7 @@
 </section>
 
 <!-- New Arrivals Section -->
-<section class="new-arrivals-section py-5">
+<section class="new-arrivals-section py-5 bg-white">
   <div class="container-fluid px-lg-5 px-3">
     <div class="section-header d-flex justify-content-between align-items-end mb-5">
       <div>
@@ -132,8 +149,8 @@
             <h5 class="product-title"><a [routerLink]="['/product', product.id]">{{product.productName}}</a></h5>
             <div class="d-flex justify-content-between align-items-center mt-3">
               <span class="product-price">₹{{product.price | number:'1.2-2'}}</span>
-              <button class="btn-add-cart" (click)="addToCart(product)" title="Add to Cart">
-                <i class="fas fa-cart-plus"></i>
+              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
+                <i class="fas" [ngClass]="isInCart(product) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
               </button>
             </div>
           </div>
@@ -144,6 +161,90 @@
         <div class="glass-panel py-5 rounded text-muted">
           <i class="fas fa-box-open fa-3x mb-3 opacity-50"></i>
           <p>No new arrivals at the moment. Please check back later.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Section -->
+<section class="featured-section py-5" style="background: #f8fafc;">
+  <div class="container-fluid px-lg-5 px-3">
+    <div class="section-header d-flex justify-content-between align-items-end mb-5">
+      <div>
+        <h2 class="section-title">Featured Products</h2>
+        <p class="section-desc">Our top-tier selection of professional-grade tools.</p>
+      </div>
+      <a routerLink="/shop" class="btn-outline-custom">Explore</a>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4" *ngFor="let product of featuredProducts">
+        <div class="premium-product-card">
+          <div class="card-badge" style="background: #c99b2e;">FEATURED</div>
+          <div class="card-image">
+            <ng-container *ngIf="product.image; else noImage2">
+              <img [src]="product.image" alt="{{product.productName}}">
+            </ng-container>
+            <ng-template #noImage2>
+              <div class="no-image-placeholder">
+                <i class="fas fa-star"></i>
+              </div>
+            </ng-template>
+            <div class="card-overlay">
+              <a [routerLink]="['/product', product.id]" class="btn-quick-view">Quick View</a>
+            </div>
+          </div>
+          <div class="card-info">
+            <h5 class="product-title"><a [routerLink]="['/product', product.id]">{{product.productName}}</a></h5>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="product-price">₹{{product.price | number:'1.2-2'}}</span>
+              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
+                <i class="fas" [ngClass]="isInCart(product) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Suggested for You Section -->
+<section class="suggested-section py-5 bg-white">
+  <div class="container-fluid px-lg-5 px-3">
+    <div class="section-header d-flex justify-content-between align-items-end mb-5">
+      <div>
+        <h2 class="section-title">Suggested for You</h2>
+        <p class="section-desc">Tools we think you'll love based on recent trends.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4" *ngFor="let product of suggestedProducts">
+        <div class="premium-product-card">
+          <div class="card-image">
+            <ng-container *ngIf="product.image; else noImage3">
+              <img [src]="product.image" alt="{{product.productName}}">
+            </ng-container>
+            <ng-template #noImage3>
+              <div class="no-image-placeholder">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+            </ng-template>
+            <div class="card-overlay">
+              <a [routerLink]="['/product', product.id]" class="btn-quick-view">Quick View</a>
+            </div>
+          </div>
+          <div class="card-info">
+            <h5 class="product-title"><a [routerLink]="['/product', product.id]">{{product.productName}}</a></h5>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="product-price">₹{{product.price | number:'1.2-2'}}</span>
+              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
+                <i class="fas" [ngClass]="isInCart(product) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

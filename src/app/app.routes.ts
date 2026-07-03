@@ -22,5 +22,6 @@ export const routes: Routes = [
     { path: 'settings', loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent) },
     { path: 'services', loadComponent: () => import('./pages/services/services.component').then(m => m.ServicesComponent) },
     { path: 'wishlist', loadComponent: () => import('./pages/wishlist/wishlist.component').then(m => m.WishlistComponent) },
+    { path: 'saved-cards', loadComponent: () => import('./pages/saved-cards/saved-cards.component').then(m => m.SavedCardsComponent) },
     { path: '**', redirectTo: '' }
 ];

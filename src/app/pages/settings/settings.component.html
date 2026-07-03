@@ -1,39 +1,69 @@
-<div class="banner_inner">
-    <div class="services-breadcrumb">
-        <div class="inner_breadcrumb">
-            <ul class="short">
-                <li><a routerLink="/">Home</a><i>|</i></li>
-                <li>Settings</li>
-            </ul>
-        </div>
+<div class="page-header bg-white py-4 border-bottom">
+    <div class="container-fluid px-lg-5 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item"><a routerLink="/profile" class="text-decoration-none text-muted">My Account</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Settings</li>
+            </ol>
+        </nav>
     </div>
 </div>
 
-<section class="settings-container py-5">
+<div class="profile-container py-5">
     <div class="container">
-        <h2 class=" mb-4">Account Settings</h2>
         <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="list-group">
-                    <button class="list-group-item list-group-item-action active bg-light  border-secondary">
-                        <i class="fas fa-user-cog mr-2"></i> Account Info
-                    </button>
-                    <button class="list-group-item list-group-item-action bg-light  border-secondary">
-                        <i class="fas fa-lock mr-2"></i> Security
-                    </button>
-                    <button class="list-group-item list-group-item-action bg-light  border-secondary">
-                        <i class="fas fa-bell mr-2"></i> Notifications
-                    </button>
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="profile-sidebar">
+                    <div class="sidebar-header">
+                        <div class="sidebar-cover"></div>
+                        <div class="sidebar-profile-info text-center">
+                            <div class="avatar-placeholder">
+                                <i class="fas fa-cogs fa-2x text-white"></i>
+                            </div>
+                            <h5 class="name mt-2">Settings</h5>
+                            <p class="greeting">Manage your preferences</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-menu">
+                        <div class="menu-category">
+                            <i class="fas fa-sliders-h"></i> PREFERENCES
+                        </div>
+                        <a class="menu-link active">
+                            <span><i class="fas fa-user-cog mr-2"></i> Account Info</span>
+                            <i class="fas fa-chevron-right small"></i>
+                        </a>
+                        <a class="menu-link">
+                            <span><i class="fas fa-lock mr-2"></i> Security</span>
+                        </a>
+                        <a class="menu-link">
+                            <span><i class="fas fa-bell mr-2"></i> Notifications</span>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="card bg-light border-secondary ">
-                    <div class="card-body p-4">
-                        <h4 class="card-title mb-4">Coming Soon</h4>
-                        <p class="text-muted">The settings dashboard is currently under construction. Please check back later.</p>
+
+            <!-- Main Content Area -->
+            <div class="col-lg-9 col-md-8">
+                <div class="profile-content text-center py-5">
+                    <div class="empty-state py-5">
+                        <div class="mb-4">
+                            <div class="icon-circle mx-auto">
+                                <i class="fas fa-tools fa-3x text-muted"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-weight-bold text-dark mb-3">Settings Dashboard</h3>
+                        <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
+                            We are currently building a comprehensive settings dashboard to give you full control over your experience. Please check back later!
+                        </p>
+                        <a routerLink="/profile" class="btn-primary-custom px-4 py-2 rounded-pill">
+                            <i class="fas fa-arrow-left mr-2"></i> Back to Profile
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>

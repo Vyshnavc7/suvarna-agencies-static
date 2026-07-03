@@ -56,8 +56,8 @@
           ₹{{product.price | number:'1.0-0'}}
         </div>
         
-        <button class="btn-add-cart" (click)="addToCart(product)">
-          ADD TO CART
+        <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product)">
+          {{ isInCart(product) ? 'GO TO CART' : 'ADD TO CART' }}
         </button>
       </div>
     </div>
@@ -67,5 +67,15 @@
       <i class="fas fa-search"></i>
       <p>No products found.</p>
     </div>
+  </div>
+  
+  <!-- Infinite Scroll Loading Indicator -->
+  <div class="loading-more" *ngIf="isLoadingMore">
+    <div class="spinner"></div>
+    <span>Loading more products...</span>
+  </div>
+  
+  <div class="end-of-results" *ngIf="!hasMoreData && products.length > 0">
+    <span>You've reached the end!</span>
   </div>
 </div>

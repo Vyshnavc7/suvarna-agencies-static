@@ -128,19 +128,19 @@
   
   .search-icon {
     position: absolute;
-    left: 12px;
+    left: 16px;
     color: #888;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   
   input {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    padding: 0.5rem 2.2rem 0.5rem 2.2rem;
+    padding: 0.7rem 2.5rem 0.7rem 2.5rem;
     color: #fff;
-    font-size: 0.85rem;
-    width: 200px;
+    font-size: 0.95rem;
+    width: 240px;
     outline: none;
     transition: all 0.3s ease;
     
@@ -150,16 +150,16 @@
     
     &:focus {
       border-color: rgba(255, 255, 255, 0.2);
-      width: 240px;
+      width: 320px;
       background: rgba(0, 0, 0, 0.5);
     }
   }
 
   .clear-icon {
     position: absolute;
-    right: 12px;
+    right: 16px;
     color: #888;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: color 0.2s ease;
     

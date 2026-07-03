@@ -1,0 +1,185 @@
+<div class="page-header bg-white py-4 border-bottom">
+    <div class="container-fluid px-lg-5 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item"><a routerLink="/profile" class="text-decoration-none text-muted">My Account</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Saved Cards</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="profile-container py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="profile-sidebar">
+                    <div class="sidebar-header">
+                        <div class="sidebar-cover"></div>
+                        <div class="sidebar-profile-info text-center">
+                            <div class="avatar-placeholder">
+                                <i class="fas fa-credit-card fa-2x text-white"></i>
+                            </div>
+                            <h5 class="name mt-2">Saved Cards</h5>
+                            <p class="greeting">Manage payment methods</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-menu">
+                        <a routerLink="/orders" class="menu-link">
+                            <span><i class="fas fa-folder text-primary mr-2"></i> My Orders</span>
+                        </a>
+                        <div class="menu-divider"></div>
+                        <div class="menu-category">
+                            <i class="fas fa-user"></i> ACCOUNT SETTINGS
+                        </div>
+                        <a routerLink="/profile" class="menu-link">Profile Information</a>
+                        <a class="menu-link">Manage Addresses</a>
+                        <a class="menu-link">PAN Card Information</a>
+                        <div class="menu-divider"></div>
+                        <div class="menu-category">
+                            <i class="fas fa-wallet"></i> PAYMENTS
+                        </div>
+                        <a class="menu-link">Gift Cards</a>
+                        <a class="menu-link">Saved UPI</a>
+                        <a routerLink="/saved-cards" class="menu-link active">Saved Cards</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-lg-9 col-md-8">
+                <div class="profile-content py-4 px-4 px-md-5">
+                    
+                    <!-- Loading State -->
+                    <div *ngIf="isLoading" class="text-center py-5">
+                        <div class="spinner-border" style="color: #c99b2e" role="status"></div>
+                        <p class="mt-3 text-muted">Loading your saved cards...</p>
+                    </div>
+
+                    <!-- Cards Display -->
+                    <div *ngIf="!isLoading">
+                        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                            <h4 class="m-0 font-weight-bold text-dark">Saved Cards</h4>
+                            <button *ngIf="!showAddForm" class="btn-primary-custom btn-sm px-3 py-2 rounded-pill" (click)="toggleAddForm()">
+                                <i class="fas fa-plus mr-1"></i> Add New Card
+                            </button>
+                            <button *ngIf="showAddForm" class="btn-outline-custom btn-sm px-3 py-2 rounded-pill" (click)="toggleAddForm()">
+                                <i class="fas fa-times mr-1"></i> Cancel
+                            </button>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div *ngIf="!showAddForm && savedCards.length === 0" class="empty-state text-center py-5">
+                            <div class="icon-circle mx-auto mb-4">
+                                <i class="far fa-credit-card fa-3x text-muted"></i>
+                            </div>
+                            <h5 class="font-weight-bold text-dark mb-2">No Saved Cards</h5>
+                            <p class="text-muted mb-4">Save your credit or debit cards for faster checkout.</p>
+                            <button class="btn-primary-custom px-4 py-2 rounded-pill" (click)="toggleAddForm()">
+                                Add a Card Now
+                            </button>
+                        </div>
+
+                        <!-- Add Card Form -->
+                        <div *ngIf="showAddForm" class="add-card-form p-4 mb-4">
+                            <h5 class="font-weight-bold mb-4">Enter Card Details</h5>
+                            
+                            <div class="form-group mb-3">
+                                <label class="small text-muted mb-1">Cardholder Name</label>
+                                <input type="text" class="form-control premium-input" [(ngModel)]="newCard.cardHolderName" placeholder="Name on card">
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label class="small text-muted mb-1">Card Number</label>
+                                <input type="text" class="form-control premium-input" [ngModel]="newCard.cardNumber" (ngModelChange)="newCard.cardNumber = $event" (input)="onCardNumberInput($event)" placeholder="0000 0000 0000 0000" maxlength="19">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-6 col-md-4 mb-3">
+                                    <label class="small text-muted mb-1">Expiry Month</label>
+                                    <select class="form-control premium-input" [(ngModel)]="newCard.expiryMonth">
+                                        <option value="" disabled selected>MM</option>
+                                        <option *ngFor="let m of months" [value]="m">{{m}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 col-md-4 mb-3">
+                                    <label class="small text-muted mb-1">Expiry Year</label>
+                                    <select class="form-control premium-input" [(ngModel)]="newCard.expiryYear">
+                                        <option value="" disabled selected>YYYY</option>
+                                        <option *ngFor="let y of years" [value]="y">{{y}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="small text-muted mb-1">Card Type</label>
+                                    <select class="form-control premium-input" [(ngModel)]="newCard.cardType">
+                                        <option value="Visa">Visa</option>
+                                        <option value="Mastercard">Mastercard</option>
+                                        <option value="Amex">American Express</option>
+                                        <option value="RuPay">RuPay</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-check mt-2 mb-4">
+                                <input class="form-check-input" type="checkbox" id="defaultCard" [(ngModel)]="newCard.isDefault">
+                                <label class="form-check-label text-muted" for="defaultCard">
+                                    Set as default payment method
+                                </label>
+                            </div>
+                            
+                            <div class="text-right">
+                                <button class="btn-primary-custom px-4 py-2 rounded-pill" (click)="saveCard()" [disabled]="isSaving">
+                                    <span *ngIf="!isSaving">Save Card</span>
+                                    <span *ngIf="isSaving"><i class="fas fa-spinner fa-spin mr-2"></i> Saving...</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Cards List -->
+                        <div *ngIf="!showAddForm && savedCards.length > 0" class="row">
+                            <div class="col-md-6 mb-4" *ngFor="let card of savedCards">
+                                <div class="credit-card-ui" [ngClass]="card.cardType.toLowerCase()">
+                                    <div class="card-chip"></div>
+                                    <div class="card-type-icon">
+                                        <i class="fab fa-cc-{{card.cardType.toLowerCase()}} fa-2x" *ngIf="card.cardType !== 'RuPay'"></i>
+                                        <span *ngIf="card.cardType === 'RuPay'" class="font-weight-bold italic">RuPay</span>
+                                    </div>
+                                    <div class="card-number mt-4 mb-3">
+                                        {{ formatCardNumber(card.cardNumber) }}
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-end">
+                                        <div>
+                                            <div class="card-label">Card Holder</div>
+                                            <div class="card-value">{{ card.cardHolderName | uppercase }}</div>
+                                        </div>
+                                        <div>
+                                            <div class="card-label">Expires</div>
+                                            <div class="card-value">{{ card.expiryMonth }}/{{ card.expiryYear.slice(-2) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-actions mt-3 d-flex justify-content-between align-items-center px-2">
+                                    <div class="default-badge" *ngIf="card.isDefault">
+                                        <i class="fas fa-check-circle mr-1"></i> Default
+                                    </div>
+                                    <button *ngIf="!card.isDefault" class="btn btn-link text-muted p-0 text-decoration-none small" (click)="setDefault(card.id!)">
+                                        Set as Default
+                                    </button>
+                                    
+                                    <button class="btn btn-link text-danger p-0 text-decoration-none small" (click)="deleteCard(card.id!)">
+                                        <i class="fas fa-trash-alt mr-1"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
