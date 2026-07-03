@@ -28,8 +28,11 @@
                     </div>
                     
                     <div class="sidebar-menu">
-                        <a routerLink="/orders" class="menu-link">
-                            <span><i class="fas fa-folder text-primary mr-2"></i> My Orders</span>
+                        <a routerLink="/orders" class="menu-link" style="padding-left: 1.5rem;">
+                            <span class="d-flex align-items-center" style="font-weight: 600;">
+                                <i class="fas fa-folder" style="color: #c99b2e; width: 20px; text-align: center; margin-right: 15px;"></i> MY ORDERS
+                            </span>
+                            <i class="fas fa-chevron-right text-muted"></i>
                         </a>
                         <div class="menu-divider"></div>
                         <div class="menu-category">
@@ -37,13 +40,11 @@
                         </div>
                         <a routerLink="/profile" class="menu-link">Profile Information</a>
                         <a class="menu-link">Manage Addresses</a>
-                        <a class="menu-link">PAN Card Information</a>
                         <div class="menu-divider"></div>
                         <div class="menu-category">
                             <i class="fas fa-wallet"></i> PAYMENTS
                         </div>
-                        <a class="menu-link">Gift Cards</a>
-                        <a class="menu-link">Saved UPI</a>
+                        <a routerLink="/saved-upi" class="menu-link">Saved UPI</a>
                         <a routerLink="/saved-cards" class="menu-link active">Saved Cards</a>
                     </div>
                 </div>
@@ -53,10 +54,14 @@
             <div class="col-lg-9 col-md-8">
                 <div class="profile-content py-4 px-4 px-md-5">
                     
-                    <!-- Loading State -->
-                    <div *ngIf="isLoading" class="text-center py-5">
-                        <div class="spinner-border" style="color: #c99b2e" role="status"></div>
-                        <p class="mt-3 text-muted">Loading your saved cards...</p>
+                    <!-- Loading State Skeleton -->
+                    <div *ngIf="isLoading" class="saved-cards-skeleton py-4">
+                        <div class="skeleton-header mb-4"></div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4" *ngFor="let i of [1, 2]">
+                                <div class="skeleton-card-ui"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Cards Display -->

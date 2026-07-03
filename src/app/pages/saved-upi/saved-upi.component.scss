@@ -1,4 +1,4 @@
-@import 'saved-cards-skeleton.scss';
+@import 'saved-upi-skeleton.scss';
 
 .profile-container {
     background: #f8fafc;
@@ -94,6 +94,12 @@
             }
         }
         
+        .menu-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 0.5rem 0;
+        }
+
         .menu-link {
             display: flex;
             justify-content: space-between;
@@ -165,122 +171,41 @@ select.premium-input {
     padding-bottom: 0;
 }
 
-/* Beautiful Credit Card UI */
-.credit-card-ui {
+/* UPI UI styling */
+.upi-ui {
     width: 100%;
-    max-width: 380px;
-    height: 220px;
-    border-radius: 16px;
-    padding: 2rem;
-    color: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     position: relative;
-    overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     
     &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border-color: #10b981;
     }
     
-    /* Backgrounds based on type */
-    &.visa {
-        background: linear-gradient(135deg, #1a1f71 0%, #1e4598 100%);
-    }
-    
-    &.mastercard {
-        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    }
-    
-    &.amex {
-        background: linear-gradient(135deg, #016fd0 0%, #00509a 100%);
-    }
-    
-    &.rupay {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    }
-    
-    /* Decoration ring */
-    &::after {
-        content: '';
-        position: absolute;
-        top: -50px;
-        right: -50px;
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.1);
-    }
-    &::before {
-        content: '';
-        position: absolute;
-        bottom: -30px;
-        left: -30px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.05);
-    }
-
-    .card-chip {
+    .upi-icon {
         width: 45px;
-        height: 35px;
-        background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
-        border-radius: 5px;
-        position: relative;
-        z-index: 1;
-        
-        &::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 1px;
-            background: rgba(0,0,0,0.2);
-            top: 50%;
-            left: 0;
-        }
-        &::before {
-            content: '';
-            position: absolute;
-            width: 1px;
-            height: 100%;
-            background: rgba(0,0,0,0.2);
-            left: 50%;
-            top: 0;
-        }
+        height: 45px;
+        border-radius: 10px;
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
     }
     
-    .card-type-icon {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
-        z-index: 1;
-    }
-    
-    .card-number {
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 1.4rem;
-        letter-spacing: 2px;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        position: relative;
-        z-index: 1;
-    }
-    
-    .card-label {
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        opacity: 0.7;
-        margin-bottom: 2px;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .card-value {
-        font-size: 0.95rem;
+    .upi-id {
+        font-size: 1.15rem;
         font-weight: 600;
-        letter-spacing: 1px;
-        position: relative;
-        z-index: 1;
+        color: #1e293b;
+        letter-spacing: 0.5px;
+        word-break: break-all;
     }
 }
 
