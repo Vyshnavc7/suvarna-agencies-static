@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import Swal from 'sweetalert2';
+import { ToastService } from './toast.service';
 
 export interface CartItem {
   id: number;
@@ -18,6 +18,7 @@ export interface CartItem {
     discountPrice: number;
     image: string;
     description: string;
+    quantity: number;
   };
   quantity: number;
 }
@@ -35,7 +36,7 @@ export class CartService {
     map(items => items.length)
   );
 
-  constructor(private http: HttpClient, private authService: AuthService, private router: Router) {
+  constructor(private http: HttpClient, private authService: AuthService, private router: Router, private toast: ToastService) {
     this.authService.currentUser.subscribe(user => {
       if (user) {
         this.loadCart();
@@ -54,19 +55,8 @@ export class CartService {
 
   addToCart(product: any, quantity: number = 1) {
     if (!this.authService.currentUserValue) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Please Login',
-        text: 'You need to be logged in to add items to the cart.',
-        confirmButtonColor: '#ff5722',
-        confirmButtonText: 'Login Now',
-        showCancelButton: true,
-        cancelButtonText: 'Cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(['/login']);
-        }
-      });
+      this.toast.info('Please log in to add items to the cart.');
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -79,13 +69,7 @@ export class CartService {
     if (existingItem) {
       // Just update quantity
       return this.updateQuantity(existingItem.id, existingItem.quantity + quantity).subscribe(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Cart Updated',
-          text: `Increased quantity of ${product.productName || 'item'} in your cart.`,
-          timer: 1500,
-          showConfirmButton: false
-        });
+        this.toast.success(`${product.productName || 'Item'} quantity updated in cart.`);
       });
     }
 
@@ -98,24 +82,12 @@ export class CartService {
     return this.http.post(this.apiUrl + '/add', { productId: productId, quantity }).pipe(
       tap(() => {
         this.pendingAdditions.delete(productId);
-        this.loadCart(); // Reload cart to get updated state
-        Swal.fire({
-          icon: 'success',
-          title: 'Added to Cart',
-          text: `${product.productName || 'Item'} has been added to your cart.`,
-          timer: 1500,
-          showConfirmButton: false
-        });
+        this.loadCart();
+        this.toast.success(`${product.productName || 'Item'} added to cart.`);
       }),
       catchError(err => {
         this.pendingAdditions.delete(productId);
         console.error('Add to cart failed', err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to add item to cart.',
-          confirmButtonColor: '#333'
-        });
         return throwError(() => err);
       })
     ).subscribe();
@@ -131,13 +103,6 @@ export class CartService {
     return this.http.delete(`${this.apiUrl}/${cartItemId}`).pipe(
       tap(() => {
         this.loadCart();
-        Swal.fire({
-          icon: 'success',
-          title: 'Removed',
-          text: 'Item removed from cart',
-          timer: 1500,
-          showConfirmButton: false
-        });
       })
     );
   }

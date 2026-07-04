@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SavedCardService, SavedCard } from '../../core/services/saved-card.service';
 import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-saved-cards',
@@ -34,7 +34,8 @@ export class SavedCardsComponent implements OnInit {
 
   constructor(
     private savedCardService: SavedCardService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toast: ToastService
   ) {
     const currentYear = new Date().getFullYear();
     for (let i = 0; i < 15; i++) {
@@ -82,20 +83,20 @@ export class SavedCardsComponent implements OnInit {
     if (this.isSaving) return;
 
     if (!this.newCard.cardHolderName || !this.newCard.cardNumber || !this.newCard.expiryMonth || !this.newCard.expiryYear) {
-      Swal.fire('Error', 'Please fill out all card details', 'error');
+      this.toast.error('Please fill out all card details.');
       return;
     }
     
     const cleanCardNumber = this.newCard.cardNumber.replace(/\s+/g, '');
     
     if (cleanCardNumber.length < 15) {
-      Swal.fire('Error', 'Please enter a valid card number', 'error');
+      this.toast.error('Please enter a valid card number.');
       return;
     }
 
     const isDuplicate = this.savedCards.some(c => c.cardNumber.replace(/\s+/g, '') === cleanCardNumber);
     if (isDuplicate) {
-      Swal.fire('Info', 'This card is already saved in your account.', 'info');
+      this.toast.info('This card is already saved in your account.');
       return;
     }
 
@@ -113,37 +114,25 @@ export class SavedCardsComponent implements OnInit {
             if (c.id !== res.card.id) c.isDefault = false;
           });
         }
-        Swal.fire('Success', 'Card saved successfully!', 'success');
+        this.toast.success('Card saved successfully!');
       },
       error: (err) => {
         console.error('Error saving card', err);
-        Swal.fire('Error', err.error?.error || 'Failed to save card. Please try again.', 'error');
+        this.toast.error(err.error?.error || 'Failed to save card. Please try again.');
         this.isSaving = false;
       }
     });
   }
 
   deleteCard(id: number): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You want to remove this saved card?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'Yes, remove it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.savedCardService.deleteSavedCard(id).subscribe({
-          next: () => {
-            this.savedCards = this.savedCards.filter(c => c.id !== id);
-            Swal.fire('Deleted!', 'Your card has been removed.', 'success');
-          },
-          error: (err) => {
-            console.error('Error deleting card', err);
-            Swal.fire('Error', 'Failed to remove card.', 'error');
-          }
-        });
+    this.savedCardService.deleteSavedCard(id).subscribe({
+      next: () => {
+        this.savedCards = this.savedCards.filter(c => c.id !== id);
+        this.toast.success('Card removed successfully.');
+      },
+      error: (err) => {
+        console.error('Error deleting card', err);
+        this.toast.error('Failed to remove card.');
       }
     });
   }

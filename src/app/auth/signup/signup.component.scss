@@ -1,0 +1,446 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+// ── Variables ───────────────────────────────────────────────────────────────
+$gold:        #c99b2e;
+$gold-dark:   #a67c21;
+$gold-light:  #f0d080;
+$navy:        #041E42;
+$navy-mid:    #0a3166;
+$text-dark:   #1e293b;
+$text-muted:  #64748b;
+$border:      rgba(0,0,0,0.08);
+$radius-lg:   20px;
+$radius-xl:   28px;
+
+// ── Page layout ─────────────────────────────────────────────────────────────
+:host {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.signup-page {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  font-family: 'Outfit', sans-serif;
+  background: #f0f4f8;
+  min-height: calc(100vh - 75px);
+}
+
+// ── Left decorative panel ────────────────────────────────────────────────────
+.signup-panel {
+  flex: 0 0 44%;
+  background:
+    radial-gradient(ellipse at 60% 40%, rgba($gold, 0.18) 0%, transparent 60%),
+    linear-gradient(160deg, #060d18 0%, #041E42 55%, #081428 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 860px) { display: none; }
+}
+
+// ── Decorative elements ───────────────────────────────────────────────────────
+.deco { position: absolute; pointer-events: none; }
+
+// Rings
+.deco-ring {
+  border-radius: 50%;
+  border: 1.5px solid rgba($gold, 0.18);
+}
+.deco-ring-1 {
+  width: 420px; height: 420px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: rotateSlow 18s linear infinite;
+}
+.deco-ring-2 {
+  width: 280px; height: 280px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: rgba($gold, 0.28);
+  animation: rotateSlow 12s linear infinite reverse;
+}
+.deco-ring-3 {
+  width: 560px; height: 560px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: rgba(255,255,255,0.05);
+  animation: rotateSlow 28s linear infinite;
+}
+
+// Floating dots
+.deco-dot {
+  border-radius: 50%;
+  background: $gold;
+}
+.deco-dot-1 { width: 10px; height: 10px; top: 18%; left: 22%; opacity: 0.6; animation: floatDot 4s ease-in-out infinite; }
+.deco-dot-2 { width: 6px;  height: 6px;  bottom: 22%; right: 18%; opacity: 0.4; animation: floatDot 5.5s ease-in-out infinite 1s; }
+.deco-dot-3 { width: 8px;  height: 8px;  top: 70%; left: 15%; background: rgba(255,255,255,0.3); animation: floatDot 3.5s ease-in-out infinite 0.5s; }
+
+// Lines
+.deco-line {
+  background: linear-gradient(90deg, transparent, rgba($gold, 0.25), transparent);
+  height: 1px;
+}
+.deco-line-1 { width: 160px; top: 28%; left: -20px; transform: rotate(-30deg); }
+.deco-line-2 { width: 120px; bottom: 28%; right: -10px; transform: rotate(-30deg); }
+
+@keyframes rotateSlow {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes floatDot {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+// ── Panel content ─────────────────────────────────────────────────────────────
+.panel-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  color: #fff;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2.4rem;
+
+  .brand-emblem {
+    font-size: 1.4rem;
+    color: $gold;
+    filter: drop-shadow(0 0 10px rgba($gold, 0.7));
+  }
+  .brand-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #fff;
+  }
+}
+
+// Central badge
+.panel-badge {
+  margin-bottom: 2rem;
+}
+
+.badge-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba($gold, 0.25) 0%, rgba($gold, 0.08) 100%);
+  border: 2px solid rgba($gold, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 32px rgba($gold, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+  animation: pulseBadge 3s ease-in-out infinite;
+}
+
+.badge-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  .badge-icon { font-size: 2rem; line-height: 1; }
+  .badge-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $gold-light;
+  }
+}
+
+@keyframes pulseBadge {
+  0%, 100% { box-shadow: 0 0 32px rgba($gold, 0.2), inset 0 1px 0 rgba(255,255,255,0.1); }
+  50%       { box-shadow: 0 0 48px rgba($gold, 0.4), inset 0 1px 0 rgba(255,255,255,0.15); }
+}
+
+.panel-headline {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0 0 0.9rem;
+  letter-spacing: -0.02em;
+}
+
+.panel-sub {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.55);
+  margin: 0 0 2rem;
+  line-height: 1.6;
+}
+
+.panel-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.pill {
+  padding: 6px 16px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: rgba($gold, 0.15);
+    border-color: rgba($gold, 0.35);
+    color: $gold-light;
+  }
+}
+
+
+// ── Right form panel ──────────────────────────────────────────────────────────
+.signup-form-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: #f0f4f8;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: $radius-xl;
+  padding: 2.2rem 2.5rem;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 10px 40px rgba(0,0,0,0.08),
+    0 1px 0 rgba(255,255,255,0.9) inset;
+  border: 1px solid rgba(255,255,255,0.8);
+
+  @media (max-width: 500px) { padding: 1.8rem; }
+}
+
+.form-header {
+  margin-bottom: 1.2rem;
+}
+
+.form-title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: $text-dark;
+  margin: 0 0 0.2rem;
+  letter-spacing: -0.02em;
+}
+
+.form-subtitle {
+  font-size: 0.95rem;
+  color: $text-muted;
+  margin: 0;
+}
+
+// ── Form fields ───────────────────────────────────────────────────────────────
+.auth-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-dark;
+  letter-spacing: 0.01em;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 10px 16px 10px 44px;
+  border: 1.5px solid $border;
+  border-radius: $radius-lg;
+  font-size: 0.9rem;
+  font-family: 'Outfit', sans-serif;
+  color: $text-dark;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+
+  &::placeholder { color: #b0bcc8; }
+
+  &:focus {
+    border-color: $gold;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba($gold, 0.12);
+
+    ~ .input-icon,
+    & + .input-icon { color: $gold; }
+  }
+}
+
+// fix icon colour on focus via wrapper
+.input-wrapper:focus-within .input-icon { color: $gold; }
+
+// Custom Radio Buttons
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 4px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: $text-dark;
+  cursor: pointer;
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  .radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid $border;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 10px;
+      height: 10px;
+      background: $gold;
+      border-radius: 50%;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+
+  input[type="radio"]:checked + .radio-custom {
+    border-color: $gold;
+    &::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+}
+
+.error-text {
+  color: #ff5252;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+// ── Submit button ─────────────────────────────────────────────────────────────
+.btn-primary-auth {
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, $gold 0%, $gold-dark 100%);
+  color: #fff;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 18px rgba($gold, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  margin-top: 0.8rem;
+
+  svg { transition: transform 0.2s; }
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, lighten($gold, 5%) 0%, $gold 100%);
+    box-shadow: 0 6px 24px rgba($gold, 0.5);
+    transform: translateY(-1px);
+
+    svg { transform: translateX(3px); }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 3px 12px rgba($gold, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+// ── Auth hint ──────────────────────────────────────────────────────────────
+.auth-hint {
+  text-align: center;
+  font-size: 0.9rem;
+  color: $text-muted;
+  margin: 0;
+}
+
+.auth-link {
+  color: $gold-dark;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover { color: $gold; text-decoration: underline; }
+}

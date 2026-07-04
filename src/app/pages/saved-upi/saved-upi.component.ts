@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SavedUpiService, SavedUpi } from '../../core/services/saved-upi.service';
 import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-saved-upi',
@@ -36,7 +36,8 @@ export class SavedUpiComponent implements OnInit {
 
   constructor(
     private savedUpiService: SavedUpiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toast: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -72,19 +73,19 @@ export class SavedUpiComponent implements OnInit {
     if (this.isSaving) return;
 
     if (!this.newUpi.upiId || !this.newUpi.providerName) {
-      Swal.fire('Error', 'Please enter a UPI ID', 'error');
+      this.toast.error('Please enter a UPI ID.');
       return;
     }
 
     const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
     if (!upiRegex.test(this.newUpi.upiId)) {
-      Swal.fire('Error', 'Please enter a valid UPI ID (e.g. name@bank)', 'error');
+      this.toast.error('Please enter a valid UPI ID (e.g. name@bank).');
       return;
     }
 
     const isDuplicate = this.savedUpis.some(u => u.upiId.toLowerCase() === this.newUpi.upiId!.toLowerCase());
     if (isDuplicate) {
-      Swal.fire('Info', 'This UPI ID is already saved in your account.', 'info');
+      this.toast.info('This UPI ID is already saved in your account.');
       return;
     }
 
@@ -100,37 +101,25 @@ export class SavedUpiComponent implements OnInit {
             if (u.id !== res.upi.id) u.isDefault = false;
           });
         }
-        Swal.fire('Success', 'UPI ID saved successfully!', 'success');
+        this.toast.success('UPI ID saved successfully!');
       },
       error: (err) => {
         console.error('Error saving UPI', err);
-        Swal.fire('Error', err.error?.error || 'Failed to save UPI. Please try again.', 'error');
+        this.toast.error(err.error?.error || 'Failed to save UPI. Please try again.');
         this.isSaving = false;
       }
     });
   }
 
   deleteUpi(id: number): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You want to remove this saved UPI ID?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'Yes, remove it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.savedUpiService.deleteSavedUpi(id).subscribe({
-          next: () => {
-            this.savedUpis = this.savedUpis.filter(u => u.id !== id);
-            Swal.fire('Deleted!', 'Your UPI ID has been removed.', 'success');
-          },
-          error: (err) => {
-            console.error('Error deleting UPI', err);
-            Swal.fire('Error', 'Failed to remove UPI ID.', 'error');
-          }
-        });
+    this.savedUpiService.deleteSavedUpi(id).subscribe({
+      next: () => {
+        this.savedUpis = this.savedUpis.filter(u => u.id !== id);
+        this.toast.success('UPI ID removed successfully.');
+      },
+      error: (err) => {
+        console.error('Error deleting UPI', err);
+        this.toast.error('Failed to remove UPI ID.');
       }
     });
   }

@@ -23,7 +23,7 @@
                     </div>
 
                     <!-- Item Cards -->
-                    <div class="cart-item-card mb-3" *ngFor="let item of cartItems">
+                    <div class="cart-item-card mb-3" *ngFor="let item of cartItems; trackBy: trackByItemId">
                         <div class="d-flex flex-column flex-sm-row p-4">
                             <!-- Image Column -->
                             <div class="item-img-box mb-4 mb-sm-0 mr-sm-4">
@@ -39,7 +39,15 @@
                                         <button class="qty-btn" (click)="updateQuantity(item, -1)"
                                             [disabled]="item.quantity <= 1">-</button>
                                         <div class="qty-val border text-center">{{item.quantity}}</div>
-                                        <button class="qty-btn" (click)="updateQuantity(item, 1)">+</button>
+                                        <button class="qty-btn" (click)="updateQuantity(item, 1)"
+                                            [disabled]="item.quantity >= item.product.quantity">+</button>
+                                    </div>
+                                    <!-- Stock Messages -->
+                                    <div *ngIf="item.quantity >= item.product.quantity" class="text-danger small text-center mt-2 font-weight-bold" style="font-size: 0.75rem;">
+                                        Max stock reached
+                                    </div>
+                                    <div *ngIf="item.product.quantity <= 5 && item.quantity < item.product.quantity" class="text-warning small text-center mt-2 font-weight-bold" style="font-size: 0.75rem;">
+                                        Only {{item.product.quantity}} left!
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +97,7 @@
                             <span class=" font-weight-bold">Saved for Later ({{savedItems.length}})</span>
                         </div>
 
-                        <div class="cart-item-card mb-3" *ngFor="let saved of savedItems">
+                        <div class="cart-item-card mb-3" *ngFor="let saved of savedItems; trackBy: trackByItemId">
                             <div class="d-flex flex-column flex-sm-row p-4 opacity-75">
                                 <!-- Image Column -->
                                 <div class="item-img-box mb-4 mb-sm-0 mr-sm-4 text-center">

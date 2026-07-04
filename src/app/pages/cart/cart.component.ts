@@ -5,7 +5,7 @@ import { CartService, CartItem } from '../../core/services/cart.service';
 import { SaveLaterService, SaveLaterItem } from '../../core/services/savelater.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -31,7 +31,8 @@ export class CartComponent implements OnInit {
     private authService: AuthService,
     private profileService: ProfileService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private toast: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -84,23 +85,19 @@ export class CartComponent implements OnInit {
   updateQuantity(item: CartItem, change: number) {
     const newQuantity = item.quantity + change;
     if (newQuantity < 1) return;
+    
+    // Check stock limit
+    if (newQuantity > item.product.quantity) {
+      this.toast.info(`Only ${item.product.quantity} units of this item are available in stock.`);
+      return;
+    }
 
     this.cartService.updateQuantity(item.id, newQuantity).subscribe();
   }
 
   removeItem(item: CartItem) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You want to remove this item from cart?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.cartService.removeFromCart(item.id).subscribe();
-      }
+    this.cartService.removeFromCart(item.id).subscribe({
+      next: () => this.toast.info('Item removed from cart.')
     });
   }
 
@@ -121,18 +118,12 @@ export class CartComponent implements OnInit {
   }
 
   removeSavedItem(savedItem: SaveLaterItem) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You want to remove this item from saved items?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.saveLaterService.removeSavedItem(savedItem.id).subscribe();
-      }
+    this.saveLaterService.removeSavedItem(savedItem.id).subscribe({
+      next: () => this.toast.info('Item removed from saved list.')
     });
+  }
+
+  trackByItemId(index: number, item: any): number {
+    return item.id;
   }
 }

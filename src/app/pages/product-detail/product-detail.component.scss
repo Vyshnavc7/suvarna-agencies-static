@@ -119,16 +119,41 @@
         }
     }
 
-    .quantity-selector {
+    .qty-stepper {
+        display: flex;
+        align-items: center;
         background: var(--bg-surface-elevated);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        border-radius: 8px;
-        padding: 10px 15px;
-        &:focus {
-            outline: none;
-            border-color: var(--accent-orange);
-            box-shadow: none;
+        border: 1.5px solid var(--border-color);
+        border-radius: 50px;
+        padding: 4px;
+        height: 52px;
+        
+        .btn-step {
+            width: 44px;
+            height: 100%;
+            border: none;
+            background: transparent;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.05);
+                color: var(--text-primary);
+            }
+        }
+
+        .qty-val {
+            width: 40px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
         }
     }
 

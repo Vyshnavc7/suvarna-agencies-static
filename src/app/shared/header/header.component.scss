@@ -419,20 +419,7 @@
     color: #fff;
   }
   
-  &.bell {
-    .dot {
-      position: absolute;
-      top: 0px;
-      right: -2px;
-      width: 6px;
-      height: 6px;
-      background: var(--accent-orange, #c99b2e);
-      border-radius: 50%;
-      border: 1px solid #1a1c23;
-    }
-  }
-  
-  &.cart {
+  &.bell, &.cart, &.wishlist {
     .badge {
       position: absolute;
       top: -6px;
@@ -441,9 +428,10 @@
       color: #fff;
       font-size: 0.65rem;
       font-weight: 700;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 4px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;

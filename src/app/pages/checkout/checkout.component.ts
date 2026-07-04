@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
@@ -7,7 +7,7 @@ import { CartService, CartItem } from '../../core/services/cart.service';
 import { SavedCardService, SavedCard } from '../../core/services/saved-card.service';
 import { SavedUpiService, SavedUpi } from '../../core/services/saved-upi.service';
 import { ProfileService } from '../../core/services/profile.service';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-checkout',
@@ -98,19 +98,13 @@ export class CheckoutComponent implements OnInit {
         this.isApplyingCoupon = false;
         this.appliedCoupon = res.coupon;
         this.discountAmount = res.coupon.discountAmount;
-        Swal.fire({
-          icon: 'success',
-          title: 'Coupon Applied',
-          text: res.message,
-          timer: 1500,
-          showConfirmButton: false
-        });
+        this.toast.success(res.message || 'Coupon applied!');
       },
       error: (err) => {
         this.isApplyingCoupon = false;
         this.appliedCoupon = null;
         this.discountAmount = 0;
-        Swal.fire('Error', err.error?.message || 'Invalid coupon code', 'error');
+        this.toast.error(err.error?.message || 'Invalid coupon code.');
       }
     });
   }
@@ -126,6 +120,8 @@ export class CheckoutComponent implements OnInit {
   isOrderPlaced = false;
   placedOrderDetails: any = null;
   finalAmountPaid = 0;
+
+  private toast = inject(ToastService);
 
   constructor(
     private cartService: CartService,
@@ -245,7 +241,7 @@ export class CheckoutComponent implements OnInit {
 
   saveAddress() {
     if (!this.newAddress.fullName || !this.newAddress.addressLine1 || !this.newAddress.city || !this.newAddress.state || !this.newAddress.postalCode) {
-      Swal.fire('Error', 'Please fill in all required address fields.', 'error');
+      this.toast.error('Please fill in all required address fields.');
       return;
     }
 
@@ -265,47 +261,42 @@ export class CheckoutComponent implements OnInit {
           country: 'India',
           type: 'shipping'
         };
-        Swal.fire({
-          icon: 'success',
-          title: 'Address Saved',
-          timer: 1500,
-          showConfirmButton: false
-        });
+        this.toast.success('Address saved successfully.');
       },
       error: (err) => {
         console.error('Failed to save address', err);
-        Swal.fire('Error', 'Failed to save address.', 'error');
+        this.toast.error('Failed to save address.');
       }
     });
   }
 
   placeOrder() {
     if (!this.selectedAddressId && !this.showNewAddressForm) {
-      Swal.fire('Error', 'Please select or add a shipping address.', 'error');
+      this.toast.error('Please select or add a shipping address.');
       return;
     }
 
     if (this.showNewAddressForm) {
-      Swal.fire('Info', 'Please save your shipping address first.', 'info');
+      this.toast.info('Please save your shipping address first.');
       return;
     }
 
     if (this.paymentMethod === 'Card') {
       if (this.selectedSavedCardId === null) {
         if (!this.cardDetails.cardNumber || this.cardDetails.cardNumber.replace(/\s/g, '').length < 16) {
-          Swal.fire('Error', 'Please enter a valid 16-digit credit card number.', 'error');
+          this.toast.error('Please enter a valid 16-digit credit card number.');
           return;
         }
         if (!this.cardDetails.cardName || !this.cardDetails.cardName.trim()) {
-          Swal.fire('Error', 'Please enter the name on your card.', 'error');
+          this.toast.error('Please enter the name on your card.');
           return;
         }
         if (!this.cardDetails.expiry || !/^(0[1-9]|1[0-2])\/\d{4}$/.test(this.cardDetails.expiry)) {
-          Swal.fire('Error', 'Please enter a valid expiry date in MM/YYYY format.', 'error');
+          this.toast.error('Please enter a valid expiry date in MM/YYYY format.');
           return;
         }
         if (!this.cardDetails.cvv || this.cardDetails.cvv.length < 3) {
-          Swal.fire('Error', 'Please enter a valid CVV (3 or 4 digits).', 'error');
+          this.toast.error('Please enter a valid CVV (3 or 4 digits).');
           return;
         }
       }
@@ -314,12 +305,12 @@ export class CheckoutComponent implements OnInit {
     if (this.paymentMethod === 'UPI') {
       if (this.selectedSavedUpiId === null) {
         if (!this.upiDetails.upiId) {
-          Swal.fire('Error', 'Please enter your UPI ID.', 'error');
+          this.toast.error('Please enter your UPI ID.');
           return;
         }
         const upiRegex = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
         if (!upiRegex.test(this.upiDetails.upiId)) {
-          Swal.fire('Error', 'Please enter a valid UPI ID (e.g. username@upi or mobile@ybl).', 'error');
+          this.toast.error('Please enter a valid UPI ID (e.g. username@upi or mobile@ybl).');
           return;
         }
       }
@@ -339,17 +330,12 @@ export class CheckoutComponent implements OnInit {
         this.isOrderPlaced = true;
         this.placedOrderDetails = res;
         this.cartService.loadCart(); // reset frontend cart items count to 0!
-        Swal.fire({
-          icon: 'success',
-          title: 'Order Placed!',
-          text: 'Thank you for your purchase.',
-          confirmButtonColor: '#333'
-        });
+        this.toast.success('Order placed! Thank you for your purchase.');
       },
       error: (err) => {
         this.isPlacingOrder = false;
         console.error('Order placement failed', err);
-        Swal.fire('Error', err.error?.message || 'Failed to place order. Please try again.', 'error');
+        this.toast.error(err.error?.message || 'Failed to place order. Please try again.');
       }
     });
   }

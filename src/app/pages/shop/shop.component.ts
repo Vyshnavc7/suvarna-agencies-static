@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../core/services/cart.service';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-shop',
@@ -28,6 +28,7 @@ export class ShopComponent implements OnInit {
   cartService = inject(CartService);
   wishlistService = inject(WishlistService);
   authService = inject(AuthService);
+  toastService = inject(ToastService);
   router = inject(Router);
 
   addToCart(product: any) {
@@ -58,7 +59,7 @@ export class ShopComponent implements OnInit {
 
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) {
-      Swal.fire('Please Login', 'You need to be logged in to add items to your wishlist.', 'info');
+      this.toastService.info('Please log in to add items to your wishlist.');
       return;
     }
 

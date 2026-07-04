@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-signup',
@@ -13,11 +13,11 @@ import Swal from 'sweetalert2';
 })
 export class SignupComponent {
   signupForm: FormGroup;
-  errorMessage = '';
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   constructor() {
     this.signupForm = this.fb.group({
@@ -40,23 +40,12 @@ export class SignupComponent {
       this.authService.signup({ name, email, password, gender }).subscribe({
         next: (response) => {
           console.log('Signup successful', response);
-          Swal.fire({
-            icon: 'success',
-            title: 'Signup Successful',
-            text: 'You have been registered and logged in!',
-            timer: 2000,
-            showConfirmButton: false
-          });
-          this.router.navigate(['/']); // Redirect to home as they are auto-logged in
+          this.toast.success('You have been registered and logged in!');
+          this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Signup failed', err);
-          this.errorMessage = 'Signup failed. Please try again.';
-          Swal.fire({
-            icon: 'error',
-            title: 'Signup Failed',
-            text: 'Registration failed. Please try again.'
-          });
+          this.toast.error('Registration failed. Please try again.');
         }
       });
     }

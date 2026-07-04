@@ -1,43 +1,108 @@
-<div class="banner_inner">
-    <div class="services-breadcrumb">
-        <div class="inner_breadcrumb">
-            <ul class="short">
-                <li>
-                    <a routerLink="/">Home</a>
-                    <i>|</i>
-                </li>
-                <li>Login</li>
-            </ul>
-        </div>
-    </div>
-</div>
+<div class="login-page">
 
-<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
-    <div class="container">
-        <h3 class="tittle-w3layouts text-center my-lg-4 my-4">Login Now</h3>
-        <div class="inner_sec">
-            <div class="login p-5 bg-light mx-auto mw-100" style="max-width: 500px !important;">
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                    <div *ngIf="errorMessage" class="alert alert-danger">
-                        {{ errorMessage }}
-                    </div>
-                    <div class="form-group">
-                        <label class="mb-2 ">Email address</label>
-                        <input type="email" class="form-control" formControlName="email" placeholder="" required="">
-                    </div>
-                    <div class="form-group">
-                        <label class="mb-2 ">Password</label>
-                        <input type="password" class="form-control" formControlName="password" placeholder=""
-                            required="">
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary submit mb-4" [disabled]="loginForm.invalid">Sign
-                            In</button>
-                    </div>
-                    <p class="text-center ">Don't have an account? <a routerLink="/signup"
-                            class="text-info">Sign Up</a></p>
-                </form>
-            </div>
+  <!-- Left decorative panel -->
+  <div class="login-panel">
+    <!-- Decorative background shapes -->
+    <div class="deco deco-ring deco-ring-1"></div>
+    <div class="deco deco-ring deco-ring-2"></div>
+    <div class="deco deco-ring deco-ring-3"></div>
+    <div class="deco deco-dot deco-dot-1"></div>
+    <div class="deco deco-dot deco-dot-2"></div>
+    <div class="deco deco-dot deco-dot-3"></div>
+    <div class="deco deco-line deco-line-1"></div>
+    <div class="deco deco-line deco-line-2"></div>
+
+    <div class="panel-content">
+      <!-- Brand -->
+      <div class="brand-logo">
+        <div class="brand-emblem">✦</div>
+        <span class="brand-name">Suvarna Agencies</span>
+      </div>
+
+      <!-- Central badge -->
+      <div class="panel-badge">
+        <div class="badge-circle">
+          <div class="badge-inner">
+            <span class="badge-icon">🛍️</span>
+            <span class="badge-label">Premium Store</span>
+          </div>
         </div>
+      </div>
+
+      <h2 class="panel-headline">Your trusted<br>shopping partner</h2>
+      <p class="panel-sub">Quality products · Secure payments · Fast delivery</p>
+
+      <div class="panel-pills">
+        <span class="pill">✓ 500+ Products</span>
+        <span class="pill">✓ Secure Checkout</span>
+        <span class="pill">✓ Easy Returns</span>
+      </div>
     </div>
-</section>
+  </div>
+
+  <!-- Right form panel -->
+  <div class="login-form-side">
+    <div class="form-card">
+
+      <div class="form-header">
+        <h1 class="form-title">Sign in</h1>
+        <p class="form-subtitle">Enter your credentials to continue</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+
+        <div class="field-group">
+          <label class="field-label" for="login-email">Email address</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <input
+              id="login-email"
+              type="email"
+              class="auth-input"
+              formControlName="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+            />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="login-password">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input
+              id="login-password"
+              type="password"
+              class="auth-input"
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+          </div>
+        </div>
+
+        <button
+          id="login-submit"
+          type="submit"
+          class="btn-signin"
+          [disabled]="loginForm.invalid"
+        >
+          <span>Sign In</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+
+      </form>
+
+      <p class="signup-hint">
+        Don't have an account?
+        <a routerLink="/signup" class="signup-link">Create one</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>

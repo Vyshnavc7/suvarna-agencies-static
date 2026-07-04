@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-login',
@@ -13,11 +13,12 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  errorMessage = '';
+
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -37,31 +38,15 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           console.log('Login successful', response);
-          // Token is handled in AuthService
-          Swal.fire({
-            icon: 'success',
-            title: 'Login Successful',
-            text: 'Welcome back!',
-            timer: 1500,
-            showConfirmButton: false
-          });
+          this.toast.success('Welcome back!');
           this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Login failed', err);
           if (err.message === 'Admin login not allowed') {
-            Swal.fire({
-              icon: 'error',
-              title: 'Access Denied',
-              text: 'This is a customer portal. Admins are not allowed.'
-            });
+            this.toast.error('This is a customer portal. Admins are not allowed.');
           } else {
-            this.errorMessage = 'Invalid credentials. Please try again.';
-            Swal.fire({
-              icon: 'error',
-              title: 'Login Failed',
-              text: 'Invalid credentials. Please try again.'
-            });
+            this.toast.error('Invalid credentials. Please try again.');
           }
         }
       });

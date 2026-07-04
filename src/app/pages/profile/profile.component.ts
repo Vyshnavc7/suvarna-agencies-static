@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
     selector: 'app-profile',
@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 export class ProfileComponent implements OnInit {
     authService = inject(AuthService);
     profileService = inject(ProfileService);
+    toastService = inject(ToastService);
     
     // We keep currentUser$ for basic auth state (like checking if logged in)
     currentUser$ = this.authService.currentUser;
@@ -55,13 +56,7 @@ export class ProfileComponent implements OnInit {
             next: (res) => {
                 this.profileData = res.data;
                 this.isEditMode = false;
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Profile Updated',
-                    text: 'Your personal information has been saved!',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
+                this.toastService.success('Your personal information has been saved!');
                 
                 // Update the token info slightly if they changed their name, 
                 // though this is optional. The next login will get fresh token data.
@@ -75,11 +70,7 @@ export class ProfileComponent implements OnInit {
                 }
             },
             error: (err) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Update Failed',
-                    text: 'Could not save your changes. Please try again.'
-                });
+                this.toastService.error('Could not save your changes. Please try again.');
             }
         });
     }

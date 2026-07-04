@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 
 interface GroupedOrder {
   paymentId: number;
@@ -31,31 +31,69 @@ export class OrdersComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
+  // Return / Exchange inline state
+  returnModalItem: any = null;
+  returnType = 'return';
+  returnReason = '';
+
+  // Retry payment inline state
+  retryOrder: GroupedOrder | null = null;
+  retryMethod: 'Card' | 'UPI' | 'COD' | null = null;
+  retryCardNumber = '';
+  retryCardName = '';
+  retryCardExpiry = '';
+  retryCardCvv = '';
+  retryUpiId = '';
+
+  toast = inject(ToastService);
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchOrders();
   }
 
-  fetchOrders(append: boolean = false): void {
-    this.isLoading = true;
+  fetchOrders(append: boolean = false, silent: boolean = false): void {
+    if (!silent) this.isLoading = true;
     this.errorMessage = '';
 
     this.http.get<any>(`/server/orders?page=${this.currentPage}&limit=${this.pageSize}`).subscribe({
       next: (response) => {
-        // Response from getAllRecord is { message, data, count }
         const rawOrders = response.data || [];
         this.totalOrders = response.count || 0;
-
-        this.orders = this.groupOrders(rawOrders, append);
         this.hasMoreOrders = (this.currentPage * this.pageSize) < this.totalOrders;
 
-        this.isLoading = false;
+        if (silent) {
+           const newGroups = this.groupOrders(rawOrders, append);
+           // In-place merge to update tracking statuses without destroying DOM elements
+           this.orders.forEach(existingOrder => {
+             const updatedGroup = newGroups.find(g => g.paymentId === existingOrder.paymentId);
+             if (updatedGroup) {
+               existingOrder.status = updatedGroup.status;
+               existingOrder.paymentStatus = updatedGroup.paymentStatus;
+               existingOrder.items.forEach(existingItem => {
+                 const updatedItem = updatedGroup.items.find(i => i.id === existingItem.id);
+                 if (updatedItem) {
+                   // Only update fields relevant to tracking and status to prevent DOM flicker
+                   existingItem.status = updatedItem.status;
+                   existingItem.updatedAt = updatedItem.updatedAt;
+                   existingItem.paymentStatus = updatedItem.paymentStatus;
+                 }
+               });
+             }
+           });
+        } else {
+           this.orders = this.groupOrders(rawOrders, append);
+           this.isLoading = false;
+        }
       },
       error: (err) => {
         console.error('Failed to load orders', err);
         this.errorMessage = 'Failed to load order history. Please try again later.';
-        this.isLoading = false;
+        
+        if (!silent) {
+           this.isLoading = false;
+        }
       }
     });
   }
@@ -135,39 +173,22 @@ export class OrdersComponent implements OnInit {
   }
 
   openReturnExchangeModal(item: any): void {
-    Swal.fire({
-      title: 'Request Return / Exchange',
-      html:
-        '<div class="text-left mb-2"><label for="swal-req-type" style="font-weight: 600; font-size: 0.95rem;">Request Type:</label></div>' +
-        '<select id="swal-req-type" class="form-control mb-3" style="padding: 8px; border-radius: 6px; font-size: 0.9rem;">' +
-        '<option value="return">Return & Refund</option>' +
-        '<option value="exchange">Product Exchange</option>' +
-        '</select>' +
-        '<div class="text-left mb-2"><label for="swal-req-reason" style="font-weight: 600; font-size: 0.95rem;">Reason for Request:</label></div>' +
-        '<textarea id="swal-req-reason" class="form-control" rows="4" placeholder="Please describe the reason (min 10 characters)..." style="padding: 10px; border-radius: 6px; font-size: 0.9rem;"></textarea>',
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: 'Submit Request',
-      confirmButtonColor: '#ff9800',
-      preConfirm: () => {
-        const type = (document.getElementById('swal-req-type') as HTMLSelectElement).value;
-        const reason = (document.getElementById('swal-req-reason') as HTMLTextAreaElement).value;
+    this.returnModalItem = item;
+    this.returnType = 'return';
+    this.returnReason = '';
+  }
 
-        if (!type) {
-          Swal.showValidationMessage('Please select a request type');
-          return false;
-        }
-        if (!reason || reason.trim().length < 10) {
-          Swal.showValidationMessage('Reason must be at least 10 characters long');
-          return false;
-        }
-        return { type, reason };
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.submitReturnRequest(item.id, result.value.type, result.value.reason);
-      }
-    });
+  closeReturnModal(): void {
+    this.returnModalItem = null;
+  }
+
+  submitReturnModal(): void {
+    if (!this.returnReason || this.returnReason.trim().length < 10) {
+      this.toast.error('Reason must be at least 10 characters long.');
+      return;
+    }
+    this.submitReturnRequest(this.returnModalItem.id, this.returnType, this.returnReason);
+    this.returnModalItem = null;
   }
 
   submitReturnRequest(orderId: number, type: string, reason: string): void {
@@ -178,101 +199,64 @@ export class OrdersComponent implements OnInit {
       reason
     }).subscribe({
       next: (response) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Request Submitted!',
-          text: response.message || 'Your request has been successfully received and is pending review.',
-          timer: 2500,
-          showConfirmButton: false
-        });
+        this.toast.success(response.message || 'Your request has been successfully received and is pending review.');
         this.fetchOrders();
       },
       error: (err) => {
         console.error('Failed to submit return request', err);
-        Swal.fire('Error', err.error?.message || 'Submission failed. Please try again.', 'error');
+        this.toast.error(err.error?.message || 'Submission failed. Please try again.');
         this.isLoading = false;
       }
     });
   }
 
   openCardPaymentModal(order: GroupedOrder): void {
-    Swal.fire({
-      title: 'Pay with Credit / Debit Card',
-      html:
-        '<div class="text-left mb-3"><strong style="font-size: 1.1rem; color: #222;">Total Amount: ₹' + (order.paymentDetails?.totalAmount || 0).toFixed(2) + '</strong></div>' +
-        '<input id="swal-card-number" class="form-control mb-2" placeholder="Card Number (16 digits)" maxlength="16" style="padding: 10px; border-radius: 6px;">' +
-        '<input id="swal-card-name" class="form-control mb-2" placeholder="Name on Card" style="padding: 10px; border-radius: 6px;">' +
-        '<div class="row g-2" style="display: flex; gap: 8px;">' +
-        '<div style="flex: 1;"><input id="swal-card-expiry" class="form-control" placeholder="MM/YY" maxlength="5" style="padding: 10px; border-radius: 6px;"></div>' +
-        '<div style="flex: 1;"><input id="swal-card-cvv" type="password" class="form-control" placeholder="CVV" maxlength="3" style="padding: 10px; border-radius: 6px;"></div>' +
-        '</div>',
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: 'Pay Now',
-      confirmButtonColor: '#ff5722',
-      preConfirm: () => {
-        const cardNumber = (document.getElementById('swal-card-number') as HTMLInputElement).value;
-        const cardName = (document.getElementById('swal-card-name') as HTMLInputElement).value;
-        const expiry = (document.getElementById('swal-card-expiry') as HTMLInputElement).value;
-        const cvv = (document.getElementById('swal-card-cvv') as HTMLInputElement).value;
+    this.retryOrder = order;
+    this.retryMethod = 'Card';
+    this.retryCardNumber = '';
+    this.retryCardName = '';
+    this.retryCardExpiry = '';
+    this.retryCardCvv = '';
+  }
 
-        if (!cardNumber || !cardName || !expiry || !cvv) {
-          Swal.showValidationMessage('Please fill in all card details');
-          return false;
-        }
-        return { cardNumber, cardName, expiry, cvv };
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.executeRetryPayment(order.paymentId, 'Card');
-      }
-    });
+  submitCardPayment(): void {
+    if (!this.retryCardNumber || !this.retryCardName || !this.retryCardExpiry || !this.retryCardCvv) {
+      this.toast.error('Please fill in all card details.');
+      return;
+    }
+    this.executeRetryPayment(this.retryOrder!.paymentId, 'Card');
+    this.retryOrder = null;
+    this.retryMethod = null;
   }
 
   openUPIPaymentModal(order: GroupedOrder): void {
-    Swal.fire({
-      title: 'Pay with UPI',
-      html:
-        '<div class="text-left mb-3"><strong style="font-size: 1.1rem; color: #222;">Total Amount: ₹' + (order.paymentDetails?.totalAmount || 0).toFixed(2) + '</strong></div>' +
-        '<input id="swal-upi-id" class="form-control mb-2" placeholder="Enter UPI ID (e.g. mobile@ybl, username@upi)" style="padding: 10px; border-radius: 6px;">',
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: 'Pay Now',
-      confirmButtonColor: '#17a2b8',
-      preConfirm: () => {
-        const upiId = (document.getElementById('swal-upi-id') as HTMLInputElement).value;
-        if (!upiId) {
-          Swal.showValidationMessage('Please enter your UPI ID');
-          return false;
-        }
-        const upiRegex = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
-        if (!upiRegex.test(upiId)) {
-          Swal.showValidationMessage('Please enter a valid UPI ID (e.g. username@upi or mobile@ybl)');
-          return false;
-        }
-        return { upiId };
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.executeRetryPayment(order.paymentId, 'UPI');
-      }
-    });
+    this.retryOrder = order;
+    this.retryMethod = 'UPI';
+    this.retryUpiId = '';
+  }
+
+  submitUpiPayment(): void {
+    if (!this.retryUpiId) {
+      this.toast.error('Please enter your UPI ID.');
+      return;
+    }
+    const upiRegex = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
+    if (!upiRegex.test(this.retryUpiId)) {
+      this.toast.error('Please enter a valid UPI ID (e.g. username@upi or mobile@ybl).');
+      return;
+    }
+    this.executeRetryPayment(this.retryOrder!.paymentId, 'UPI');
+    this.retryOrder = null;
+    this.retryMethod = null;
   }
 
   switchToCOD(order: GroupedOrder): void {
-    Swal.fire({
-      title: 'Switch to Cash on Delivery (COD)?',
-      text: 'You will pay ₹' + (order.paymentDetails?.totalAmount || 0).toFixed(2) + ' in cash upon delivery of your products. Your order status will be marked as Success (Pending delivery).',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Switch to COD',
-      confirmButtonColor: '#ff5722',
-      cancelButtonText: 'Cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.executeRetryPayment(order.paymentId, 'COD');
-      }
-    });
+    this.executeRetryPayment(order.paymentId, 'COD');
+  }
+
+  closeRetryModal(): void {
+    this.retryOrder = null;
+    this.retryMethod = null;
   }
 
   executeRetryPayment(paymentId: number, method: string): void {
@@ -282,18 +266,12 @@ export class OrdersComponent implements OnInit {
       paymentMethod: method
     }).subscribe({
       next: () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Payment Successful!',
-          text: method === 'COD' ? 'Your order is now set to Cash on Delivery.' : 'Your card payment completed successfully.',
-          timer: 2000,
-          showConfirmButton: false
-        });
+        this.toast.success(method === 'COD' ? 'Your order is now set to Cash on Delivery.' : 'Payment completed successfully.');
         this.fetchOrders();
       },
       error: (err) => {
         console.error('Failed to retry payment', err);
-        Swal.fire('Error', err.error?.message || 'Payment update failed. Please try again.', 'error');
+        this.toast.error(err.error?.message || 'Payment update failed. Please try again.');
         this.isLoading = false;
       }
     });
@@ -336,5 +314,56 @@ export class OrdersComponent implements OnInit {
       default:
         return 'text-muted';
     }
+  }
+
+  getTimelineSteps(status: string): any[] {
+    const s = (status || 'pending').toLowerCase();
+    
+    // Cancelled flow
+    if (s === 'cancelled') {
+      return [
+        { label: 'Order Placed', icon: 'fas fa-clipboard-check', completed: true, active: false },
+        { label: 'Cancelled', icon: 'fas fa-times-circle', completed: true, active: true, isError: true }
+      ];
+    }
+    
+    // Return flow
+    if (s.includes('return')) {
+      return [
+        { label: 'Delivered', icon: 'fas fa-home', completed: true, active: false },
+        { label: 'Return Requested', icon: 'fas fa-undo', completed: true, active: s === 'return_requested' },
+        { label: 'Returned', icon: 'fas fa-box-open', completed: s === 'returned', active: s === 'returned', isError: true }
+      ];
+    }
+
+    // Standard flow mapping
+    const standardSteps = [
+      { id: 'pending', label: 'Order Placed', icon: 'fas fa-clipboard-check' },
+      { id: 'processing', label: 'Processing', icon: 'fas fa-cog' },
+      { id: 'shipped', label: 'Shipped', icon: 'fas fa-truck' },
+      { id: 'delivered', label: 'Delivered', icon: 'fas fa-home' }
+    ];
+
+    let currentStepIndex = 0;
+    if (s === 'processing') currentStepIndex = 1;
+    else if (s === 'shipped') currentStepIndex = 2;
+    else if (s === 'delivered' || s === 'completed') currentStepIndex = 3;
+
+    return standardSteps.map((step, index) => ({
+      ...step,
+      completed: index <= currentStepIndex,
+      // If it's fully delivered (index 3), it shouldn't pulse as "in-progress", it's completely done.
+      active: index === currentStepIndex && currentStepIndex !== 3
+    }));
+  }
+
+  refreshTracking(item: any, event: Event): void {
+    event.stopPropagation();
+    // Trigger a completely silent background fetch, with no visual loading indicators
+    this.fetchOrders(false, true);
+  }
+
+  trackByStepId(index: number, step: any): string {
+    return step.id;
   }
 }

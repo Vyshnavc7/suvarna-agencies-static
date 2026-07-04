@@ -3,7 +3,6 @@ import { Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',

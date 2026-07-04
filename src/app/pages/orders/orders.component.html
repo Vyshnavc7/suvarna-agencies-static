@@ -93,6 +93,30 @@
                     
                     <!-- Expanded Details -->
                     <div class="order-expanded-details" *ngIf="item.expanded">
+                        <!-- Tracking Timeline -->
+                        <div class="tracking-timeline mb-5 mt-2 px-md-4" (click)="refreshTracking(item, $event)">
+                            <h5 class="timeline-title mb-4"><i class="fas fa-route mr-2"></i> Tracking History</h5>
+                            <div class="timeline-container d-flex justify-content-between align-items-center position-relative">
+                                <!-- Background connecting line -->
+                                <div class="timeline-line-bg"></div>
+                                
+                                <div class="timeline-step" 
+                                     *ngFor="let step of getTimelineSteps(item.status); let last = last; trackBy: trackByStepId"
+                                     [class.completed]="step.completed"
+                                     [class.active]="step.active"
+                                     [class.error-step]="step.isError">
+                                     
+                                    <div class="step-icon-wrapper">
+                                        <i [class]="step.icon"></i>
+                                    </div>
+                                    <span class="step-label mt-2">{{ step.label }}</span>
+                                    
+                                    <!-- Progress Line filler (doesn't show on last item) -->
+                                    <div class="step-progress-line" *ngIf="!last" [class.filled]="step.completed && !step.active"></div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <!-- Left: Item details -->
                             <div class="col-md-6 mb-4 mb-md-0 border-right-custom">

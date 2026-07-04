@@ -1,12 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -24,11 +24,18 @@ export class ProductDetailComponent implements OnInit {
   selectedQuantity: number = 1;
 
   authService = inject(AuthService);
+  toastService = inject(ToastService);
 
   selectedImage: string | null = null;
   galleryImages: string[] = [];
+  cartItems: any[] = [];
+  router = inject(Router);
 
   ngOnInit() {
+    this.cartService.cartItems$.subscribe(items => {
+      this.cartItems = items;
+    });
+    
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -75,15 +82,31 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart(product: any) {
     this.cartService.addToCart(product, +this.selectedQuantity);
-    Swal.fire({
-      icon: 'success',
-      title: 'Added to Cart',
-      text: `${product.productName} has been added to your cart.`,
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000
-    });
+  }
+
+  increaseQuantity() {
+    const maxQty = this.product.quantity || 10;
+    if (this.selectedQuantity < maxQty) {
+      this.selectedQuantity++;
+    } else {
+      this.toastService.info(`Only ${maxQty} units of this item are available in stock.`);
+    }
+  }
+
+  decreaseQuantity() {
+    if (this.selectedQuantity > 1) {
+      this.selectedQuantity--;
+    }
+  }
+
+  goToCart() {
+    this.router.navigate(['/cart']);
+  }
+
+  isInCart(product: any): boolean {
+    if (!product) return false;
+    const pId = product.productId || product.id;
+    return this.cartItems.some(item => item.productId === pId);
   }
 
   isWishlisted(product: any): boolean {
@@ -97,7 +120,7 @@ export class ProductDetailComponent implements OnInit {
   addToWishlist(product: any) {
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) {
-      Swal.fire('Please Login', 'You need to be logged in to modify your wishlist.', 'info');
+      this.toastService.info('Please log in to modify your wishlist.');
       return;
     }
 

@@ -85,10 +85,10 @@
             <h6 [class.pro-name]="isPro">{{ user.name }}</h6>
             <small>{{ user.email }}</small>
           </div>
-          <a class="dropdown-item" routerLink="/profile"><i class="far fa-user"></i> My Account</a>
-          <a class="dropdown-item" routerLink="/orders"><i class="fas fa-box"></i> My Orders</a>
-          <!-- <a class="dropdown-item" routerLink="/wishlist"><i class="far fa-heart"></i> My Wishlist</a> -->
-          <a class="dropdown-item" routerLink="/settings"><i class="fas fa-cog"></i> Settings</a>
+          <a class="dropdown-item" routerLink="/profile" (click)="isProfileDropdownOpen = false"><i class="far fa-user"></i> My Account</a>
+          <a class="dropdown-item" routerLink="/orders" (click)="isProfileDropdownOpen = false"><i class="fas fa-box"></i> My Orders</a>
+          <!-- <a class="dropdown-item" routerLink="/wishlist" (click)="isProfileDropdownOpen = false"><i class="far fa-heart"></i> My Wishlist</a> -->
+          <a class="dropdown-item" routerLink="/settings" (click)="isProfileDropdownOpen = false"><i class="fas fa-cog"></i> Settings</a>
           <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="logout()"><i
               class="fas fa-sign-out-alt"></i> Sign Out</a>
         </div>
@@ -103,8 +103,8 @@
         <a href="javascript:void(0)" class="icon-action bell" title="Notifications"
           (click)="toggleNotificationDropdown()">
           <i class="fas fa-bell"></i>
-          <span class="dot"
-            *ngIf="(notificationUnreadCount$ | async) && (notificationUnreadCount$ | async)! > 0"></span>
+          <span class="badge" *ngIf="(notificationUnreadCount$ | async) as count">{{ count > 9 ? '9+' : count }}</span>
+          <span class="badge" *ngIf="!(notificationUnreadCount$ | async)">0</span>
         </a>
         <div class="profile-menu p-0" [class.show]="isNotificationDropdownOpen"
           style="width: 420px; max-height: 500px; overflow-y: auto;">
@@ -137,12 +137,14 @@
       <!-- Wishlist -->
       <a routerLink="/wishlist" class="icon-action wishlist" title="My Wishlist">
         <i class="far fa-heart"></i>
+        <span class="badge" *ngIf="(wishlistCount$ | async) as count">{{ count > 9 ? '9+' : count }}</span>
+        <span class="badge" *ngIf="!(wishlistCount$ | async)">0</span>
       </a>
 
       <!-- Cart -->
       <a href="javascript:void(0)" class="icon-action cart" title="My Cart" (click)="toggleCartDrawer()">
         <i class="fas fa-shopping-cart"></i>
-        <span class="badge" *ngIf="(cartItemCount$ | async) as count">{{ count }}</span>
+        <span class="badge" *ngIf="(cartItemCount$ | async) as count">{{ count > 9 ? '9+' : count }}</span>
         <span class="badge" *ngIf="!(cartItemCount$ | async)">0</span>
       </a>
 

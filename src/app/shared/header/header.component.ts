@@ -2,7 +2,7 @@ import { Component, inject, ElementRef, HostListener, ViewChild, OnInit, OnDestr
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
+import { ToastService } from '../../core/services/toast.service';
 import { Subject, Subscription, of } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 
@@ -11,6 +11,7 @@ import { CategoryService } from '../../core/services/category.service';
 import { ProductService } from '../../core/services/product.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ProfileService } from '../../core/services/profile.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 
 @Component({
     selector: 'app-header',
@@ -25,6 +26,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   productService = inject(ProductService);
   notificationService = inject(NotificationService);
   profileService = inject(ProfileService);
+  wishlistService = inject(WishlistService);
+  toastService = inject(ToastService);
   router = inject(Router);
 
   cartItemCount$ = this.cartService.cartCount$;
@@ -34,6 +37,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notifications$ = this.notificationService.notifications$;
   notificationUnreadCount$ = this.notificationService.unreadCount$;
   isNotificationDropdownOpen = false;
+
+  wishlistItems$ = this.wishlistService.wishlistItems$;
+  get wishlistCount$() {
+    return this.wishlistItems$.pipe(
+      map(items => items.length)
+    );
+  }
 
   get cartTotal$() {
     return this.cartItems$.pipe(
@@ -72,6 +82,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.isPro = res.data?.type === 'pro';
         }
       });
+      this.wishlistService.loadWishlist();
     }
 
     // Set up reactive auto-complete search
@@ -222,23 +233,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, logout!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.authService.logout();
-        Swal.fire(
-          'Logged Out!',
-          'You have been logged out.',
-          'success'
-        )
-      }
-    })
+    this.isProfileDropdownOpen = false;
+    this.authService.logout();
+    this.toastService.success('You have been logged out.');
   }
 }

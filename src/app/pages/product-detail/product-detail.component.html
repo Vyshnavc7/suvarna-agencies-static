@@ -74,17 +74,17 @@
                         </div>
 
                         <div class="action-buttons d-flex mt-4 align-items-center">
-                            <!-- Quantity Selector -->
-                            <select class="quantity-selector mr-3" [(ngModel)]="selectedQuantity">
-                                <option [ngValue]="1">Qty: 1</option>
-                                <option [ngValue]="2">Qty: 2</option>
-                                <option [ngValue]="3">Qty: 3</option>
-                                <option [ngValue]="4">Qty: 4</option>
-                                <option [ngValue]="5">Qty: 5</option>
-                            </select>
+                            <!-- Quantity Stepper -->
+                            <div class="qty-stepper mr-3" *ngIf="!isInCart(product)">
+                                <button class="btn-step" (click)="decreaseQuantity()" [disabled]="selectedQuantity <= 1">-</button>
+                                <span class="qty-val">{{selectedQuantity}}</span>
+                                <button class="btn-step" (click)="increaseQuantity()" [disabled]="selectedQuantity >= (product.quantity || 10)">+</button>
+                            </div>
 
-                            <button class="btn btn-add-cart mr-3" (click)="addToCart(product)">
-                                Add to Cart <i class="fas fa-cart-plus"></i>
+                            <button class="btn btn-add-cart mr-3" 
+                                    [ngClass]="{'in-cart': isInCart(product)}"
+                                    (click)="isInCart(product) ? goToCart() : addToCart(product)">
+                                {{ isInCart(product) ? 'GO TO CART' : 'ADD TO CART' }} <i class="fas" [ngClass]="isInCart(product) ? 'fa-arrow-right' : 'fa-cart-plus'"></i>
                             </button>
                             <button class="btn btn-wishlist" 
                                     [ngClass]="isWishlisted(product) ? 'active' : ''" 
@@ -92,6 +92,16 @@
                                 <i [ngClass]="isWishlisted(product) ? 'fas fa-heart text-danger' : 'far fa-heart'"></i> 
                                 {{ isWishlisted(product) ? 'Wishlisted' : 'Wishlist' }}
                             </button>
+                        </div>
+
+                        <!-- Stock Messages -->
+                        <div class="mt-3">
+                            <span *ngIf="selectedQuantity >= (product.quantity || 10) && !isInCart(product)" class="badge badge-danger p-2" style="font-size: 0.85rem;">
+                                Max stock reached
+                            </span>
+                            <span *ngIf="product.quantity && product.quantity <= 5" class="badge badge-warning p-2" style="font-size: 0.85rem; background: #fff3cd; color: #856404; border: 1px solid #ffeeba;">
+                                <i class="fas fa-fire mr-1"></i> Hurry up! Only {{product.quantity}} left in stock.
+                            </span>
                         </div>
                     </div>
                 </div>
