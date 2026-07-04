@@ -25,6 +25,9 @@ export class CheckoutComponent implements OnInit {
   isPro = false;
   proDiscountPercent = 5; // Default from settings
   
+  // Wizard State
+  currentStep = 1;
+  
   // Addresses
   addresses: any[] = [];
   selectedAddressId: number | null = null;
@@ -113,6 +116,71 @@ export class CheckoutComponent implements OnInit {
     this.appliedCoupon = null;
     this.couponCode = '';
     this.discountAmount = 0;
+  }
+
+  // Wizard Navigation
+  nextStep() {
+    if (this.currentStep === 1) {
+      if (!this.selectedAddressId) {
+        this.toast.error('Please select a shipping address to continue.');
+        return;
+      }
+      // Scroll to top when changing steps
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.currentStep = 2;
+    } else if (this.currentStep === 2) {
+      if (this.paymentMethod === 'Card' && !this.selectedSavedCardId && (!this.cardDetails.cardNumber || !this.cardDetails.expiry || !this.cardDetails.cvv)) {
+         this.toast.error('Please select or enter valid card details.');
+         return;
+      }
+      if (this.paymentMethod === 'UPI' && !this.selectedSavedUpiId && !this.upiDetails.upiId) {
+         this.toast.error('Please select or enter a valid UPI ID.');
+         return;
+      }
+      
+      // Silently save newly entered credentials in the background
+      if (this.paymentMethod === 'Card' && !this.selectedSavedCardId) {
+        const expiryParts = this.cardDetails.expiry.split('/');
+        const newCard: any = {
+          cardHolderName: this.cardDetails.cardName || 'Cardholder',
+          cardNumber: this.cardDetails.cardNumber.replace(/\s+/g, ''),
+          expiryMonth: expiryParts[0] || '',
+          expiryYear: expiryParts[1] || '',
+          cardType: 'Credit',
+          isDefault: true
+        };
+        this.savedCardService.addSavedCard(newCard).subscribe({
+          next: (res) => {
+            this.selectedSavedCardId = res.card.id!;
+            this.savedCards.push(res.card);
+          }
+        });
+      }
+
+      if (this.paymentMethod === 'UPI' && !this.selectedSavedUpiId) {
+        const newUpi: any = {
+          upiId: this.upiDetails.upiId,
+          providerName: 'New UPI',
+          isDefault: true
+        };
+        this.savedUpiService.addSavedUpi(newUpi).subscribe({
+          next: (res) => {
+            this.selectedSavedUpiId = res.upi.id!;
+            this.savedUpis.push(res.upi);
+          }
+        });
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.currentStep = 3;
+    }
+  }
+
+  prevStep() {
+    if (this.currentStep > 1) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.currentStep--;
+    }
   }
 
   // Status
@@ -233,6 +301,18 @@ export class CheckoutComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load addresses', err)
     });
+  }
+
+  getSelectedAddress() {
+    return this.addresses.find(a => a.id === this.selectedAddressId);
+  }
+
+  getSelectedCard() {
+    return this.savedCards.find(c => c.id === this.selectedSavedCardId);
+  }
+
+  getSelectedUpi() {
+    return this.savedUpis.find(u => u.id === this.selectedSavedUpiId);
   }
 
   toggleNewAddressForm() {

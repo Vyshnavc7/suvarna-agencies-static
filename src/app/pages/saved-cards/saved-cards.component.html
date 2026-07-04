@@ -147,20 +147,30 @@
                         <div *ngIf="!showAddForm && savedCards.length > 0" class="row">
                             <div class="col-md-6 mb-4" *ngFor="let card of savedCards">
                                 <div class="credit-card-ui" [ngClass]="card.cardType.toLowerCase()">
-                                    <div class="card-chip"></div>
-                                    <div class="card-type-icon">
-                                        <i class="fab fa-cc-{{card.cardType.toLowerCase()}} fa-2x" *ngIf="card.cardType !== 'RuPay'"></i>
-                                        <span *ngIf="card.cardType === 'RuPay'" class="font-weight-bold italic">RuPay</span>
+                                    <div class="shape-1"></div>
+                                    <div class="shape-2"></div>
+                                    
+                                    <div class="card-top">
+                                        <div class="card-chip-group">
+                                            <div class="card-chip"></div>
+                                            <i class="fas fa-wifi contactless-icon"></i>
+                                        </div>
+                                        <div class="card-type-icon">
+                                            <i class="fab fa-cc-{{card.cardType.toLowerCase()}}" *ngIf="card.cardType !== 'RuPay'"></i>
+                                            <span *ngIf="card.cardType === 'RuPay'" class="font-weight-bold italic" style="font-size: 1.5rem;">RuPay</span>
+                                        </div>
                                     </div>
-                                    <div class="card-number mt-4 mb-3">
+                                    
+                                    <div class="card-number">
                                         {{ formatCardNumber(card.cardNumber) }}
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-end">
+                                    
+                                    <div class="card-footer">
                                         <div>
                                             <div class="card-label">Card Holder</div>
                                             <div class="card-value">{{ card.cardHolderName | uppercase }}</div>
                                         </div>
-                                        <div>
+                                        <div class="text-right">
                                             <div class="card-label">Expires</div>
                                             <div class="card-value">{{ card.expiryMonth }}/{{ card.expiryYear.slice(-2) }}</div>
                                         </div>
