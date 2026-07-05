@@ -6,6 +6,7 @@ import { SaveLaterService, SaveLaterItem } from '../../core/services/savelater.s
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { ToastService } from '../../core/services/toast.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -32,7 +33,8 @@ export class CartComponent implements OnInit {
     private profileService: ProfileService,
     private router: Router,
     private http: HttpClient,
-    private toast: ToastService
+    private toast: ToastService,
+    private settingsService: SettingsService
   ) { }
 
   ngOnInit(): void {
@@ -50,10 +52,10 @@ export class CartComponent implements OnInit {
       }
     });
 
-    this.http.get<any>('/server/settings/public').subscribe({
-      next: (res) => {
-        if (res.data) {
-          this.proDiscountPercent = res.data.proDiscountPercentage;
+    this.settingsService.settings$.subscribe({
+      next: (data) => {
+        if (data) {
+          this.proDiscountPercent = data.proDiscountPercentage || 5;
           this.calculateTotal();
         }
       }
@@ -98,6 +100,12 @@ export class CartComponent implements OnInit {
   removeItem(item: CartItem) {
     this.cartService.removeFromCart(item.id).subscribe({
       next: () => this.toast.info('Item removed from cart.')
+    });
+  }
+
+  clearCart() {
+    this.cartService.clearCart().subscribe({
+      next: () => this.toast.success('Cart cleared successfully.')
     });
   }
 

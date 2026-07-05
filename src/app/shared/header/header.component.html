@@ -17,9 +17,9 @@
             stroke-miterlimit="4" />
         </svg>
       </div>
-      <div class="logo-text">
-        <span class="brand-name">Suvarna</span>
-        <span class="brand-sub">Agencies</span>
+      <div class="logo-text" *ngIf="settings$ | async as settings">
+        <span class="brand-name">{{ settings.brandName || 'Suvarna' }}</span>
+        <span class="brand-sub">{{ settings.brandSubName || 'Agencies' }}</span>
       </div>
     </a>
 
@@ -28,6 +28,7 @@
       <a routerLink="/shop" routerLinkActive="active" class="nav-item">Products</a>
       <a routerLink="/services" routerLinkActive="active" class="nav-item">Services</a>
       <a routerLink="/about" routerLinkActive="active" class="nav-item">About</a>
+      <a routerLink="/track-order" routerLinkActive="active" class="nav-item">Track Order</a>
     </nav>
 
     <!-- Right: Actions -->
@@ -142,7 +143,7 @@
       </a>
 
       <!-- Cart -->
-      <a href="javascript:void(0)" class="icon-action cart" title="My Cart" (click)="toggleCartDrawer()">
+      <a href="javascript:void(0)" id="nav-cart-icon" class="icon-action cart" title="My Cart" (click)="toggleCartDrawer()">
         <i class="fas fa-shopping-cart"></i>
         <span class="badge" *ngIf="(cartItemCount$ | async) as count">{{ count > 9 ? '9+' : count }}</span>
         <span class="badge" *ngIf="!(cartItemCount$ | async)">0</span>
@@ -156,8 +157,13 @@
 <div class="cart-drawer-overlay" *ngIf="isCartDrawerOpen" (click)="closeCartDrawer()"></div>
 <div class="cart-drawer" [class.open]="isCartDrawerOpen">
   <div class="drawer-header">
-    <h5>Your Cart</h5>
-    <button class="btn-close-drawer" (click)="closeCartDrawer()"><i class="fas fa-times"></i></button>
+    <h5 class="mb-0">Your Cart</h5>
+    <div>
+      <button class="btn btn-sm btn-outline-danger mr-3" style="border-radius: 50px;" *ngIf="(cartItems$ | async)?.length" (click)="clearCart()" title="Clear All">
+        <i class="fas fa-trash-alt"></i> Clear All
+      </button>
+      <button class="btn-close-drawer" (click)="closeCartDrawer()"><i class="fas fa-times"></i></button>
+    </div>
   </div>
   <div class="drawer-body">
     <ng-container *ngIf="(cartItems$ | async) as items">

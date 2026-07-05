@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from '../../core/services/toast.service';
+import { CartAnimationService } from '../../core/services/cart-animation.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -25,11 +26,12 @@ export class ProductDetailComponent implements OnInit {
 
   authService = inject(AuthService);
   toastService = inject(ToastService);
+  cartAnimationService = inject(CartAnimationService);
+  router = inject(Router);
 
   selectedImage: string | null = null;
   galleryImages: string[] = [];
   cartItems: any[] = [];
-  router = inject(Router);
 
   ngOnInit() {
     this.cartService.cartItems$.subscribe(items => {
@@ -80,8 +82,9 @@ export class ProductDetailComponent implements OnInit {
     this.selectedImage = imgUrl;
   }
 
-  addToCart(product: any) {
+  addToCart(product: any, event: any) {
     this.cartService.addToCart(product, +this.selectedQuantity);
+    this.cartAnimationService.animateToCart(event, this.selectedImage || product.image);
   }
 
   increaseQuantity() {

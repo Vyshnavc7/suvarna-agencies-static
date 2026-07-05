@@ -1,0 +1,25 @@
+<div class="success-page-wrapper">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="success-card text-center p-5">
+            <div class="check-container mb-4 mx-auto">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            
+            <h1 class="success-title mb-3">Order Placed Successfully!</h1>
+            <p class="success-subtitle mb-4">Thank you for your purchase. Your order has been received and is being processed.</p>
+            
+            <div class="order-id-box mb-5 p-3">
+                <span class="text-muted text-uppercase" style="letter-spacing: 1px; font-size: 0.85rem;">Order Reference ID</span>
+                <div class="fw-bold mt-1" style="font-size: 1.25rem; color: #1e293b;">#{{orderId}}</div>
+            </div>
+            
+            <div class="action-buttons d-flex gap-3 justify-content-center flex-wrap">
+                <button class="btn btn-outline-premium px-4 py-2" routerLink="/orders">Track Order</button>
+                <button class="btn btn-primary px-4 py-2" routerLink="/shop">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+</div>

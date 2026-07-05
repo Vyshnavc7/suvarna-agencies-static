@@ -70,7 +70,7 @@
                   featuredProduct.productName }}</a></h5>
               <div class="d-flex justify-content-between align-items-center">
                 <span class="price">₹{{ featuredProduct.price | number:'1.2-2' }}</span>
-                <button class="btn-icon" [ngClass]="{'in-cart': isInCart(featuredProduct)}" (click)="isInCart(featuredProduct) ? goToCart() : addToCart(featuredProduct)" [title]="isInCart(featuredProduct) ? 'Go to Cart' : 'Add to Cart'">
+                <button class="btn-icon" [ngClass]="{'in-cart': isInCart(featuredProduct)}" (click)="isInCart(featuredProduct) ? goToCart() : addToCart(featuredProduct, $event)" [title]="isInCart(featuredProduct) ? 'Go to Cart' : 'Add to Cart'">
                   <i class="fas" [ngClass]="isInCart(featuredProduct) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
                 </button>
               </div>
@@ -151,7 +151,7 @@
             <h5 class="product-title"><a [routerLink]="['/product', product.id]">{{product.productName}}</a></h5>
             <div class="d-flex justify-content-between align-items-center mt-3">
               <span class="product-price">₹{{product.price | number:'1.2-2'}}</span>
-              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
+              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product, $event)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
                 <i class="fas" [ngClass]="isInCart(product) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
               </button>
             </div>
@@ -203,7 +203,7 @@
             <h5 class="product-title"><a [routerLink]="['/product', product.id]">{{product.productName}}</a></h5>
             <div class="d-flex justify-content-between align-items-center mt-3">
               <span class="product-price">₹{{product.price | number:'1.2-2'}}</span>
-              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
+              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product, $event)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
                 <i class="fas" [ngClass]="isInCart(product) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
               </button>
             </div>
@@ -246,7 +246,7 @@
             <h5 class="product-title"><a [routerLink]="['/product', product.id]">{{product.productName}}</a></h5>
             <div class="d-flex justify-content-between align-items-center mt-3">
               <span class="product-price">₹{{product.price | number:'1.2-2'}}</span>
-              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
+              <button class="btn-add-cart" [ngClass]="{'in-cart': isInCart(product)}" (click)="isInCart(product) ? goToCart() : addToCart(product, $event)" [title]="isInCart(product) ? 'Go to Cart' : 'Add to Cart'">
                 <i class="fas" [ngClass]="isInCart(product) ? 'fa-check text-success' : 'fa-cart-plus'"></i>
               </button>
             </div>

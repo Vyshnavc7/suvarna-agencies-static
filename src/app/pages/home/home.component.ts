@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
+import { CartAnimationService } from '../../core/services/cart-animation.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit {
   cartItems: any[] = [];
   productService = inject(ProductService);
   cartService = inject(CartService);
+  cartAnimationService = inject(CartAnimationService);
   router = inject(Router);
 
   ngOnInit() {
@@ -77,8 +79,9 @@ export class HomeComponent implements OnInit {
     // Replaced by inline logic in ngOnInit
   }
 
-  addToCart(product: any) {
+  addToCart(product: any, event: any) {
     this.cartService.addToCart(product);
+    this.cartAnimationService.animateToCart(event, product.image);
   }
 
   goToCart() {

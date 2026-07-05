@@ -19,7 +19,12 @@
                     <!-- Location Header Box -->
                     <div class="cart-header-box mb-4 d-flex justify-content-between align-items-center">
                         <span class="m-0"><i class="fas fa-map-marker-alt text-primary mr-2"></i> Deliver to: <strong>560001</strong></span>
-                        <button class="btn btn-outline-primary btn-sm py-1 px-3" style="border-radius: 50px;">Change Pincode</button>
+                        <div>
+                            <button class="btn btn-outline-danger btn-sm py-1 px-3 mr-2" style="border-radius: 50px;" (click)="clearCart()">
+                                <i class="fas fa-trash-alt mr-1"></i> Clear All
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm py-1 px-3" style="border-radius: 50px;">Change Pincode</button>
+                        </div>
                     </div>
 
                     <!-- Item Cards -->

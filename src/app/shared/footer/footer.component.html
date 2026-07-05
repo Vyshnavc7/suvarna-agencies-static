@@ -1,6 +1,6 @@
 <footer class="footer-wrapper">
   <div class="container-fluid">
-    <div class="row footer-content">
+    <div class="row footer-content" *ngIf="settings$ | async as settings">
       <div class="col-lg-3 col-md-6 footer-brand">
         <a class="brand-logo" routerLink="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
           <div style="width: 40px; height: 40px;">
@@ -21,16 +21,16 @@
                     stroke-miterlimit="4"/>
             </svg>
           </div>
-          <h2 style="font-size: 1.8rem; font-weight: 800; margin: 0; color: #fff;">Suvarna<span style="font-weight: 300; color: #a0a0a0;">Agencies</span></h2>
+          <h2 style="font-size: 1.8rem; font-weight: 800; margin: 0; color: #fff;">{{ settings.brandName || 'Suvarna' }}<span style="font-weight: 300; color: #a0a0a0;">{{ settings.brandSubName || 'Agencies' }}</span></h2>
         </a>
         <p class="brand-desc">
-          Premium power tools and machinery. Delivering excellence in both sales and service since our inception. Your trusted partner for quality tools.
+          {{ settings.aboutText || 'Premium power tools and machinery. Delivering excellence in both sales and service since our inception. Your trusted partner for quality tools.' }}
         </p>
         <div class="social-links">
-          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a *ngIf="settings.facebookUrl" [href]="settings.facebookUrl" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a *ngIf="settings.twitterUrl" [href]="settings.twitterUrl" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a *ngIf="settings.linkedinUrl" [href]="settings.linkedinUrl" target="_blank" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          <a *ngIf="settings.instagramUrl" [href]="settings.instagramUrl" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
       
@@ -50,15 +50,15 @@
         <ul class="contact-info">
           <li>
             <i class="fas fa-map-marker-alt"></i>
-            <span>Kakkad Road, South Bazar<br>Kannur - 670002</span>
+            <span>{{ settings.contactAddress || 'Kakkad Road, South Bazar, Kannur - 670002' }}</span>
           </li>
           <li>
             <i class="fas fa-phone-alt"></i>
-            <a href="tel://9847921072">+91 98479 21072</a>
+            <a [href]="'tel:' + (settings.contactPhone || '+91 98479 21072')">{{ settings.contactPhone || '+91 98479 21072' }}</a>
           </li>
           <li>
             <i class="fas fa-envelope"></i>
-            <a href="mailto:agenciessuvarna&#64;gmail.com">agenciessuvarna&#64;gmail.com</a>
+            <a [href]="'mailto:' + (settings.contactEmail || 'agenciessuvarna@gmail.com')">{{ settings.contactEmail || 'agenciessuvarna@gmail.com' }}</a>
           </li>
         </ul>
       </div>
@@ -73,8 +73,12 @@
       </div>
     </div>
     
-    <div class="footer-bottom">
-      <p>&copy; 2026 Suvarna Agencies. All Rights Reserved. Designed by C.Vyshnav.</p>
+    <div class="row footer-bottom mt-4" *ngIf="settings$ | async as settings">
+      <div class="col-12 text-center">
+        <p class="copyright">
+          {{ settings.copyrightText || '© 2026 Suvarna Agencies. All Rights Reserved. Designed by C.Vyshnav.' }}
+        </p>
+      </div>
     </div>
   </div>
 </footer>

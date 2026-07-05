@@ -410,7 +410,10 @@ export class CheckoutComponent implements OnInit {
         this.isOrderPlaced = true;
         this.placedOrderDetails = res;
         this.cartService.loadCart(); // reset frontend cart items count to 0!
-        this.toast.success('Order placed! Thank you for your purchase.');
+        
+        // Navigate to the success page instead of just showing a toast
+        const finalOrderId = res.order?.id || res.id;
+        this.router.navigate(['/checkout/success', finalOrderId]);
       },
       error: (err) => {
         this.isPlacingOrder = false;

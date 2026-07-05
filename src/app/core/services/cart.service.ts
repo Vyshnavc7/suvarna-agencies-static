@@ -106,4 +106,12 @@ export class CartService {
       })
     );
   }
+
+  clearCart() {
+    return this.http.delete(`${this.apiUrl}/clear`).pipe(
+      tap(() => {
+        this.loadCart();
+      })
+    );
+  }
 }

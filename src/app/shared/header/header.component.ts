@@ -12,6 +12,7 @@ import { ProductService } from '../../core/services/product.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { WishlistService } from '../../core/services/wishlist.service';
+import { SettingsService } from '../../core/services/settings.service';
 
 @Component({
     selector: 'app-header',
@@ -29,6 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   wishlistService = inject(WishlistService);
   toastService = inject(ToastService);
   router = inject(Router);
+  settingsService = inject(SettingsService);
+  settings$ = this.settingsService.settings$;
 
   cartItemCount$ = this.cartService.cartCount$;
   cartItems$ = this.cartService.cartItems$;
@@ -39,17 +42,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isNotificationDropdownOpen = false;
 
   wishlistItems$ = this.wishlistService.wishlistItems$;
-  get wishlistCount$() {
-    return this.wishlistItems$.pipe(
-      map(items => items.length)
-    );
-  }
+  wishlistCount$ = this.wishlistItems$.pipe(
+    map(items => items.length)
+  );
 
-  get cartTotal$() {
-    return this.cartItems$.pipe(
-      map(items => items.reduce((sum, item) => sum + ((item.product?.price || 0) * item.quantity), 0))
-    );
-  }
+  cartTotal$ = this.cartItems$.pipe(
+    map(items => items.reduce((sum, item) => sum + ((item.product?.price || 0) * item.quantity), 0))
+  );
 
   isProfileDropdownOpen = false;
   isPro = false;
@@ -76,14 +75,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
       error: (err) => console.error('Failed to load categories', err)
     });
 
-    if (this.authService.currentUserValue) {
-      this.profileService.getProfile().subscribe({
-        next: (res) => {
-          this.isPro = res.data?.type === 'pro';
-        }
-      });
-      this.wishlistService.loadWishlist();
-    }
+    this.authService.currentUser.subscribe(user => {
+      if (user) {
+        this.profileService.getProfile().subscribe({
+          next: (res) => {
+            this.isPro = res.data?.type === 'pro';
+          }
+        });
+      } else {
+        this.isPro = false;
+      }
+    });
 
     // Set up reactive auto-complete search
     this.searchSubscription = this.searchSubject.pipe(
@@ -230,6 +232,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   
   removeFromCart(id: number) {
     this.cartService.removeFromCart(id).subscribe();
+  }
+
+  clearCart() {
+    this.cartService.clearCart().subscribe();
   }
 
   logout() {

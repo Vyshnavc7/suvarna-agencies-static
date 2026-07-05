@@ -83,7 +83,7 @@
 
                             <button class="btn btn-add-cart mr-3" 
                                     [ngClass]="{'in-cart': isInCart(product)}"
-                                    (click)="isInCart(product) ? goToCart() : addToCart(product)">
+                                    (click)="isInCart(product) ? goToCart() : addToCart(product, $event)">
                                 {{ isInCart(product) ? 'GO TO CART' : 'ADD TO CART' }} <i class="fas" [ngClass]="isInCart(product) ? 'fa-arrow-right' : 'fa-cart-plus'"></i>
                             </button>
                             <button class="btn btn-wishlist" 

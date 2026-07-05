@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ToastService } from './toast.service';
+import { AuthService } from './auth.service';
 
 export interface WishlistItem {
   id: number;
@@ -18,8 +19,17 @@ export class WishlistService {
   private wishlistItemsSubject = new BehaviorSubject<WishlistItem[]>([]);
   wishlistItems$ = this.wishlistItemsSubject.asObservable();
   private toast = inject(ToastService);
+  private authService = inject(AuthService);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.authService.currentUser.subscribe(user => {
+      if (user) {
+        this.loadWishlist();
+      } else {
+        this.wishlistItemsSubject.next([]);
+      }
+    });
+  }
 
   loadWishlist() {
     this.http.get<WishlistItem[]>('/server/wishlist').subscribe({

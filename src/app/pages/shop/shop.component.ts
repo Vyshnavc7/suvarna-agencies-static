@@ -6,6 +6,7 @@ import { CartService } from '../../core/services/cart.service';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { CartAnimationService } from '../../core/services/cart-animation.service';
 
 @Component({
   selector: 'app-shop',
@@ -30,9 +31,11 @@ export class ShopComponent implements OnInit {
   authService = inject(AuthService);
   toastService = inject(ToastService);
   router = inject(Router);
+  cartAnimationService = inject(CartAnimationService);
 
-  addToCart(product: any) {
+  addToCart(product: any, event: any) {
     this.cartService.addToCart(product);
+    this.cartAnimationService.animateToCart(event, product.image);
   }
 
   goToCart() {
