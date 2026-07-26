@@ -67,6 +67,28 @@
                                 Not Eligible for Return
                             </span>
                         </div>
+
+                        <div class="meta-item">
+                            <i class="fas" [ngClass]="product.isExchangeable ? 'fa-sync-alt text-success' : 'fa-times-circle text-danger'"></i>
+                            <strong>Exchange Policy:</strong>
+                            <span *ngIf="product.isExchangeable">
+                                {{product.exchangePeriod}} Days Easy Exchange
+                            </span>
+                            <span class="text-muted" *ngIf="!product.isExchangeable">
+                                Not Eligible for Exchange
+                            </span>
+                        </div>
+
+                        <div class="meta-item">
+                            <i class="fas" [ngClass]="product.isCancellable ? 'fa-calendar-times text-success' : 'fa-times-circle text-danger'"></i>
+                            <strong>Cancellation Policy:</strong>
+                            <span *ngIf="product.isCancellable">
+                                Cancel within {{product.cancelPeriod}} Hours
+                            </span>
+                            <span class="text-muted" *ngIf="!product.isCancellable">
+                                Not Eligible for Cancellation
+                            </span>
+                        </div>
                         
                         <div class="meta-item" *ngIf="isNew(product.createdAt)">
                             <i class="fas fa-star text-warning"></i>

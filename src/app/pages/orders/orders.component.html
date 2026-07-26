@@ -132,9 +132,17 @@
                                     </li>
                                 </ul>
                                 
-                                <div class="mt-4" *ngIf="isEligibleForReturn(item)">
-                                    <button class="btn-outline-custom btn-sm rounded-pill" (click)="openReturnExchangeModal(item)">
-                                        <i class="fas fa-undo mr-1"></i> Return / Exchange
+                                <div class="mt-4" *ngIf="isEligibleForReturn(item) || isEligibleForExchange(item)">
+                                    <button *ngIf="isEligibleForReturn(item)" class="btn-outline-custom btn-sm rounded-pill mr-2" (click)="openReturnExchangeModal(item, 'return')">
+                                        <i class="fas fa-undo mr-1"></i> Return Order
+                                    </button>
+                                    <button *ngIf="isEligibleForExchange(item)" class="btn-outline-custom btn-sm rounded-pill" (click)="openReturnExchangeModal(item, 'exchange')">
+                                        <i class="fas fa-sync-alt mr-1"></i> Exchange Order
+                                    </button>
+                                </div>
+                                <div class="mt-4" *ngIf="isEligibleForCancellation(item)">
+                                    <button class="btn-outline-danger btn-sm rounded-pill" (click)="cancelOrder(item)">
+                                        <i class="fas fa-times-circle mr-1"></i> Cancel Order
                                     </button>
                                 </div>
                                 <div class="mt-4" *ngIf="item.paymentStatus === 'refunded'">
@@ -190,3 +198,44 @@
         </div>
     </div>
 </section>
+
+<!-- Return / Exchange Modal -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="returnModalItem" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" style="color: #1e293b;">
+                    <i class="fas" [ngClass]="returnType === 'return' ? 'fa-undo' : 'fa-sync-alt'" class="mr-2 text-primary"></i>
+                    Request {{ returnType === 'return' ? 'Return' : 'Exchange' }}
+                </h5>
+                <button type="button" class="close" aria-label="Close" (click)="closeReturnModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pt-4">
+                <div class="d-flex align-items-center mb-4 p-3 rounded" style="background-color: #f8fafc;">
+                    <img [src]="returnModalItem.image || 'assets/images/default-product.png'" alt="Product" class="mr-3 rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                    <div>
+                        <h6 class="mb-1 fw-bold" style="color: #1e293b;">{{ returnModalItem.productName }}</h6>
+                        <p class="mb-0 text-muted small">Order #{{ returnModalItem.orderId || returnModalItem.paymentId }}</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="font-weight-bold" style="color: #475569;">Please provide a reason for the {{ returnType }}: <span class="text-danger">*</span></label>
+                    <textarea class="form-control" rows="4" [(ngModel)]="returnReason" placeholder="Enter details about why you want to {{ returnType }} this item (min 10 characters)..." style="border-radius: 8px; border: 1px solid #cbd5e1; resize: none;"></textarea>
+                    <small class="form-text text-muted mt-2">
+                        Your request will be reviewed by our team. We may contact you for further details.
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4">
+                <button type="button" class="btn btn-light rounded-pill px-4" (click)="closeReturnModal()">Cancel</button>
+                <button type="button" class="btn btn-primary-custom rounded-pill px-4" (click)="submitReturnModal()" [disabled]="isLoading || !returnReason || returnReason.trim().length < 10">
+                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+                    Submit Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

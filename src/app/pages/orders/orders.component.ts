@@ -130,6 +130,11 @@ export class OrdersComponent implements OnInit {
         status: order.status,
         isReturnable: order.product?.isReturnable !== undefined ? order.product.isReturnable : true,
         returnPeriod: order.product?.returnPeriod !== undefined ? order.product.returnPeriod : 7,
+        isExchangeable: order.product?.isExchangeable !== undefined ? order.product.isExchangeable : true,
+        exchangePeriod: order.product?.exchangePeriod !== undefined ? order.product.exchangePeriod : 7,
+        isCancellable: order.product?.isCancellable !== undefined ? order.product.isCancellable : true,
+        cancelPeriod: order.product?.cancelPeriod !== undefined ? order.product.cancelPeriod : 24,
+        createdAt: order.createdAt,
         updatedAt: order.updatedAt,
         paymentStatus: order.paymentStatus,
         paymentMethod: order.paymentDetails?.paymentMethod || 'Original Payment Method'
@@ -172,9 +177,57 @@ export class OrdersComponent implements OnInit {
     return new Date() <= returnDeadline;
   }
 
-  openReturnExchangeModal(item: any): void {
+  isEligibleForExchange(item: any): boolean {
+    if (item.status !== 'delivered') return false;
+    if (!item.isExchangeable) return false;
+
+    const deliveryDate = new Date(item.updatedAt);
+    const exchangeDeadline = new Date(deliveryDate.getTime() + item.exchangePeriod * 24 * 60 * 60 * 1000);
+    return new Date() <= exchangeDeadline;
+  }
+
+  isEligibleForCancellation(item: any): boolean {
+    const s = item.status?.toLowerCase();
+    
+    // Status must be pending or processing
+    if (s !== 'pending' && s !== 'processing') {
+      return false;
+    }
+    
+    // Check product specific policy
+    if (item.isCancellable === false) {
+      return false;
+    }
+    
+    // Must be within cancellation period
+    const cancelDeadlineHours = item.cancelPeriod !== undefined ? item.cancelPeriod : 24;
+    const orderDate = new Date(item.createdAt);
+    const now = new Date();
+    const diffInHours = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60);
+    
+    return diffInHours <= cancelDeadlineHours;
+  }
+
+  cancelOrder(item: any): void {
+    if (confirm('Are you sure you want to cancel this order item?')) {
+      this.isLoading = true;
+      this.http.post<any>('/server/orders/cancel', { orderId: item.id }).subscribe({
+        next: (response) => {
+          this.toast.success(response.message || 'Order cancelled successfully.');
+          this.fetchOrders();
+        },
+        error: (err) => {
+          console.error('Failed to cancel order', err);
+          this.toast.error(err.error?.message || 'Cancellation failed. Please try again.');
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
+  openReturnExchangeModal(item: any, type: 'return' | 'exchange'): void {
     this.returnModalItem = item;
-    this.returnType = 'return';
+    this.returnType = type;
     this.returnReason = '';
   }
 
