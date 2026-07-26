@@ -61,8 +61,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                         router.navigate(['/login']);
                     });
                 });
-            } else if (error.status >= 400) {
-                // All other client/server errors → toast
+            } else if (error.status >= 500) {
+                // Only 5xx server errors get a global fallback toast (components handle 4xx client validation)
                 toast.error(getErrorMessage(error));
             }
             return throwError(() => error);

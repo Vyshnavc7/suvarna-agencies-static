@@ -83,11 +83,11 @@
                         </div>
                         
                         <div class="tile-status-col">
-                            <div class="status-indicator" [ngClass]="item.status === 'delivered' ? 'text-success' : 'text-warning'">
+                            <div class="status-indicator" [ngClass]="item.status?.toLowerCase() === 'delivered' ? 'text-success' : 'text-warning'">
                                 <i class="far fa-circle font-weight-bold"></i>
-                                <span class="status-title">{{ item.status === 'delivered' ? 'Delivered on' : 'Delivery expected by' }} {{ item.updatedAt | date:'mediumDate' }}</span>
+                                <span class="status-title">{{ item.status?.toLowerCase() === 'delivered' ? 'Delivered on' : 'Delivery expected by' }} {{ (item.updatedAt || item.createdAt) | date:'mediumDate' }}</span>
                             </div>
-                            <p class="status-desc">{{ item.status === 'shipped' ? 'Your item has been shipped.' : 'Order is ' + item.status }}</p>
+                            <p class="status-desc">{{ item.status?.toLowerCase() === 'shipped' ? 'Your item has been shipped.' : 'Order is ' + item.status }}</p>
                         </div>
                     </div>
                     
@@ -199,40 +199,138 @@
     </div>
 </section>
 
-<!-- Return / Exchange Modal -->
-<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="returnModalItem" style="background-color: rgba(0,0,0,0.5);">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title fw-bold" style="color: #1e293b;">
-                    <i class="fas" [ngClass]="returnType === 'return' ? 'fa-undo' : 'fa-sync-alt'" class="mr-2 text-primary"></i>
-                    Request {{ returnType === 'return' ? 'Return' : 'Exchange' }}
-                </h5>
-                <button type="button" class="close" aria-label="Close" (click)="closeReturnModal()">
-                    <span aria-hidden="true">&times;</span>
+<!-- Return / Exchange Premium Modal -->
+<div class="modal fade show d-block premium-rma-modal" tabindex="-1" role="dialog" *ngIf="returnModalItem">
+    <div class="modal-backdrop-custom" (click)="closeReturnModal()"></div>
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content border-0 shadow-2xl premium-modal-card">
+            <!-- Modal Header -->
+            <div class="modal-header-custom d-flex align-items-center justify-content-between p-4 border-bottom">
+                <div class="d-flex align-items-center">
+                    <div class="modal-icon-badge mr-3">
+                        <i class="fas text-white" [ngClass]="returnType === 'return' ? 'fa-undo' : 'fa-exchange-alt'"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-1 fw-bold text-dark">
+                            Request {{ returnType === 'return' ? 'Order Return' : 'Order Exchange' }}
+                        </h5>
+                        <p class="mb-0 text-muted small">Please complete the details below for RMA processing</p>
+                    </div>
+                </div>
+                <button type="button" class="close-btn-custom" aria-label="Close" (click)="closeReturnModal()">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body pt-4">
-                <div class="d-flex align-items-center mb-4 p-3 rounded" style="background-color: #f8fafc;">
-                    <img [src]="returnModalItem.image || 'assets/images/default-product.png'" alt="Product" class="mr-3 rounded" style="width: 60px; height: 60px; object-fit: cover;">
-                    <div>
-                        <h6 class="mb-1 fw-bold" style="color: #1e293b;">{{ returnModalItem.productName }}</h6>
-                        <p class="mb-0 text-muted small">Order #{{ returnModalItem.orderId || returnModalItem.paymentId }}</p>
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4">
+                <!-- Product Preview Card -->
+                <div class="product-preview-card d-flex align-items-center p-3 mb-4">
+                    <div class="preview-thumb-wrapper mr-3">
+                        <img *ngIf="returnModalItem.image" [src]="returnModalItem.image" (error)="returnModalItem.image = ''" alt="{{ returnModalItem.productName }}" class="preview-thumb">
+                        <div *ngIf="!returnModalItem.image" class="preview-thumb-fallback">
+                            {{ returnModalItem.productName.charAt(0) | uppercase }}
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="mb-1 fw-bold text-dark">{{ returnModalItem.productName }}</h6>
+                            <span class="badge badge-pill badge-gold ml-2">₹{{ (returnModalItem.price * returnModalItem.quantity) | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="d-flex align-items-center text-muted small mt-1">
+                            <span class="mr-3"><i class="fas fa-hashtag mr-1"></i>Order #{{ returnModalItem.orderId || returnModalItem.paymentId }}</span>
+                            <span><i class="fas fa-cubes mr-1"></i>Qty: {{ returnModalItem.quantity }}</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="font-weight-bold" style="color: #475569;">Please provide a reason for the {{ returnType }}: <span class="text-danger">*</span></label>
-                    <textarea class="form-control" rows="4" [(ngModel)]="returnReason" placeholder="Enter details about why you want to {{ returnType }} this item (min 10 characters)..." style="border-radius: 8px; border: 1px solid #cbd5e1; resize: none;"></textarea>
-                    <small class="form-text text-muted mt-2">
-                        Your request will be reviewed by our team. We may contact you for further details.
-                    </small>
+                <!-- Reason Textarea -->
+                <div class="form-group mb-4">
+                    <label class="form-label-custom d-flex justify-content-between align-items-center mb-2">
+                        <span><i class="fas fa-comment-dots mr-2 text-gold"></i>Reason for {{ returnType === 'return' ? 'Return' : 'Exchange' }} <span class="text-danger">*</span></span>
+                        <small class="text-muted">{{ returnReason.length }} / 1000 chars</small>
+                    </label>
+
+                    <!-- Quick Reason Chips -->
+                    <div class="quick-reason-chips mb-2 d-flex flex-wrap">
+                        <span *ngFor="let qr of quickReturnReasons" class="badge badge-outline-gold mr-2 mb-1 cursor-pointer" (click)="selectQuickReason(qr)" title="Click to insert reason">
+                            + {{ qr }}
+                        </span>
+                    </div>
+
+                    <textarea class="form-control premium-textarea" rows="4" [(ngModel)]="returnReason" placeholder="Enter detailed reason for your {{ returnType }} request (e.g. damaged item, wrong size, defect)... (min 15 characters & 3 words)" maxlength="1000"></textarea>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-muted">Please describe the issue in at least 3 words (15+ chars).</small>
+                        <span *ngIf="isReasonValid()" class="badge badge-success-subtle"><i class="fas fa-check-circle mr-1"></i>Valid reason</span>
+                    </div>
+                </div>
+
+                <!-- Image / Video Attachments Zone -->
+                <div class="form-group mb-2">
+                    <label class="form-label-custom d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-camera mr-2 text-gold"></i>Attach Supporting Photos / Videos <span class="badge badge-light-custom ml-2">Optional (Max 3)</span></span>
+                        <small class="text-muted">{{ returnAttachments.length }} / 3 uploaded</small>
+                    </label>
+
+                    <!-- Drag & Drop Upload Zone (Full when empty) -->
+                    <div class="media-upload-zone text-center p-4 mb-3" *ngIf="returnAttachments.length === 0">
+                        <input type="file" id="mediaUploadInput" class="upload-input-hidden" accept="image/*,video/*" multiple (change)="onSelectAttachments($event)">
+                        <label for="mediaUploadInput" class="upload-zone-label mb-0 w-100">
+                            <div class="upload-icon-wrapper mb-2">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h6 class="mb-1 fw-bold text-dark">Click to upload or drag & drop</h6>
+                            <p class="mb-0 text-muted small">Support JPG, PNG, MP4, WebM (max 15MB per file)</p>
+                        </label>
+                    </div>
+
+                    <!-- Compact Add More Button (When 1 or 2 files uploaded) -->
+                    <div class="media-upload-zone-compact text-center p-2 mb-3" *ngIf="returnAttachments.length > 0 && returnAttachments.length < 3">
+                        <input type="file" id="mediaUploadInputMore" class="upload-input-hidden" accept="image/*,video/*" multiple (change)="onSelectAttachments($event)">
+                        <label for="mediaUploadInputMore" class="upload-zone-label mb-0 w-100 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-plus-circle text-gold mr-2"></i>
+                            <span class="fw-bold small text-dark">Add more files ({{ 3 - returnAttachments.length }} remaining)</span>
+                        </label>
+                    </div>
+
+                    <!-- Uploaded Attachments Preview Gallery -->
+                    <div class="attachments-preview-grid row g-3" *ngIf="returnAttachments.length > 0">
+                        <div class="col-md-4 col-sm-6 mb-3" *ngFor="let att of returnAttachments; let i = index">
+                            <div class="attachment-card p-2 position-relative">
+                                <!-- Remove Button -->
+                                <button type="button" class="attachment-remove-btn" (click)="removeAttachment(i)" title="Remove file">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                
+                                <!-- Preview Thumbnail -->
+                                <div class="attachment-thumb-box mb-2">
+                                    <img *ngIf="!att.isVideo" [src]="att.url" alt="{{ att.name }}" class="attachment-img">
+                                    <div *ngIf="att.isVideo" class="attachment-video-placeholder d-flex flex-column align-items-center justify-content-center">
+                                        <i class="fas fa-video fa-2x mb-1 text-gold"></i>
+                                        <span class="small font-weight-bold">VIDEO</span>
+                                    </div>
+                                    <span class="attachment-type-badge">{{ att.isVideo ? 'VIDEO' : 'PHOTO' }}</span>
+                                </div>
+                                
+                                <!-- File Info -->
+                                <div class="attachment-info text-truncate px-1">
+                                    <p class="mb-0 small fw-bold text-dark text-truncate" title="{{ att.name }}">{{ att.name }}</p>
+                                    <small class="text-muted">{{ (att.size / 1024 / 1024) | number:'1.1-2' }} MB</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer border-top-0 pt-0 pb-4 px-4">
-                <button type="button" class="btn btn-light rounded-pill px-4" (click)="closeReturnModal()">Cancel</button>
-                <button type="button" class="btn btn-primary-custom rounded-pill px-4" (click)="submitReturnModal()" [disabled]="isLoading || !returnReason || returnReason.trim().length < 10">
+
+            <!-- Modal Footer -->
+            <div class="modal-footer-custom d-flex justify-content-end p-4 border-top">
+                <button type="button" class="btn btn-light-custom rounded-pill px-4 mr-2" (click)="closeReturnModal()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-gold-gradient rounded-pill px-4 shadow-sm" (click)="submitReturnModal()" [disabled]="isLoading || !isReasonValid()">
                     <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+                    <i *ngIf="!isLoading" class="fas fa-paper-plane mr-2"></i>
                     Submit Request
                 </button>
             </div>

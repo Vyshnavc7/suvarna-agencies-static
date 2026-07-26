@@ -35,6 +35,32 @@ export class OrdersComponent implements OnInit {
   returnModalItem: any = null;
   returnType = 'return';
   returnReason = '';
+  returnAttachments: { name: string; type: string; url: string; size: number; isVideo?: boolean }[] = [];
+
+  quickReturnReasons = [
+    'Damaged on arrival',
+    'Defective or not working properly',
+    'Wrong product / model received',
+    'Missing accessories or parts',
+    'Quality not as expected'
+  ];
+
+  selectQuickReason(reason: string): void {
+    if (!this.returnReason || this.returnReason.trim() === '') {
+      this.returnReason = reason + ' - ';
+    } else if (!this.returnReason.includes(reason)) {
+      this.returnReason = reason + ' - ' + this.returnReason;
+    }
+  }
+
+  isReasonValid(): boolean {
+    if (!this.returnReason) return false;
+    const trimmed = this.returnReason.trim();
+    if (trimmed.length < 15) return false;
+    // Require at least 3 separate words (to reject single gibberish strings like 'dsacsdcdsacsd')
+    const words = trimmed.split(/\s+/).filter(w => w.length > 1);
+    return words.length >= 3;
+  }
 
   // Retry payment inline state
   retryOrder: GroupedOrder | null = null;
@@ -135,7 +161,7 @@ export class OrdersComponent implements OnInit {
         isCancellable: order.product?.isCancellable !== undefined ? order.product.isCancellable : true,
         cancelPeriod: order.product?.cancelPeriod !== undefined ? order.product.cancelPeriod : 24,
         createdAt: order.createdAt,
-        updatedAt: order.updatedAt,
+        updatedAt: order.updatedAt || order.createdAt || new Date().toISOString(),
         paymentStatus: order.paymentStatus,
         paymentMethod: order.paymentDetails?.paymentMethod || 'Original Payment Method'
       });
@@ -169,20 +195,24 @@ export class OrdersComponent implements OnInit {
   }
 
   isEligibleForReturn(item: any): boolean {
-    if (item.status !== 'delivered') return false;
-    if (!item.isReturnable) return false;
+    if (item.status?.toLowerCase() !== 'delivered') return false;
+    const isRet = item.isReturnable !== false && item.isReturnable !== 0 && item.isReturnable !== 'false' && item.isReturnable !== '0';
+    if (!isRet) return false;
 
-    const deliveryDate = new Date(item.updatedAt);
-    const returnDeadline = new Date(deliveryDate.getTime() + item.returnPeriod * 24 * 60 * 60 * 1000);
+    const deliveryDate = new Date(item.updatedAt || item.createdAt || Date.now());
+    const returnDays = Number(item.returnPeriod) > 0 ? Number(item.returnPeriod) : 7;
+    const returnDeadline = new Date(deliveryDate.getTime() + returnDays * 24 * 60 * 60 * 1000);
     return new Date() <= returnDeadline;
   }
 
   isEligibleForExchange(item: any): boolean {
-    if (item.status !== 'delivered') return false;
-    if (!item.isExchangeable) return false;
+    if (item.status?.toLowerCase() !== 'delivered') return false;
+    const isExch = item.isExchangeable !== false && item.isExchangeable !== 0 && item.isExchangeable !== 'false' && item.isExchangeable !== '0';
+    if (!isExch) return false;
 
-    const deliveryDate = new Date(item.updatedAt);
-    const exchangeDeadline = new Date(deliveryDate.getTime() + item.exchangePeriod * 24 * 60 * 60 * 1000);
+    const deliveryDate = new Date(item.updatedAt || item.createdAt || Date.now());
+    const exchangeDays = Number(item.exchangePeriod) > 0 ? Number(item.exchangePeriod) : 7;
+    const exchangeDeadline = new Date(deliveryDate.getTime() + exchangeDays * 24 * 60 * 60 * 1000);
     return new Date() <= exchangeDeadline;
   }
 
@@ -229,10 +259,105 @@ export class OrdersComponent implements OnInit {
     this.returnModalItem = item;
     this.returnType = type;
     this.returnReason = '';
+    this.returnAttachments = [];
   }
 
   closeReturnModal(): void {
     this.returnModalItem = null;
+    this.returnAttachments = [];
+  }
+
+  compressImage(file: File, maxWidth = 1024, maxHeight = 1024, quality = 0.7): Promise<{ url: string; size: number }> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve({ url: e.target.result, size: file.size });
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          // Approximate byte size of compressed Base64 string
+          const head = 'data:image/jpeg;base64,';
+          const size = Math.round((compressedDataUrl.length - head.length) * 0.75);
+          resolve({ url: compressedDataUrl, size });
+        };
+        img.onerror = () => resolve({ url: e.target.result, size: file.size });
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  onSelectAttachments(event: any): void {
+    const files: FileList = event.target.files;
+    if (!files || files.length === 0) return;
+
+    if (this.returnAttachments.length + files.length > 3) {
+      this.toast.error('You can upload a maximum of 3 files (images/videos).');
+      return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > 15 * 1024 * 1024) {
+        this.toast.error(`File "${file.name}" exceeds the 15MB limit.`);
+        continue;
+      }
+
+      const isVideo = file.type.startsWith('video/');
+      if (!isVideo && file.type.startsWith('image/')) {
+        // Client-side HTML5 canvas compression to shrink image Base64 URLs by ~90-95%
+        this.compressImage(file, 1024, 1024, 0.7).then(compressed => {
+          this.returnAttachments.push({
+            name: file.name,
+            type: 'image/jpeg',
+            url: compressed.url,
+            size: compressed.size,
+            isVideo: false
+          });
+        });
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.returnAttachments.push({
+            name: file.name,
+            type: file.type,
+            url: e.target.result,
+            size: file.size,
+            isVideo
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    event.target.value = '';
+  }
+
+  removeAttachment(index: number): void {
+    this.returnAttachments.splice(index, 1);
   }
 
   submitReturnModal(): void {
@@ -240,16 +365,18 @@ export class OrdersComponent implements OnInit {
       this.toast.error('Reason must be at least 10 characters long.');
       return;
     }
-    this.submitReturnRequest(this.returnModalItem.id, this.returnType, this.returnReason);
+    this.submitReturnRequest(this.returnModalItem.id, this.returnType, this.returnReason, this.returnAttachments);
     this.returnModalItem = null;
+    this.returnAttachments = [];
   }
 
-  submitReturnRequest(orderId: number, type: string, reason: string): void {
+  submitReturnRequest(orderId: number, type: string, reason: string, attachments?: any[]): void {
     this.isLoading = true;
     this.http.post<any>('/server/orders/return-request', {
       orderId,
       type,
-      reason
+      reason,
+      attachments: attachments && attachments.length > 0 ? attachments : null
     }).subscribe({
       next: (response) => {
         this.toast.success(response.message || 'Your request has been successfully received and is pending review.');
